@@ -14,12 +14,11 @@ This is a small project to build an R-based free+open-source cross-platform GUI 
 
 2. It is true that there are already a number of great GUI libraries for data science in R, for example, Rattle. However, after a year of research, I have found none aimed squarely at the task types and data structures that are ubiquitous in, for example, EEG research. (A great example of this is epoched multivariate time series.)
 
-## Goals
-While the wishlist is long, the immediate goals are as follows.
+## Roadmap
+While the wishlist is long, the immediate goals (in partial order) are as follows.
 
 - Interoperability with bci2000
     - static data import/export
-    - stream input for online algorithms (actually the subject of the [RstreamBCI library](projecturlhere))
 - Data converters to/from EEGLAB, BCILAB and MATLAB
     - static data import/export (both epoched and continuous)
 - Interface (by task)
@@ -51,3 +50,13 @@ While the wishlist is long, the immediate goals are as follows.
         - Direct configuration of RMarkdown files
 
 Some of these tasks are already more or less complete--I just have to extract them from my own R code and make them more user-friendly. Many are easily done by bringing in other existing community R packages.
+
+## Wishlist
+- stream input for online algorithms (actually the subject of the [RstreamBCI library](projecturlhere))
+- Complete replication of most popular algorithms from EEGLAB, BCILAB, SIFT, etc.
+- Core code written entirely in fast precompiled languages (C, C++)
+- Interface to wavelet tools
+- Additional report generation features like
+    - AUC analysis in feature space
+- Fast deployability of designed interfaces to users as abbreviated software outside of an R REPL/IDE (see [InsideR](urlhere) for an example)
+- Modular tool format so that interface components can be swapped in and out of chain (like bci2000)
