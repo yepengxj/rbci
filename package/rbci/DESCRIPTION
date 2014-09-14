@@ -1,9 +1,9 @@
 Package: rbci
 Type: Package
-Title: What the package does (short line)
+Title: Unified toolkit for BCI data analysis and processing.
 Version: 1.0
 Date: 2014-09-13
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Author: Trevor Alexander
+Maintainer: Trevor Alexander <talex@privatdemail.net>
+Description: TODO More about what it does (maybe more than one line)
+License: GPLv3
