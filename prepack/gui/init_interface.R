@@ -31,3 +31,6 @@ builder$connectSignals(NULL)
 window <- builder$getObject("initwindow")
 
 window$showAll()
+
+# Initialize backend processing
+# source("../scripts/init_backend.R")
