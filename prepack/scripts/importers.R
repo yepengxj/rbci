@@ -8,45 +8,33 @@
 NULL
 
 #' @rdname import.matlab
-rbci.import.matlab <- function(filename, environment = rbci.env, options) {
-  sample.rate <- 512 # 512Hz for AUTD dataset
-  time.start <- -100 # dataset recorded from -100ms to 1000ms
-  time.end <- 999
-  multi.cores <- 3 # number of cores to use for parallel ops
+rbci.import.matlab <- function(filename, environment = rbci.env, options = rbci.env$options) {
+  ######## Initial options ########
+  sample.rate <- options$sample.rate
+  time.start <- options$ts.start # dataset recorded from -100ms to 1000ms
+  time.end <- options$ts.end
+  multi.cores <- options$core.count # number of cores to use for parallel ops
   
-  # read in each mat-file; pull targets and voltages into arrays
-  all.mats <- foreach(this.file = filelist, .combine=myabind) %dopar% {
-    init.struct <- readMat(this.file)
-    init.eeg <- init.struct$eeg[[1]]
-    return(init.eeg)
-  }
-  all.tgts <- foreach(this.file = filelist, .combine=cbind) %dopar% {
-    init.struct <- readMat(this.file)
-    init.tgt <- init.struct$eeg[[3]] # these are unfortunately hardcoded
-    return(init.tgt)
-  }
+  init.struct <- readMat(this.file)
+  init.eeg <- init.struct$eeg[[1]]
   
-  # get subject names from each file
-  sub.names <- foreach(this.file = filelist, .combine=c) %do% {
-    this.sub <- substr(this.file,1,3)
-  }
+  init.tgt <- init.struct$eeg[[3]] # these are unfortunately hardcoded
   
-  # convert to table format, add column names
-  all.mats.table <- melt(all.mats, 
-                         varnames = c("Trial","Sample","Channel","File"), 
-                         value.name = "Voltage")
-  all.mats.table <- as.data.table(all.mats.table)
-  setnames(all.mats.table,old=colnames(all.mats.table),
+  ###### convert to table format, add column names ######
+  init.dt <- as.data.table(melt(init.eeg,
+                                varnames = c("Trial","Sample","Channel"),
+                                value.name = "Voltage"))
+  setnames(init.dt,old=colnames(all.mats.table),
            new=c(colnames(all.mats.table)[1:length(colnames(all.mats.table))-1],
                  "Voltage"))
-  
-  all.tgts.table <- melt(all.tgts, varnames = c("Trial","File"))
-  all.tgts.table <- as.data.table(all.tgts.table)
+  ###### do target things #######
+  all.tgts.table <- as.data.table(melt(all.tgts, 
+                                       varnames = c("Trial")))
   setnames(all.tgts.table,old=colnames(all.tgts.table),
            new=c(colnames(all.tgts.table)[1:length(colnames(all.tgts.table))-1],
                  "Class"))
   
-  # Merge in subject and session names
+  ##### Merge in subject and session names ######
   setkey(all.tgts.table,File)
   setkey(sub.names,File,Subject)
   # all.tgts.table <- merge(all.tgts.table,sub.names, by="File")
