@@ -3,7 +3,12 @@ library(cairoDevice)
 
 ##### main window button actions #####
 on_quitbutton_clicked <- function(action) {
-  builder$getObject("initwindow")$destroy()
+  objlist <- builder$getObjects()
+  for (obj in objlist) {
+    if (class(obj)[1] == "GtkWindow") {
+      obj$destroy()
+    }
+  }
 }
 
 on_importbutton_clicked <- function(action) {
