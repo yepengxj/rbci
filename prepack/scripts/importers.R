@@ -4,13 +4,15 @@
 #' 
 #' @param filename A string pointing to the data file.
 #' @param environment The desired enviroment to receive the data.
-#' @param ... A list of named options
+#' @param options A list of named options
 #' @return If import OK, outputs a preview of the imported data 
 #' @name Import backends
 NULL
 
 #' @rdname import.matlab
-rbci.import.matlab <- function(filename, environment = rbci.env, options = rbci.env$options) {
+rbci.import.matlab <- function(filename, 
+                               environment = rbci.env, 
+                               options = rbci.env$options) {
   ######## Initial options ########
   sample.rate <- options$sample.rate
   time.start <- options$ts.start # dataset recorded from -100ms to 1000ms
