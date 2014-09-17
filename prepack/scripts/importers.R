@@ -1,5 +1,7 @@
 #' Import functions for external data files.
 #' 
+#' Each of these functions imports data into a specified enivronment.
+#' 
 #' @param filename A string pointing to the data file.
 #' @param environment The desired enviroment to receive the data.
 #' @param ... A list of named options
@@ -17,7 +19,6 @@ rbci.import.matlab <- function(filename, environment = rbci.env, options = rbci.
   
   init.struct <- readMat(this.file)
   init.eeg <- init.struct$eeg[[1]]
-  
   init.tgt <- init.struct$eeg[[3]] # these are unfortunately hardcoded
   
   ###### convert to table format, add column names ######
@@ -27,6 +28,7 @@ rbci.import.matlab <- function(filename, environment = rbci.env, options = rbci.
   setnames(init.dt,old=colnames(all.mats.table),
            new=c(colnames(all.mats.table)[1:length(colnames(all.mats.table))-1],
                  "Voltage"))
+  
   ###### do target things #######
   all.tgts.table <- as.data.table(melt(all.tgts, 
                                        varnames = c("Trial")))
@@ -56,8 +58,7 @@ rbci.import.matlab <- function(filename, environment = rbci.env, options = rbci.
   # update trial column
   erp[,Trial:= all.Trial]
   erp[,all.Trial:= NULL]
-  
-  
+
   # add time column by reference to sample
   time.lookup <- data.table(Sample = seq_len(max(erp$Sample)))
   time.lookup[,Time:= seq(from=time.start,to=time.end,
@@ -65,19 +66,6 @@ rbci.import.matlab <- function(filename, environment = rbci.env, options = rbci.
   setkey(time.lookup,Sample)
   setkey(erp,Sample)
   erp <- erp[time.lookup,nomatch=NA]
-  
-  # add subject column by reference to file index
-  # erp <- merge(erp,sub.names, by="File")
-  # setkey(erp,File)
-  # setkey(sub.names,File)
-  # erp.t <- sub.names[erp]
-  
-  # drop file index
-  erp[,File:= NULL]
-  # drop duplicated columns
-  # erp[,Subject:= Subject.x]
-  # erp[,Subject.x:= NULL]
-  # erp[,Subject.y:= NULL]
   
   # Cleanup
   keep(erp,project.root,sample.rate, sure=TRUE)

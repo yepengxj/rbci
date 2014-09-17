@@ -6,6 +6,7 @@ on_quitbutton_clicked <- function(action) {
   objlist <- builder$getObjects()
   for (obj in objlist) {
     if (class(obj)[1] == "GtkWindow") {
+      # destroy all GtkWindows on quit
       obj$destroy()
     }
   }
