@@ -19,15 +19,16 @@ rbci.preview.csv <- function(filename,
 #' @rdname preview.mat
 rbci.preview.mat <- function(filename, 
                              environment = rbci.env, 
-                             options = rbci.env$options) {
+                             opts = rbci.env$opts) {
   
   rbci.env$importedmat <- readMat(filename)
   
   # since the structure is complex, we preview with str() if no view options
-  if (!options$view.head) {
-    return(str(rbci.env$importedmat))
+  if (is.null(rbci.env$opts$preview.head) || 
+        rbci.env$opts$preview.head == TRUE) {
+    return(capture.output(str(rbci.env$importedmat)))
   }
-  else if (options$view.head) {
+  else if (opts$preview.head) {
     # check for other view options to properly format
     
     # build preview from options+data

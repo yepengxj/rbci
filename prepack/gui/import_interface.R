@@ -17,18 +17,18 @@ on_importcsvpreviewbutton_clicked <- function(action) {
   
 }
 
-on_importmatpreviewbutton_clicked <- function(action) {
+on_importmatfilechoosebutton_file_activated <- function(action) {
   previewselector <- builder$getObject("importmatfilechoosebutton")
   
-  previewfile <- previewselector$GetUri()
+  previewfile <- previewselector$GetFilename()
   # get some options also
   
   # here we need to go to the backend to process the MAT
-  previewtext <- import.mat.preview(previewfile)
+  previewtext <- rbci.preview.mat(previewfile)
   
   # set text if preview load succeeded
   previewbuf <- builder$getObject("datapreviewtext")
-  previewbuf$text <- previewtext
+  previewbuf$text <- paste(previewtext,collapse="\n")
   
   # update options based on data characteristics (available cols, etc.)
 }
