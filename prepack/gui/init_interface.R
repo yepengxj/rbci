@@ -36,4 +36,4 @@ window <- builder$getObject("initwindow")
 window$showAll()
 
 # Initialize backend processing
-# source("../scripts/init_backend.R")
+source("./backend/init_backend.R")
