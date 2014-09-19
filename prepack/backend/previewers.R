@@ -27,4 +27,9 @@ rbci.preview.mat <- function(filename,
   if (!options$view.head) {
     return(str(rbci.env$importedmat))
   }
+  else if (options$view.head) {
+    # check for other view options to properly format
+    
+    # build preview from options+data
+  }
 }
