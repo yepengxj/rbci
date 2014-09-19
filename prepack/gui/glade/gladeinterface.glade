@@ -460,49 +460,51 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <object class="GtkFrame" id="importmatframe1">
+                      <object class="GtkFrame" id="importmatframe">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label_xalign">0</property>
                         <property name="shadow_type">none</property>
                         <child>
-                          <object class="GtkAlignment" id="importmatframealign1">
+                          <object class="GtkAlignment" id="importmatframealign">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="left_padding">12</property>
                             <child>
-                              <object class="GtkVBox" id="importmatoptvbox1">
+                              <object class="GtkVBox" id="importmatoptvbox">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="GtkFrame" id="importmatfileframe1">
+                                  <object class="GtkFrame" id="importmatfileframe">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <property name="label_xalign">0</property>
                                     <property name="shadow_type">none</property>
                                     <child>
-                                      <object class="GtkAlignment" id="importcsvfileframealign1">
+                                      <object class="GtkAlignment" id="importmatfileframealign">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
                                         <property name="left_padding">12</property>
                                         <child>
-                                          <object class="GtkVButtonBox" id="importcsvfilevbuttonbox1">
+                                          <object class="GtkVButtonBox" id="importmatfilevbuttonbox">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="layout_style">spread</property>
                                             <child>
-                                              <object class="GtkFileChooserButton" id="importcsvfilechoosebutton1">
+                                              <object class="GtkFileChooserButton" id="importmatfilechoosebutton">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
+                                                <property name="create_folders">False</property>
+                                                <property name="width_chars">20</property>
                                               </object>
                                               <packing>
-                                                <property name="expand">False</property>
+                                                <property name="expand">True</property>
                                                 <property name="fill">False</property>
                                                 <property name="position">0</property>
                                               </packing>
                                             </child>
                                             <child>
-                                              <object class="GtkButton" id="importcsvpreviewbutton1">
+                                              <object class="GtkButton" id="importmatpreviewbutton">
                                                 <property name="label" translatable="yes">Preview</property>
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
@@ -520,7 +522,7 @@
                                       </object>
                                     </child>
                                     <child type="label">
-                                      <object class="GtkLabel" id="importcsvfileframelabel1">
+                                      <object class="GtkLabel" id="importmatfileframelabel">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
                                         <property name="label" translatable="yes">File path</property>
@@ -535,22 +537,22 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkVBox" id="matimportoptsframe1">
+                                  <object class="GtkVBox" id="matimportoptsframe">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <child>
-                                      <object class="GtkFrame" id="matimportvaroptsframe1">
+                                      <object class="GtkFrame" id="matimportvaroptsframe">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
                                         <property name="label_xalign">0</property>
                                         <property name="shadow_type">etched-out</property>
                                         <child>
-                                          <object class="GtkAlignment" id="matimportvaroptslabel1">
+                                          <object class="GtkAlignment" id="matimportvaroptslabel">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="left_padding">12</property>
                                             <child>
-                                              <object class="GtkVBox" id="matimportoptsvbox1">
+                                              <object class="GtkVBox" id="matimportoptsvbox">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
                                                 <child>
@@ -653,7 +655,7 @@
                                                   </packing>
                                                 </child>
                                                 <child>
-                                                  <object class="GtkTreeView" id="csvimportoptslistview1">
+                                                  <object class="GtkTreeView" id="matimportoptslistview">
                                                     <property name="visible">True</property>
                                                     <property name="can_focus">True</property>
                                                     <property name="model">importoptslist</property>
@@ -669,7 +671,7 @@
                                           </object>
                                         </child>
                                         <child type="label">
-                                          <object class="GtkLabel" id="matimportvaroptslabe1">
+                                          <object class="GtkLabel" id="matimportvaroptslabe">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="label" translatable="yes">Options</property>
@@ -684,7 +686,7 @@
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkFrame" id="matimportloadsaveframe1">
+                                      <object class="GtkFrame" id="matimportloadsaveframe">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
                                         <property name="label_xalign">0</property>
@@ -758,7 +760,7 @@
                           </object>
                         </child>
                         <child type="label">
-                          <object class="GtkLabel" id="importmatframelabel1">
+                          <object class="GtkLabel" id="importmatframelabel">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="label" translatable="yes">Import Options</property>
@@ -772,7 +774,7 @@
                         <property name="position">0</property>
                       </packing>
                     </child>
-										<child>
+                    <child>
                       <object class="GtkTextView" id="mattext">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
