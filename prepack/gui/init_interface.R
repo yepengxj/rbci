@@ -15,7 +15,7 @@ on_quitbutton_clicked <- function(action) {
 on_importbutton_clicked <- function(action) {
   importwindow <- builder$getObject("importwindow")
   # Initialize import frontend code
-  # source("./import_interface.R")
+  source("./gui/import_interface.R")
   importwindow$showAll()
 }
 

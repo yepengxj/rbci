@@ -1,3 +1,5 @@
+source("./backend/previewers.R")
+
 ##### import window button actions #####
 
 on_importcsvpreviewbutton_clicked <- function(action) {
@@ -18,10 +20,10 @@ on_importcsvpreviewbutton_clicked <- function(action) {
 on_importmatpreviewbutton_clicked <- function(action) {
   previewselector <- builder$getObject("importmatfilechoosebutton")
   
-  previewfile <- previewselector$get_uri()
+  previewfile <- previewselector$GetUri()
   # get some options also
   
-  # here we need to go to the backend to process the CSV
+  # here we need to go to the backend to process the MAT
   previewtext <- import.mat.preview(previewfile)
   
   # set text if preview load succeeded
