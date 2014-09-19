@@ -496,6 +496,7 @@
                                                 <property name="can_focus">False</property>
                                                 <property name="create_folders">False</property>
                                                 <property name="width_chars">20</property>
+                                                <signal name="file-set" handler="on_importmatfilechoosebutton_file_set" swapped="no"/>
                                               </object>
                                               <packing>
                                                 <property name="expand">True</property>
@@ -510,6 +511,7 @@
                                                 <property name="can_focus">True</property>
                                                 <property name="receives_default">True</property>
                                                 <property name="use_action_appearance">False</property>
+                                                <signal name="clicked" handler="on_importmatpreviewbutton_clicked" swapped="no"/>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>

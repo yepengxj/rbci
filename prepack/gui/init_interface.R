@@ -14,8 +14,6 @@ on_quitbutton_clicked <- function(action) {
 
 on_importbutton_clicked <- function(action) {
   importwindow <- builder$getObject("importwindow")
-  # Initialize import frontend code
-  source("./gui/import_interface.R")
   importwindow$showAll()
 }
 
@@ -24,16 +22,18 @@ on_explorebutton_clicked <- function(action) {
   explorewindow$showAll()
 }
 
+# Initialize import frontend code
+source("./gui/import_interface.R")
+# Initialize backend processing
+source("./backend/init_backend.R")
+
 # bring up GTKBuilder GUI
 builder <- gtkBuilder()
-filename <- "./gui/glade/gladeinterface.glade"
-res <- builder$addFromFile(filename)
+guilayout <- "./gui/glade/gladeinterface.glade"
+res <- builder$addFromFile(guilayout)
 if (!is.null(res$error))
   stop("ERROR: ", res$error$message)
 builder$connectSignals(NULL)
 window <- builder$getObject("initwindow")
 
 window$showAll()
-
-# Initialize backend processing
-source("./backend/init_backend.R")
