@@ -1,5 +1,7 @@
+##### TODO breakout these dependencies to correct spot in package
 library(RGtk2)
 library(cairoDevice)
+library(R.matlab)
 
 ##### main window button actions #####
 on_quitbutton_clicked <- function(action) {
