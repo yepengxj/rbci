@@ -2,6 +2,8 @@ library(gWidgets)
 library(gWidgetsRGtk2)
 options("guiToolkit"="RGtk2")
 
+source("./backend/init_backend.R")
+
 init_win <- gwindow("R BCI",
                     width = 200)
 
@@ -69,5 +71,5 @@ quit_btn <- gbutton(
   container = init_btn_group,
   handler   = function(h, ...)
   {
-    # TODO!
+    # TODO close all windows
   })
