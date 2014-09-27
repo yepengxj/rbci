@@ -2,8 +2,10 @@ source("./backend/previewers.R")
 source("./backend/importers.R")
 library(R.matlab)
 
-window.width <- 800
-window.height <- 400
+window.width <- 1000
+window.height <- 600
+
+preview.rowlen <- 20
 
 import_win <- gwindow("Data Import",
                       width = window.width,
@@ -25,7 +27,7 @@ bci2000_tab <- ggroup(container = import_tabs,
                      label = "BCI2000")
 
 matlab_pane <- gpanedgroup(horizontal = TRUE,
-                           expand = FALSE,
+                           expand = TRUE,
                            fill = TRUE,
                            container = matlab_tab)
 
@@ -46,30 +48,84 @@ matlab_preview_button <- gbutton(text = "Preview",
                                  container = matlab_file_frame,
                                  handler   = function(h, ...) {
                                    rbci.env$importfile <- 
-                                     readMat(rbci.env$previewfile)
+                                     readMat(rbci.env$previewfile,
+                                             maxLength = 100000)
                                    
                                    # init preview frame
                                    matlab_preview_frame <- 
-                                     gtable(items = as.data.frame(rbci.env$importfile)[1:10,],
-                                                                  container = matlab_pane)
+                                     gtable(items = 
+                                              as.data.frame(rbci.env$importfile)[seq_len(preview.rowlen),],
+                                            container = matlab_pane)
                                    
                                    # column selectors
-                                   columnboxes <- c()
-                                   for (this.col in colnames(as.data.frame(rbci.env$importfile))) {
-                                     columnboxes <- c(columnboxes,
-                                                      gcheckbox(this.col,
-                                                                checked = TRUE,
-                                                                expand = FALSE,
-                                                                container = matlab_option_frame))
+                                   rbci.env$columnboxes <- c()
+                                   for (this.col in 
+                                        colnames(as.data.frame(rbci.env$importfile))) {
+                                     rbci.env$columnboxes <- 
+                                       c(rbci.env$columnboxes,
+                                         gcheckbox(this.col,
+                                                   checked = FALSE,
+                                                   expand = FALSE,
+                                                   container = matlab_option_group))
                                    }
                                  })
 
-matlab_option_frame <- gframe(text = "Import options",
+# matlab_preview_type <- gcombobox(c("Columnar","Structural","Raw"),
+#                                  container = matlab_option_group)
+
+matlab_option_frame <- gframe(text = "Import Columns",
                               horizontal = FALSE,
                               container = matlab_file_frame,
-                              expand = FALSE,
-                              use.scrollwindow = TRUE)
+                              expand = TRUE)
+matlab_option_group <- ggroup(use.scrollwindow = TRUE,
+                              horizontal = FALSE,
+                              expand = TRUE, 
+                              container=matlab_option_frame)
 
 matlab_export_frame <- gframe(text = "Export/Load",
-                              horizontal = FALSE,
+                              horizontal = TRUE,
+                              expand = FALSE,
                               container = matlab_file_frame)
+
+matlab_export_button <- gbutton(text = "Export to .RData",
+                              type = "save",
+                              container = matlab_export_frame,
+                              handler = function(h,...) {
+                                # save file
+                                # get enabled columns
+                                colsel <- sapply(rbci.env$columnboxes,svalue)
+                                
+                                # read full-length file
+                                rbci.env$importfile <- 
+                                  readMat(rbci.env$previewfile)
+                                
+                                eegdata <- as.data.table(as.data.frame(
+                                  rbci.env$importfile)[,which(colsel==TRUE)])
+                                
+                                save(eegdata,
+                                  file = gfile(
+                                    filter = list("RData"= list(patterns = c("*.RData"))),
+                                    type = "save"))
+                              })
+
+matlab_load_button <- gbutton(text = "Import into interface",
+                              container = matlab_export_frame,
+                              handler = function(h,...) {
+                                # rename, insert into interface
+                                
+                                # get enabled columns
+                                colsel <- sapply(rbci.env$columnboxes,svalue)
+                                
+                                # read full-length file
+                                rbci.env$importfile <- 
+                                  readMat(rbci.env$previewfile)
+                                
+                                # set imported data to active import
+                                rbci.env$activefile <- 
+                                  as.data.table(as.data.frame(
+                                    rbci.env$importfile)[,which(colsel==TRUE)])
+                                
+                                galert("Import succeeded.",
+                                       title = "Status",
+                                       delay = 2)
+                              })
