@@ -44,34 +44,60 @@ addHandlerChanged(matlab_file_button,
                     rbci.env$previewfile <- svalue(matlab_file_button)
                  })
 
-matlab_preview_button <- gbutton(text = "Preview",
-                                 container = matlab_file_frame,
-                                 handler   = function(h, ...) {
-                                   rbci.env$importfile <- 
-                                     readMat(rbci.env$previewfile,
-                                             maxLength = 100000)
-                                   
-                                   # init preview frame
-                                   matlab_preview_frame <- 
-                                     gtable(items = 
-                                              as.data.frame(rbci.env$importfile)[seq_len(preview.rowlen),],
-                                            container = matlab_pane)
-                                   
-                                   # column selectors
-                                   rbci.env$columnboxes <- c()
-                                   for (this.col in 
-                                        colnames(as.data.frame(rbci.env$importfile))) {
-                                     rbci.env$columnboxes <- 
-                                       c(rbci.env$columnboxes,
-                                         gcheckbox(this.col,
-                                                   checked = FALSE,
-                                                   expand = FALSE,
-                                                   container = matlab_option_group))
-                                   }
-                                 })
+matlab_preview_button <- 
+  gbutton(text = "Preview",
+          container = matlab_file_frame,
+          handler   = function(h, ...) {
+            rbci.env$importfile <- readMat(rbci.env$previewfile,
+                                           maxLength = 100000)
+            
+            # react to preview type setting
+            
+            switch(svalue(matlab_preview_type),
+                   Columnar = {
+                     
+                     # init tabular preview frame
+                     matlab_preview_frame <- 
+                       gtable(items = 
+                                as.data.frame(
+                                  rbci.env$importfile)[seq_len(preview.rowlen),],
+                              container = matlab_pane)
+                     
+                     # column selectors
+                     rbci.env$columnboxes <- c()
+                     for (this.col in 
+                          colnames(as.data.frame(rbci.env$importfile))) {
+                       rbci.env$columnboxes <- 
+                         c(rbci.env$columnboxes,
+                           gcheckbox(this.col,
+                                     checked = FALSE,
+                                     expand = FALSE,
+                                     container = matlab_option_group))
+                     }
+                   },
+                   Structural = {
+                     matlab_preview_frame <- 
+                       gtext(text = paste(capture.output(str(
+                         rbci.env$importfile)),"\n"),
+                             container = matlab_pane)
+                   },
+                   Raw = {
+                     matlab_preview_frame <-
+                       gtext(text = paste(capture.output(
+                         print(sapply(rbci.env$importfile,head,n=2))),"\n"),
+                             container = matlab_pane)
+                   })
+            })
 
-# matlab_preview_type <- gcombobox(c("Columnar","Structural","Raw"),
-#                                  container = matlab_option_group)
+matlab_preview_optframe <- gframe(text = "Preview Type",
+                                  container = matlab_file_frame,
+                                  horizontal = TRUE,
+                                  expand = FALSE)
+matlab_preview_type <- gdroplist(items = c("Columnar","Structural","Raw"),
+                                 container = matlab_preview_optframe,
+                                 fill = "x",
+                                 expand = TRUE)
+# matlab_preview_rownum <- 
 
 matlab_option_frame <- gframe(text = "Import Columns",
                               horizontal = FALSE,
