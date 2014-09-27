@@ -97,7 +97,8 @@ matlab_preview_type <- gdroplist(items = c("Columnar","Structural","Raw"),
                                  container = matlab_preview_optframe,
                                  fill = "x",
                                  expand = TRUE)
-# matlab_preview_rownum <- 
+matlab_preview_rownum <- gspinbutton(from = 0, to = 20, by = 1,
+                                     container = matlab_preview_optframe)
 
 matlab_option_frame <- gframe(text = "Import Columns",
                               horizontal = FALSE,
