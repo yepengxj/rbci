@@ -45,7 +45,7 @@ csv_preview_button <-
                      rbci.env$columnboxes <- c()
                      for (this.col in 
                           colnames(as.data.frame(rbci.env$importfile))) {
-                       columnboxes <<- 
+                       rbci.env$columnboxes <<- 
                          c(rbci.env$columnboxes,
                            gcheckbox(this.col,
                                      checked = FALSE,
@@ -123,7 +123,7 @@ csv_load_button <- gbutton(text = "Import into interface",
                                 
                                 # read full-length file
                                 rbci.env$importfile <- 
-                                  readMat(rbci.env$previewfile)
+                                  read.table(rbci.env$previewfile)
                                 
                                 # set imported data to active import
                                 rbci.env$activefile <- 

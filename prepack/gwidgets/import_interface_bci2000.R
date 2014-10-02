@@ -45,7 +45,7 @@ bci_preview_button <-
                      rbci.env$columnboxes <- c()
                      for (this.col in 
                           colnames(as.data.frame(rbci.env$importfile))) {
-                       columnboxes <<- 
+                       rbci.env$columnboxes <<- 
                          c(rbci.env$columnboxes,
                            gcheckbox(this.col,
                                      checked = FALSE,
