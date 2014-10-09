@@ -42,6 +42,7 @@ bci_preview_button <-
                               container = bci_pane)
                      
                      # column selectors
+                     # TODO clear previous columns
                      rbci.env$columnboxes <- c()
                      for (this.col in 
                           colnames(as.data.frame(rbci.env$importfile))) {
@@ -113,26 +114,31 @@ bci_export_button <- gbutton(text = "Export to .RData",
                                       type = "save"))
                              })
 
-bci_load_button <- gbutton(text = "Import into interface",
-                           container = bci_export_frame,
-                           handler = function(h,...) {
-                             # rename, insert into interface
-                             
-                             # get enabled columns
-                             colsel <- sapply(rbci.env$columnboxes,svalue)
-                             
-                             # read full-length file
-                             rbci.env$importfile <- 
-                               readMat(rbci.env$previewfile)
-                             
-                             # set imported data to active import
-                             rbci.env$activefile <- 
-                               as.data.table(as.data.frame(
-                                 rbci.env$importfile)[,which(colsel==TRUE)])
-                             
-                             # TODO cleanup importfile
-                             
-                             galert("Import succeeded.",
-                                    title = "Status",
-                                    delay = 2)
-                           })
+bci_load_button <- 
+  gbutton(text = "Import into interface",
+          container = bci_export_frame,
+          handler = function(h,...) {
+            # rename, insert into interface
+            
+            # get enabled columns
+            colsel <- sapply(rbci.env$columnboxes,svalue)
+            
+            # read full-length file
+            rbci.env$importfile <- 
+              readMat(rbci.env$previewfile)
+            
+            # add imported data to list
+            rbci.env$importlist[[
+              basename(file_path_sans_ext(svalue(bci_file_button)))]] <-
+              as.data.table(as.data.frame(
+                rbci.env$importfile)[,which(colsel==TRUE)])
+            # in case of duplicates, mark explicitly
+            names(rbci.env$importlist) <- 
+              make.unique(names(rbci.env$importlist))
+            
+            # TODO cleanup importfile
+            
+            galert("Import succeeded.",
+                   title = "Status",
+                   delay = 2)
+          })

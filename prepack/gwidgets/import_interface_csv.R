@@ -113,26 +113,31 @@ csv_export_button <- gbutton(text = "Export to .RData",
                                          type = "save"))
                                 })
 
-csv_load_button <- gbutton(text = "Import into interface",
-                              container = csv_export_frame,
-                              handler = function(h,...) {
-                                # rename, insert into interface
-                                
-                                # get enabled columns
-                                colsel <- sapply(rbci.env$columnboxes,svalue)
-                                
-                                # read full-length file
-                                rbci.env$importfile <- 
-                                  read.table(rbci.env$previewfile)
-                                
-                                # set imported data to active import
-                                rbci.env$activefile <- 
-                                  as.data.table(as.data.frame(
-                                    rbci.env$importfile)[,which(colsel==TRUE)])
-                                
-                                # TODO cleanup importfile
-                                
-                                galert("Import succeeded.",
-                                       title = "Status",
-                                       delay = 2)
-                              })
+csv_load_button <- 
+  gbutton(text = "Import into interface",
+          container = csv_export_frame,
+          handler = function(h,...) {
+            # rename, insert into interface
+            
+            # get enabled columns
+            colsel <- sapply(rbci.env$columnboxes,svalue)
+            
+            # read full-length file
+            rbci.env$importfile <- 
+              read.table(rbci.env$previewfile)
+            
+            # add imported data to list
+            rbci.env$importlist[[
+              basename(file_path_sans_ext(svalue(csv_file_button)))]] <-
+              as.data.table(as.data.frame(
+                rbci.env$importfile)[,which(colsel==TRUE)])
+            # in case of duplicates, mark explicitly
+            names(rbci.env$importlist) <- 
+              make.unique(names(rbci.env$importlist))
+            
+            # TODO cleanup importfile
+            
+            galert("Import succeeded.",
+                   title = "Status",
+                   delay = 2)
+          })
