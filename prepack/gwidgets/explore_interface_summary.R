@@ -3,19 +3,26 @@ summary_pane <- gpanedgroup(horizontal = TRUE,
                             fill = TRUE,
                             container = summary_tab)
 
-summary_varlist_group <- ggroup(use.scrollwindow = TRUE,
-                                horizontal = FALSE,
-                                expand = TRUE,
-                                container = summary_pane)
+
 summary_varlist_frame <- gframe(text = "Data Columns",
                                 horizontal = FALSE,
-                                container = summary_varlist_group,
-                                expand = TRUE)
-summary_varlist_btn <- gbutton(text = "Summarize",
-                               container = summary_varlist_group,
-                               handler = function(h,...) {
-                               })
+                                container = summary_pane,
+                                expand = TRUE,
+                                width = 300)
+# populate varlist
+summary_varlist <- gcheckboxgroup(
+  names(rbci.env$importlist[[svalue(explore_var_filesel, index=TRUE)]]),
+  container = summary_varlist_frame,
+  use.table = TRUE,
+  expand = TRUE)
+
+summary_summarize_btn <- gbutton(text = "Summarize",
+                                 container = summary_varlist_frame,
+                                 handler = function(h,...) {
+                                 })
 
 summary_output_frame <- gtext(text = "Summary output",
+                              width = window.width*0.4,
                               container = summary_pane)
 
+svalue(summary_pane) <- 0.2
