@@ -22,12 +22,19 @@ filter_var_frame <- gframe(text = "Data Sets",
                             horizontal = FALSE,
                             container = filter_var_group,
                             expand = TRUE)
+# populate data set selector
+# TODO add some kind of handler to refresh subitems in tables
+filter_var_filesel <- gradio(names(rbci.env$importlist),
+                              container = filter_var_frame)
+
 
 filter_task_book <- gnotebook(tab.pos = 3,
                                container = filter_pane)
 
-filter_tab <- gframe(label = "Apply Filter",
-                     container = filter_task_book)
+filter_simple_tab <- gframe(label = "Simple Filtering",
+                            container = filter_task_book)
 
-summary_tab <- gframe(label = "Mean Spectra",
-                      container = filter_task_book)
+source("./gwidgets/filter_interface_simple.R")
+
+# set some widths (doesn't work if earlier)
+svalue(filter_pane) <- 0.2

@@ -34,12 +34,12 @@ stream_btn <- gbutton(
     # TODO!
   })
 
-stream_btn <- gbutton(
+filter_btn <- gbutton(
   text      = "Filter Data",
   container = init_btn_group,
   handler   = function(h, ...)
   {
-    # TODO!
+    source("./gwidgets/filter_interface.R")
   })
 
 tool_btn <- gbutton(

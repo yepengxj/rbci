@@ -42,7 +42,7 @@ means_tab <- gframe(label = "Grand Means",
 hist_tab <- gframe(label = "Histogram",
                          container = explore_task_book)
 
-
+# Load subitems (into tabs)
 source("./gwidgets/explore_interface_summary.R")
 source("./gwidgets/explore_interface_means.R")
 source("./gwidgets/explore_interface_hist.R")
