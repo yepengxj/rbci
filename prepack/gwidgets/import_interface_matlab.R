@@ -57,13 +57,15 @@ matlab_preview_button <-
                      matlab_preview_frame <<- 
                        gtext(text = paste(capture.output(str(
                          rbci.env$importfile)),"\n"),
-                         container = matlab_pane)
+                         container = matlab_pane,
+                         font.attr=c(family="monospace"))
                    },
                    Raw = {
                      matlab_preview_frame <<-
                        gtext(text = paste(capture.output(
                          print(sapply(rbci.env$importfile,head,n=2))),"\n"),
-                         container = matlab_pane)
+                         container = matlab_pane,
+                         font.attr=c(family="monospace"))
                    })
           })
 

@@ -57,13 +57,15 @@ csv_preview_button <-
                      csv_preview_frame <<- 
                        gtext(text = paste(capture.output(str(
                          rbci.env$importfile)),"\n"),
-                         container = csv_pane)
+                         container = csv_pane,
+                         font.attr=c(family="monospace"))
                    },
                    Raw = {
                      csv_preview_frame <<-
                        gtext(text = paste(capture.output(
                          print(sapply(rbci.env$importfile,head,n=2))),"\n"),
-                         container = csv_pane)
+                         container = csv_pane,
+                         font.attr=c(family="monospace"))
                    })
           })
 

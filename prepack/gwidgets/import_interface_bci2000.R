@@ -58,13 +58,15 @@ bci_preview_button <-
                      bci_preview_frame <<- 
                        gtext(text = paste(capture.output(str(
                          rbci.env$importfile)),"\n"),
-                         container = bci_pane)
+                         container = bci_pane,
+                         font.attr=c(family="monospace"))
                    },
                    Raw = {
                      bci_preview_frame <<-
                        gtext(text = paste(capture.output(
                          print(sapply(rbci.env$importfile,head,n=2))),"\n"),
-                         container = bci_pane)
+                         container = bci_pane,
+                         font.attr=c(family="monospace"))
                    })
           })
 
