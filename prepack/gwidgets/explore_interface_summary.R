@@ -16,12 +16,18 @@ summary_varlist <- gcheckboxgroup(
   use.table = TRUE,
   expand = TRUE)
 
-summary_summarize_btn <- gbutton(text = "Summarize",
-                                 container = summary_varlist_frame,
-                                 handler = function(h,...) {
-                                 })
+summary_summarize_btn <- 
+  gbutton(text = "Summarize",
+          container = summary_varlist_frame,
+          handler = function(h,...) {
+            svalue(summary_output_frame) <- 
+              capture.output(summary(rbci.env$importlist[[
+                svalue(explore_var_filesel,
+                       index=TRUE)]][,svalue(summary_varlist),with=FALSE]))
+          })
 
 summary_output_frame <- gtext(text = "Summary output",
+                              font.attr=c(family="monospace"),
                               width = window.width*0.4,
                               container = summary_pane)
 
