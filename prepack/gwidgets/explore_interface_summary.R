@@ -31,4 +31,4 @@ summary_output_frame <- gtext(text = "Summary output",
                               width = window.width*0.4,
                               container = summary_pane)
 
-svalue(summary_pane) <- 0.2
+svalue(summary_pane) <- 0.25

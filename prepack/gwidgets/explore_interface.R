@@ -39,13 +39,13 @@ summary_tab <- gframe(label = "Summary",
 means_tab <- gframe(label = "Grand Means",
                          container = explore_task_book)
 
-histogram_tab <- gframe(label = "Histogram",
+hist_tab <- gframe(label = "Histogram",
                          container = explore_task_book)
 
 
 source("./gwidgets/explore_interface_summary.R")
 source("./gwidgets/explore_interface_means.R")
-# source("./gwidgets/explore_interface_histogram.R")
+source("./gwidgets/explore_interface_hist.R")
 
 # set some widths (doesn't work if earlier)
 svalue(explore_pane) <- 0.2
