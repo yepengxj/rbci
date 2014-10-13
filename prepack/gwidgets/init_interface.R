@@ -55,7 +55,7 @@ transform_btn <- gbutton(
   container = init_btn_group,
   handler   = function(h, ...)
   {
-    # TODO!
+    source("./gwidgets/trans_interface.R")
   })
 
 classify_btn <- gbutton(
@@ -79,5 +79,5 @@ quit_btn <- gbutton(
   container = init_btn_group,
   handler   = function(h, ...)
   {
-    # TODO close all windows
+    dispose(init_win)
   })
