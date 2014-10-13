@@ -100,6 +100,8 @@ filter_apply_btn <- gbutton("Apply Filter Data",
 filter_save_btn <- gbutton("Save Filtered Data",
                            container = filter_output_frame)
 # refresh dataset frame on run
+# alert complete (progress bar?)
+
 
 # plot pane
 

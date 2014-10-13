@@ -47,7 +47,7 @@ tool_btn <- gbutton(
   container = init_btn_group,
   handler   = function(h, ...)
   {
-    # TODO!
+    source("./gwidgets/tool_interface.R")
   })
 
 transform_btn <- gbutton(
