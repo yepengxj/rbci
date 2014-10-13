@@ -108,6 +108,8 @@ tool_run_button <- gbutton(text = "Run Script",
                              # print error in console if not (automatic?)
                              # notify w/ alert
                            })
+tool_input_name <- gdroplist(names(rbci.env$importlist),
+                             container = tool_edit_runframe)
 tool_output_name <- gedit(text = "Output.Variable",
                           container = tool_edit_runframe,
                           width = 25)
