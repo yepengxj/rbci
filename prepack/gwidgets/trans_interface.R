@@ -2,7 +2,7 @@ window.width <- 1000
 window.height <- 600
 
 
-trans_win <- gwindow("trans Data",
+trans_win <- gwindow("Transform/Cluster Data",
                       width = window.width,
                       height = window.height)
 
@@ -36,10 +36,10 @@ trans_pca_tab <- gframe(label = "PCA",
 trans_csp_tab <- gframe(label = "CSP",
                         container = trans_task_book)
 
-trans_csp_tab <- gframe(label = "k-means",
+trans_kmeans_tab <- gframe(label = "k-means",
                         container = trans_task_book)
 
-# source("./gwidgets/trans_interface_pca.R")
+source("./gwidgets/trans_interface_pca.R")
 # source("./gwidgets/trans_interface_csp.R")
 # source("./gwidgets/trans_interface_kmeans.R")
 
