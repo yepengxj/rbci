@@ -220,4 +220,5 @@ pca_subspace_btn <- gbutton("Plot 2D Subspaces",
 pca_plot_frame <- ggraphics(container = pca_action_pane)
 
 # set some widths (doesn't work if earlier)
-svalue(pca_param_frame) <- 0.2
+svalue(pca_pane) <- 0.2
+svalue(pca_action_pane) <- 0.2
