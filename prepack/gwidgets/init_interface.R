@@ -63,7 +63,7 @@ classify_btn <- gbutton(
   container = init_btn_group,
   handler   = function(h, ...)
   {
-    # TODO!
+    source("./gwidgets/class_interface.R")
   })
 
 report_btn <- gbutton(
