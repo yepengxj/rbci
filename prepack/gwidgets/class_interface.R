@@ -33,14 +33,14 @@ class_task_book <- gnotebook(tab.pos = 3,
 
 
 
-text_tab <- gframe(label = "Text Info",
-                      container = class_task_book)
+text_tab <- gframe(label = "SDA",
+                   container = class_task_book)
 
-plot_tab <- gframe(label = "Summary Plot",
-                         container = class_task_book)
+plot_tab <- gframe(label = "SVM",
+                   container = class_task_book)
 
-# hist_tab <- gframe(label = "Histogram",
-#                          container = class_task_book)
+hist_tab <- gframe(label = "Naive Bayes",
+                   container = class_task_book)
 
 # Load subitems (into tabs)
 source("./gwidgets/class_interface_text.R")
