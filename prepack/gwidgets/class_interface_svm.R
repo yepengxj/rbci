@@ -221,17 +221,18 @@ svm_save_btn <- gfilebrowse(text = "Save Model",
                               
                               ## below to backend
                               # save file
-                              
                               # update list to include
                               
                             })
 
 
 # plot variances
-svm_variance_btn <- gbutton("Print Table",
+svm_table_btn <- gbutton("Print Table",
                             container = svm_output_frame)
-svm_subspace_btn <- gbutton("Print Model",
+svm_model_btn <- gbutton("Print Model",
                             container = svm_output_frame)
+svm_plot_btn <- gbutton("Plot Model (Overview)",
+                         container = svm_output_frame)
 
 # plot pane
 

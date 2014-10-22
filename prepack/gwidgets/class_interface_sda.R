@@ -105,11 +105,12 @@ sda_save_btn <- gfilebrowse(text = "Save Model",
 
 
 # plot variances
-sda_variance_btn <- gbutton("Print Table",
+sda_table_btn <- gbutton("Print Table",
                             container = sda_output_frame)
-sda_subspace_btn <- gbutton("Print Model",
+sda_model_btn <- gbutton("Print Model",
                             container = sda_output_frame)
-
+sda_plot_btn <- gbutton("Plot Model (Overview)",
+                        container = sda_output_frame)
 
 
 sda_output_frame <- gtext(text = "sda output",
