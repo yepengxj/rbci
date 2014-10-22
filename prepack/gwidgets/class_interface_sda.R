@@ -82,9 +82,13 @@ sda_apply_btn <- gbutton("Run",
                          container = sda_output_frame)
 # refresh dataset frame on run
 # alert complete (progress bar?)
-tool_output_name <- gedit(text = "Output.Variable",
+model_output_name <- gedit(text = "Model.Output.Var",
                           container = sda_output_frame,
                           width = 25)
+result_output_name <- gedit(text = "Result.Output.Var",
+                           container = sda_output_frame,
+                           width = 25)
+
 
 # save sda
 sda_save_btn <- gfilebrowse(text = "Save Model",
