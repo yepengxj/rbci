@@ -34,15 +34,15 @@ class_task_book <- gnotebook(tab.pos = 3,
 sda_tab <- gframe(label = "SDA",
                    container = class_task_book)
 
-plot_tab <- gframe(label = "SVM",
+svm_tab <- gframe(label = "SVM",
                    container = class_task_book)
 
-hist_tab <- gframe(label = "Naive Bayes",
+bayes_tab <- gframe(label = "Naive Bayes",
                    container = class_task_book)
 
 # Load subitems (into tabs)
 source("./gwidgets/class_interface_sda.R")
-# source("./gwidgets/class_interface_means.R")
+source("./gwidgets/class_interface_svm.R")
 # source("./gwidgets/class_interface_hist.R")
 
 # set some widths (doesn't work if earlier)
