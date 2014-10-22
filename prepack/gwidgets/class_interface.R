@@ -31,9 +31,7 @@ class_var_filesel <- gradio(names(rbci.env$importlist),
 class_task_book <- gnotebook(tab.pos = 3,
                                container = class_pane)
 
-
-
-text_tab <- gframe(label = "SDA",
+sda_tab <- gframe(label = "SDA",
                    container = class_task_book)
 
 plot_tab <- gframe(label = "SVM",
@@ -43,7 +41,7 @@ hist_tab <- gframe(label = "Naive Bayes",
                    container = class_task_book)
 
 # Load subitems (into tabs)
-source("./gwidgets/class_interface_text.R")
+source("./gwidgets/class_interface_sda.R")
 # source("./gwidgets/class_interface_means.R")
 # source("./gwidgets/class_interface_hist.R")
 
