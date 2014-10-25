@@ -71,7 +71,7 @@ report_btn <- gbutton(
   container = init_btn_group,
   handler   = function(h, ...)
   {
-    # TODO!
+    source("./gwidgets/report_interface.R")
   })
 
 quit_btn <- gbutton(
