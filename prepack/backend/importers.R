@@ -73,3 +73,7 @@ rbci.import.matlab <- function(filename,
   keep(erp,project.root,sample.rate, sure=TRUE)
   gc()
 }
+
+matlab_type2_import <- function(invar, opts, ...) {
+  
+}

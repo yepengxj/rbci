@@ -8,6 +8,7 @@ rbci.env$transformlist <- list()
 library(tools)
 library(parallel)
 library(foreach)
+library(doMC)
 
 library(R.matlab) # for importing matfiles
 
@@ -17,3 +18,6 @@ library(gdata) # for cleanups: keep()
 library(data.table)
 
 library(ggplot2)
+
+# misc utility functions
+source("./backend/misc.R")
