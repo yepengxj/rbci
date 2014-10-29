@@ -74,6 +74,14 @@ report_btn <- gbutton(
     source("./gwidgets/report_interface.R")
   })
 
+opts_btn <- gbutton(
+  text      = "Parallelization Options",
+  container = init_btn_group,
+  handler   = function(h, ...)
+  {
+    source("./gwidgets/opts_interface.R")
+  })
+
 quit_btn <- gbutton(
   text      = "Quit",
   container = init_btn_group,

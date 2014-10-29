@@ -1,4 +1,4 @@
-##### TODO breakout these dependencies to correct spot in package
+##### TODO breakout these dependencies to correct location in package
 library(RGtk2)
 library(cairoDevice)
 library(R.matlab)
