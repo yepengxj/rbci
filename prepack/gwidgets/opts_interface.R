@@ -1,5 +1,5 @@
-window.width <- 1000
-window.height <- 600
+window.width <- 250
+window.height <- 400
 
 preview.rowlen <- 20
 
@@ -7,13 +7,17 @@ opts_win <- gwindow("Parallelization Options",
                     width = window.width,
                     height = window.height)
 
-parallel_label <- glabel("Options")
+parallel_frame <- gframe(container = opts_win,
+                         horizontal = FALSE)
+
+parallel_label <- glabel("Options",
+                         container = parallel_frame)
 parallelbackend_type_list <- c("multicore")
 
 parallelbackend_type_menu <- 
-  gdroplist(filter_type_list,
+  gdroplist(parallelbackend_type_list,
             text = "Backend Type",
-            container = filter_param_frame,
+            container = parallel_frame,
             handler = function (h,...) {
               # enable or disable param GUI opts on type change
               
@@ -34,14 +38,23 @@ parallelbackend_type_menu <-
                       })
             })
 
-backendopts_layout <- glayout(container = opts_win)
+backendopts_layout <- glayout(container = parallel_frame)
 backendopts_layout[1,1] <- "# of Cores"
-backendopts_layout[2,1] <- gspinbutton(from = 1, to = detectCores(), by = 1)
+backendopts_layout[2,1] <- gslider(from = 1, to = detectCores(), by = 1,
+                                   handler = function(h,...){
+                                     # set number of cores
+                                     rbci.env$numcores <- svalue(h$obj)
+                                  })
 
-# stop band end
 backendopts_layout[1,2] <- ""
 backendopts_layout[2,2] <- gspinbutton(from = 0, to = 1, by = 0.01)
 
-# pass band start
 backendopts_layout[3,1] <- ""
 backendopts_layout[4,1] <- gspinbutton(from = 0, to = 1, by = 0.01)
+
+enabled(backendopts_layout[1,1]) <- TRUE
+enabled(backendopts_layout[2,1]) <- TRUE
+enabled(backendopts_layout[1,2]) <- FALSE
+enabled(backendopts_layout[2,2]) <- FALSE
+enabled(backendopts_layout[3,1]) <- FALSE
+enabled(backendopts_layout[4,1]) <- FALSE

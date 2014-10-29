@@ -7,3 +7,4 @@ rbci.env$transformlist <- list()
 
 library(data.table)
 library(tools)
+library(parallel)
