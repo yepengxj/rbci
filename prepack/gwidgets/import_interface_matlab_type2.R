@@ -10,7 +10,7 @@ matlab_pane <- gpanedgroup(horizontal = TRUE,
 matlab_file_frame <- gframe(text = "File path",
                             horizontal = FALSE,
                             container = matlab_pane)
-#width = window.width/2)
+
 
 matlab_file_button <- gfilebrowse(text = "",
                                   container = matlab_file_frame,

@@ -94,7 +94,7 @@ csv_export_frame <- gframe(text = "Export/Load",
                               expand = FALSE,
                               container = csv_file_frame)
 
-csv_export_button <- gbutton(text = "Export to .RData",
+csv_export_button <- gbutton(text = "Export to R Data",
                                 type = "save",
                                 container = csv_export_frame,
                                 handler = function(h,...) {
@@ -104,14 +104,14 @@ csv_export_button <- gbutton(text = "Export to .RData",
                                   
                                   # read full-length file
                                   rbci.env$importfile <- 
-                                    readMat(rbci.env$previewfile)
+                                    read.table(rbci.env$previewfile)
                                   
                                   eegdata <- as.data.table(as.data.frame(
                                     rbci.env$importfile)[,which(colsel==TRUE)])
                                   
                                   save(eegdata,
                                        file = gfile(
-                                         filter = list("RData"= list(patterns = c("*.RData"))),
+                                         filter = list("R Data (RData)"= list(patterns = c("*.RData"))),
                                          type = "save"))
                                 })
 

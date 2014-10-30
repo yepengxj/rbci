@@ -16,4 +16,5 @@ import_tabs <- gnotebook(tab.pos = 2,
 source("./gwidgets/import_interface_matlab.R")
 source("./gwidgets/import_interface_matlab_type2.R")
 source("./gwidgets/import_interface_csv.R")
+source("./gwidgets/import_interface_rdata.R")
 source("./gwidgets/import_interface_bci2000.R")
