@@ -74,13 +74,18 @@ rbci.import.matlab <- function(filename,
   gc()
 }
 
-matlab_type2_import <- function(invar, opts, ...) {
+matlab_type2_import <- function(init.struct,...) {
   
+  # TODO remove structural hardcoding to frontend
   init.eeg <- init.struct$eeg[[1]]
   init.tgt <- init.struct$eeg[[3]]
   
-  all.mats.table <- melt(all.mats, 
-                         varnames = c("Trial","Sample","Channel","File"), 
-                         value.name = "Voltage")
+  eeg.table <- melt(init.eeg,
+                    varnames = c("Trial","Sample","Channel"),
+                    value.name = "Voltage")
+  eeg.table <- as.data.table(eeg.table)
+  
+  
+  eeg.table[,Target:=init.tgt]
   
 }

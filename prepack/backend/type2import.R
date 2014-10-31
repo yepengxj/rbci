@@ -15,4 +15,8 @@ eeg.table <- as.data.table(eeg.table)
 
 eeg.table[,Target:=init.tgt]
 
-qplot(eeg.table[,Trial],eeg.table[,Target])
+
+# qplot(eeg.table[,Trial],eeg.table[,Target])
+
+comb.class.avg <- erp[,mean(Voltage),by=c("Sample","Channel","Class")]
+comb.class.avg[,Class:= as.factor(Class)]
