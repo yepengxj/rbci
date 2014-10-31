@@ -76,4 +76,11 @@ rbci.import.matlab <- function(filename,
 
 matlab_type2_import <- function(invar, opts, ...) {
   
+  init.eeg <- init.struct$eeg[[1]]
+  init.tgt <- init.struct$eeg[[3]]
+  
+  all.mats.table <- melt(all.mats, 
+                         varnames = c("Trial","Sample","Channel","File"), 
+                         value.name = "Voltage")
+  
 }

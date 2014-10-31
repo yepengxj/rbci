@@ -125,7 +125,7 @@ matlab_load_button <-
             # rename, insert into interface
             
             # get enabled columns
-            colsel <- sapply(rbci.env$columnboxes,svalue)
+            # colsel <- sapply(rbci.env$columnboxes,svalue)
             
             # read full-length file
             rbci.env$importfile <- 
