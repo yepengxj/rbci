@@ -27,6 +27,12 @@ matlab_type2_preview_button <-
             rbci.env$importfile <- readMat(rbci.env$previewfile,
                                            maxLength = 100000)
             
+            eegdata <- 
+              matlab_type2_import(rbci.env$importfile,
+                                  eeg.ind = svalue(matlab_type2_eegindex),
+                                  tgt.ind = svalue(matlab_type2_tgtindex),
+                                  preview = TRUE)
+            
             # delete previous preview frame if present
             if ("matlab_type2_preview_frame" %in% ls()) {
               delete(matlab_type2_pane, matlab_type2_preview_frame)
@@ -63,6 +69,7 @@ matlab_type2_preview_button <-
                    Graphical = {
                      matlab_type2_preview_frame <<- 
                        ggraphics(container = matlab_type2_pane)
+                     eegdata$preview.plot # should actually plot here
                    }
 #                    Raw = {
 #                      matlab_type2_preview_frame <<-
@@ -74,14 +81,22 @@ matlab_type2_preview_button <-
             )
           })
 
-matlab_type2_preview_optframe <- gframe(text = "Preview Type",
+matlab_type2_preview_optframe <- gframe(text = "",
                                   container = matlab_type2_file_frame,
-                                  horizontal = TRUE,
+                                  horizontal = FALSE,
                                   expand = FALSE)
-matlab_type2_preview_type <- gdroplist(items = c("Structural"),
+glabel("Preview Type", container = matlab_type2_preview_optframe)
+matlab_type2_preview_type <- gdroplist(items = c("Structural",
+                                                 "Graphical"),
                                  container = matlab_type2_preview_optframe,
                                  fill = "x",
                                  expand = TRUE)
+glabel("EEG index", container = matlab_type2_preview_optframe)
+matlab_type2_eegindex <- gspinbutton(from = 1, 
+                                     container = matlab_type2_preview_optframe)
+glabel("Class label index", container = matlab_type2_preview_optframe)
+matlab_type2_tgtindex <- gspinbutton(from = 1, 
+                                     container = matlab_type2_preview_optframe)
 # matlab_type2_preview_rownum <- gspinbutton(from = 0, to = 20, by = 1,
 #                                      container = matlab_type2_preview_optframe)
 
@@ -114,9 +129,13 @@ matlab_type2_export_button <-
             rbci.env$importfile <- 
               readMat(rbci.env$previewfile)
             
-            eegdata <- matlab_type2_import(rbci.env$importfile)
+            eegdata <- 
+              matlab_type2_import(rbci.env$importfile,
+                                  eeg.ind = svalue(matlab_type2_eegindex),
+                                  tgt.ind = svalue(matlab_type2_tgtindex),
+                                  preview = FALSE)
             
-            save(eegdata,
+            save(eegdata$eeg.table,
                  file = gfile(
                    filter = list("RData"= list(patterns = c("*.RData"))),
                    type = "save"))
@@ -135,10 +154,15 @@ matlab_type2_load_button <-
             rbci.env$importfile <- 
               readMat(rbci.env$previewfile)
             
+            
+            
             # add imported data to list
             rbci.env$importlist[[
               basename(file_path_sans_ext(svalue(matlab_type2_file_button)))]] <-
-              matlab_type2_import(rbci.env$importfile)
+              matlab_type2_import(rbci.env$importfile,
+                                  eeg.ind = svalue(matlab_type2_eegindex),
+                                  tgt.ind = svalue(matlab_type2_tgtindex),
+                                  preview = FALSE)$eeg.table
             # in case of duplicates, mark explicitly
             names(rbci.env$importlist) <- 
               make.unique(names(rbci.env$importlist))
