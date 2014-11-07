@@ -24,7 +24,7 @@ matlab_type2_preview_button <-
   gbutton(text = "Preview",
           container = matlab_type2_file_frame,
           handler   = function(h, ...) {
-            rbci.env$importfile <- readMat(rbci.env$previewfile,
+            rbci.env$importfile <<- readMat(rbci.env$previewfile,
                                            maxLength = 100000)
             
             eegdata <- 
@@ -39,26 +39,6 @@ matlab_type2_preview_button <-
             }
             # react to preview type setting
             switch(svalue(matlab_type2_preview_type),
-#                    Columnar = {
-#                      # init tabular preview frame
-#                      matlab_type2_preview_frame <<- 
-#                        gtable(items = 
-#                                 as.data.frame(
-#                                   rbci.env$importfile)[seq_len(preview.rowlen),],
-#                               container = matlab_type2_pane)
-#                      
-#                      # column selectors
-#                      rbci.env$columnboxes <- c()
-#                      for (this.col in 
-#                           colnames(as.data.frame(rbci.env$importfile))) {
-#                        rbci.env$columnboxes <<- 
-#                          c(rbci.env$columnboxes,
-#                            gcheckbox(this.col,
-#                                      checked = FALSE,
-#                                      expand = FALSE,
-#                                      container = matlab_type2_option_group))
-#                      }
-#                    },
                    Structural = {
                      matlab_type2_preview_frame <<- 
                        gtext(text = paste(capture.output(str(
@@ -69,15 +49,9 @@ matlab_type2_preview_button <-
                    Graphical = {
                      matlab_type2_preview_frame <<- 
                        ggraphics(container = matlab_type2_pane)
-                     eegdata$preview.plot # should actually plot here
+                     # visible(matlab_type2_preview_frame) <- TRUE
+                     print(eegdata$preview.plot) # should plot here
                    }
-#                    Raw = {
-#                      matlab_type2_preview_frame <<-
-#                        gtext(text = paste(capture.output(
-#                          print(sapply(rbci.env$importfile,head,n=2))),"\n"),
-#                          container = matlab_type2_pane,
-#                          font.attr=c(family="monospace"))
-#                    })
             )
           })
 
@@ -133,9 +107,10 @@ matlab_type2_export_button <-
               matlab_type2_import(rbci.env$importfile,
                                   eeg.ind = svalue(matlab_type2_eegindex),
                                   tgt.ind = svalue(matlab_type2_tgtindex),
-                                  preview = FALSE)
+                                  preview = FALSE)$eeg.table
             
-            save(eegdata$eeg.table,
+            save(eegdata, # index 1 is "eeg.table"
+                 # envir = rbci.env,
                  file = gfile(
                    filter = list("RData"= list(patterns = c("*.RData"))),
                    type = "save"))

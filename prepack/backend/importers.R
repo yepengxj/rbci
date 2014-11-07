@@ -25,20 +25,28 @@ matlab_type2_import <- function(init.struct,eeg.ind,tgt.ind,preview = FALSE) {
   eeg.table[,Class:=init.tgt]
   
   if (preview == TRUE) {
-    comb.class.avg <- eeg.table[,mean(Voltage),by=c("Sample","Channel","Class")]
-    comb.class.avg[,Class:= as.factor(Class)]
+    # using grand means as graphical prev
+    # TODO this doesn't work due to environment issues
+#     preview.plot <- grand.means(eeg.table,
+#                                 val.name = "Voltage",
+#                                 col.groups = c("Sample","Channel","Class"))
     
-    setnames(comb.class.avg,old=colnames(comb.class.avg),
+    comb.class.avg <- eeg.table[,mean(Voltage),
+                                by = c("Sample","Channel","Class")]
+    comb.class.avg[, Class := as.factor(Class)]
+    
+    setnames(comb.class.avg, old=colnames(comb.class.avg),
              new=c(colnames(comb.class.avg)[1:length(
                colnames(comb.class.avg))-1],
                "Voltage"))
     
     # checkplot
     preview.plot <- 
-      ggplot(comb.class.avg,
-             aes(Sample,Voltage, label=Target, group=Target)) + 
-      geom_line(aes(colour= Target )) +
-      stat_smooth(aes(colour= Target), method = "loess", level=0.9) +
+      ggplot(comb.class.avg, 
+             aes(Sample, Voltage, label = Class, group = Class)) + 
+      geom_line(aes(colour = Class )) +
+      stat_smooth(aes(colour = Class),
+                  method = "loess", level=0.9) +
       facet_wrap(~ Channel, ncol=4) +
       ggtitle(bquote("Averaged ERP by Class")) +
       xlab("Sample") + ylab("Amplitude (uV)") +
