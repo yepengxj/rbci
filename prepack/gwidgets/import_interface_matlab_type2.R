@@ -1,106 +1,99 @@
-matlab_tab <- ggroup(container = import_tabs,
+matlab_type2_tab <- ggroup(container = import_tabs,
                      horizontal = FALSE,
                      label = "MATLAB (Type 2)")
 
-matlab_pane <- gpanedgroup(horizontal = TRUE,
+matlab_type2_pane <- gpanedgroup(horizontal = TRUE,
                            expand = TRUE,
                            fill = TRUE,
-                           container = matlab_tab)
+                           container = matlab_type2_tab)
 
-matlab_file_frame <- gframe(text = "File path",
+matlab_type2_file_frame <- gframe(text = "File path",
                             horizontal = FALSE,
-                            container = matlab_pane)
+                            container = matlab_type2_pane)
 
 
-matlab_file_button <- gfilebrowse(text = "",
-                                  container = matlab_file_frame,
+matlab_type2_file_button <- gfilebrowse(text = "",
+                                  container = matlab_type2_file_frame,
                                   quote = FALSE)
-addHandlerChanged(matlab_file_button,
+addHandlerChanged(matlab_type2_file_button,
                   handler=function(h,...) {
-                    rbci.env$previewfile <- svalue(matlab_file_button)
+                    rbci.env$previewfile <- svalue(matlab_type2_file_button)
                   })
 
-matlab_preview_button <- 
+matlab_type2_preview_button <- 
   gbutton(text = "Preview",
-          container = matlab_file_frame,
+          container = matlab_type2_file_frame,
           handler   = function(h, ...) {
-            rbci.env$importfile <- readMat(rbci.env$previewfile,
+            rbci.env$importfile <<- readMat(rbci.env$previewfile,
                                            maxLength = 100000)
             
+            eegdata <- 
+              matlab_type2_import(rbci.env$importfile,
+                                  eeg.ind = svalue(matlab_type2_eegindex),
+                                  tgt.ind = svalue(matlab_type2_tgtindex),
+                                  preview = TRUE)
+            
             # delete previous preview frame if present
-            if ("matlab_preview_frame" %in% ls()) {
-              delete(matlab_pane, matlab_preview_frame)
+            if ("matlab_type2_preview_frame" %in% ls()) {
+              delete(matlab_type2_pane, matlab_type2_preview_frame)
             }
             # react to preview type setting
-            switch(svalue(matlab_preview_type),
-#                    Columnar = {
-#                      # init tabular preview frame
-#                      matlab_preview_frame <<- 
-#                        gtable(items = 
-#                                 as.data.frame(
-#                                   rbci.env$importfile)[seq_len(preview.rowlen),],
-#                               container = matlab_pane)
-#                      
-#                      # column selectors
-#                      rbci.env$columnboxes <- c()
-#                      for (this.col in 
-#                           colnames(as.data.frame(rbci.env$importfile))) {
-#                        rbci.env$columnboxes <<- 
-#                          c(rbci.env$columnboxes,
-#                            gcheckbox(this.col,
-#                                      checked = FALSE,
-#                                      expand = FALSE,
-#                                      container = matlab_option_group))
-#                      }
-#                    },
+            switch(svalue(matlab_type2_preview_type),
                    Structural = {
-                     matlab_preview_frame <<- 
+                     matlab_type2_preview_frame <<- 
                        gtext(text = paste(capture.output(str(
                          rbci.env$importfile)),"\n"),
-                         container = matlab_pane,
+                         container = matlab_type2_pane,
                          font.attr=c(family="monospace"))
-                   } #,
-#                    Raw = {
-#                      matlab_preview_frame <<-
-#                        gtext(text = paste(capture.output(
-#                          print(sapply(rbci.env$importfile,head,n=2))),"\n"),
-#                          container = matlab_pane,
-#                          font.attr=c(family="monospace"))
-#                    })
+                   },
+                   Graphical = {
+                     matlab_type2_preview_frame <<- 
+                       ggraphics(container = matlab_type2_pane)
+                     # visible(matlab_type2_preview_frame) <- TRUE
+                     print(eegdata$preview.plot) # should plot here
+                   }
             )
           })
 
-matlab_preview_optframe <- gframe(text = "Preview Type",
-                                  container = matlab_file_frame,
-                                  horizontal = TRUE,
+matlab_type2_preview_optframe <- gframe(text = "",
+                                  container = matlab_type2_file_frame,
+                                  horizontal = FALSE,
                                   expand = FALSE)
-matlab_preview_type <- gdroplist(items = c("Structural"),
-                                 container = matlab_preview_optframe,
+glabel("Preview Type", container = matlab_type2_preview_optframe)
+matlab_type2_preview_type <- gdroplist(items = c("Structural",
+                                                 "Graphical"),
+                                 container = matlab_type2_preview_optframe,
                                  fill = "x",
                                  expand = TRUE)
-# matlab_preview_rownum <- gspinbutton(from = 0, to = 20, by = 1,
-#                                      container = matlab_preview_optframe)
+glabel("EEG index", container = matlab_type2_preview_optframe)
+matlab_type2_eegindex <- gspinbutton(from = 1, 
+                                     container = matlab_type2_preview_optframe)
+glabel("Class label index", container = matlab_type2_preview_optframe)
+matlab_type2_tgtindex <- gspinbutton(from = 1, 
+                                     container = matlab_type2_preview_optframe)
+# matlab_type2_preview_rownum <- gspinbutton(from = 0, to = 20, by = 1,
+#                                      container = matlab_type2_preview_optframe)
 
-# matlab_option_frame <- gframe(text = "Import Columns",
+# matlab_type2_option_frame <- gframe(text = "Import Columns",
 #                               horizontal = FALSE,
-#                               container = matlab_file_frame,
+#                               container = matlab_type2_file_frame,
 #                               expand = TRUE)
-# matlab_option_group <- ggroup(use.scrollwindow = TRUE,
+# matlab_type2_option_group <- ggroup(use.scrollwindow = TRUE,
 #                               horizontal = FALSE,
 #                               expand = TRUE, 
-#                               container=matlab_option_frame)'
+#                               container=matlab_type2_option_frame)'
 
-addSpring(matlab_file_frame)
+addSpring(matlab_type2_file_frame)
 
-matlab_export_frame <- gframe(text = "Export/Load",
+matlab_type2_export_frame <- gframe(text = "Export/Load",
                               horizontal = TRUE,
                               expand = FALSE,
-                              container = matlab_file_frame)
+                              container = matlab_type2_file_frame)
 
-matlab_export_button <- 
+matlab_type2_export_button <- 
   gbutton(text = "Export to .RData",
           type = "save",
-          container = matlab_export_frame,
+          container = matlab_type2_export_frame,
           handler = function(h,...) {
             # save file
             # get enabled columns
@@ -110,17 +103,22 @@ matlab_export_button <-
             rbci.env$importfile <- 
               readMat(rbci.env$previewfile)
             
-            eegdata <- matlab_type2_import(rbci.env$importfile)
+            eegdata <- 
+              matlab_type2_import(rbci.env$importfile,
+                                  eeg.ind = svalue(matlab_type2_eegindex),
+                                  tgt.ind = svalue(matlab_type2_tgtindex),
+                                  preview = FALSE)$eeg.table
             
-            save(eegdata,
+            save(eegdata, # index 1 is "eeg.table"
+                 # envir = rbci.env,
                  file = gfile(
                    filter = list("RData"= list(patterns = c("*.RData"))),
                    type = "save"))
           })
 
-matlab_load_button <- 
+matlab_type2_load_button <- 
   gbutton(text = "Import into interface",
-          container = matlab_export_frame,
+          container = matlab_type2_export_frame,
           handler = function(h,...) {
             # rename, insert into interface
             
@@ -131,10 +129,15 @@ matlab_load_button <-
             rbci.env$importfile <- 
               readMat(rbci.env$previewfile)
             
+            
+            
             # add imported data to list
             rbci.env$importlist[[
-              basename(file_path_sans_ext(svalue(matlab_file_button)))]] <-
-              matlab_type2_import(rbci.env$importfile)
+              basename(file_path_sans_ext(svalue(matlab_type2_file_button)))]] <-
+              matlab_type2_import(rbci.env$importfile,
+                                  eeg.ind = svalue(matlab_type2_eegindex),
+                                  tgt.ind = svalue(matlab_type2_tgtindex),
+                                  preview = FALSE)$eeg.table
             # in case of duplicates, mark explicitly
             names(rbci.env$importlist) <- 
               make.unique(names(rbci.env$importlist))
