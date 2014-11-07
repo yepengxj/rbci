@@ -4,6 +4,7 @@ rbci.env$opts <- list()
 rbci.env$importlist <- list()
 rbci.env$filterlist <- list()
 rbci.env$transformlist <- list()
+# gc() # ensure we have a clean slate
 
 library(tools)
 library(parallel)
@@ -21,3 +22,8 @@ library(ggplot2)
 
 # misc utility functions
 source("./backend/misc.R")
+
+# importer backend
+source("./backend/importers.R")
+# explorer backend
+source("./backend/explorers.R")
