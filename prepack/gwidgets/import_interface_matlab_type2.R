@@ -30,8 +30,7 @@ matlab_type2_preview_button <-
             eegdata <- 
               matlab_type2_import(rbci.env$importfile,
                                   eeg.ind = svalue(matlab_type2_eegindex),
-                                  tgt.ind = svalue(matlab_type2_tgtindex),
-                                  preview = TRUE)
+                                  tgt.ind = svalue(matlab_type2_tgtindex))
             
             # delete previous preview frame if present
             if ("matlab_type2_preview_frame" %in% ls()) {
@@ -50,7 +49,8 @@ matlab_type2_preview_button <-
                      matlab_type2_preview_frame <<- 
                        ggraphics(container = matlab_type2_pane)
                      # visible(matlab_type2_preview_frame) <- TRUE
-                     print(eegdata$preview.plot) # should plot here
+                     # print(eegdata$preview.plot) # should plot here
+                     print(grand.means.plot(eegdata))
                    }
             )
           })
@@ -71,17 +71,7 @@ matlab_type2_eegindex <- gspinbutton(from = 1,
 glabel("Class label index", container = matlab_type2_preview_optframe)
 matlab_type2_tgtindex <- gspinbutton(from = 1, 
                                      container = matlab_type2_preview_optframe)
-# matlab_type2_preview_rownum <- gspinbutton(from = 0, to = 20, by = 1,
-#                                      container = matlab_type2_preview_optframe)
 
-# matlab_type2_option_frame <- gframe(text = "Import Columns",
-#                               horizontal = FALSE,
-#                               container = matlab_type2_file_frame,
-#                               expand = TRUE)
-# matlab_type2_option_group <- ggroup(use.scrollwindow = TRUE,
-#                               horizontal = FALSE,
-#                               expand = TRUE, 
-#                               container=matlab_type2_option_frame)'
 
 addSpring(matlab_type2_file_frame)
 
@@ -106,9 +96,8 @@ matlab_type2_export_button <-
             eegdata <- 
               matlab_type2_import(rbci.env$importfile,
                                   eeg.ind = svalue(matlab_type2_eegindex),
-                                  tgt.ind = svalue(matlab_type2_tgtindex),
-                                  preview = FALSE)$eeg.table
-            
+                                  tgt.ind = svalue(matlab_type2_tgtindex))
+        
             save(eegdata, # index 1 is "eeg.table"
                  # envir = rbci.env,
                  file = gfile(
@@ -136,8 +125,7 @@ matlab_type2_load_button <-
               basename(file_path_sans_ext(svalue(matlab_type2_file_button)))]] <-
               matlab_type2_import(rbci.env$importfile,
                                   eeg.ind = svalue(matlab_type2_eegindex),
-                                  tgt.ind = svalue(matlab_type2_tgtindex),
-                                  preview = FALSE)$eeg.table
+                                  tgt.ind = svalue(matlab_type2_tgtindex))
             # in case of duplicates, mark explicitly
             names(rbci.env$importlist) <- 
               make.unique(names(rbci.env$importlist))
