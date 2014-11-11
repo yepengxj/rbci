@@ -1,3 +1,11 @@
+summarize <- function(eeg.table,
+                      selected.columns) {
+  return(capture.output(
+    # summary(rbci.env$importlist[[1]][,c(2,3),with=FALSE])
+    summary(eeg.table[,selected.columns,with=FALSE])
+  ))
+}
+
 # first arg is time column
 # second arg is channel column
 # third arg is class column
