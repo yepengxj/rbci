@@ -37,15 +37,19 @@ summary_tab <- gframe(label = "Summary",
                       container = explore_task_book)
 
 means_tab <- gframe(label = "Grand Means",
-                         container = explore_task_book)
+                    container = explore_task_book)
 
 hist_tab <- gframe(label = "Histogram",
-                         container = explore_task_book)
+                   container = explore_task_book)
+
+annotate_tab <- gframe(label = "Annotate",
+                       container = explore_task_book)
 
 # Load subitems (into tabs)
 source("./gwidgets/explore_interface_summary.R")
 source("./gwidgets/explore_interface_means.R")
 source("./gwidgets/explore_interface_hist.R")
+source("./gwidgets/explore_interface_annotate.R")
 
 # set some widths (doesn't work if earlier)
 svalue(explore_pane) <- 0.2
