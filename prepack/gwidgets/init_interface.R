@@ -26,13 +26,13 @@ explore_btn <- gbutton(
     source("./gwidgets/explore_interface.R")
   })
 
-stream_btn <- gbutton(
-  text      = "Create/Load Online Stream",
-  container = init_btn_group,
-  handler   = function(h, ...)
-  {
-    # TODO!
-  })
+# stream_btn <- gbutton(
+#   text      = "Create/Load Online Stream",
+#   container = init_btn_group,
+#   handler   = function(h, ...)
+#   {
+#     # TODO!
+#   })
 
 filter_btn <- gbutton(
   text      = "Filter Data",
