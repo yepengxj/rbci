@@ -9,6 +9,8 @@ means_varlist_frame <- gframe(text = "Data Columns",
                                 container = means_pane,
                                 expand = TRUE,
                                 width = 300)
+
+### TODO: is this needed after allowing annotations?
 # populate varlist
 means_varlist <- gcheckboxgroup(
   names(rbci.env$importlist[[svalue(explore_var_filesel, index=TRUE)]]),
@@ -16,10 +18,31 @@ means_varlist <- gcheckboxgroup(
   use.table = TRUE,
   expand = TRUE)
 
-means_plot_btn <- gbutton(text = "Plot",
-                                 container = means_varlist_frame,
-                                 handler = function(h,...) {
-                                 })
+### if above checkboxgroup not used, check for annotations and send
+### user alert if not present
+means_plot_btn <-
+    gbutton(text = "Plot",
+            container = means_varlist_frame,
+            handler = function(h,...) {
+                
+                print(
+                    grand.means.plot(
+                    rbci.env$importlist[[svalue(explore_var_filesel,
+                                                index=TRUE)]],
+                        val.name = rbci.env$tags[[svalue(explore_var_filesel,
+                            index=TRUE)]]$valuecol,
+                        col.groups =
+                            setdiff(names(rbci.env$importlist[[svalue(explore_var_filesel,
+                                                                      index=TRUE)]]),
+                                    c(rbci.env$tags[[svalue(explore_var_filesel,
+                                                            index=TRUE)]]$valuecol,
+                                      rbci.env$tags[[svalue(explore_var_filesel,
+                                                            index=TRUE)]]$targetcol,
+                                  rbci.env$tags[[svalue(explore_var_filesel,
+                                                        index=TRUE)]]$epochcol))
+                    )
+                )
+            })
 
 means_output_frame <- ggraphics(container = means_pane)
 

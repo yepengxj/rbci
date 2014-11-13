@@ -10,6 +10,7 @@ summarize <- function(eeg.table,
   ))
 }
 
+### plotting function for multivariate grand means
 # first arg is time column
 # second arg is channel column
 # third arg is class column
