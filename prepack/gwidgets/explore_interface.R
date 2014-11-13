@@ -4,28 +4,29 @@ window.height <- 600
 preview.rowlen <- 20
 
 explore_win <- gwindow("Data Explorer",
-                      width = window.width,
-                      height = window.height)
+                       width = window.width,
+                       height = window.height)
 
 explore_pane <- gpanedgroup(horizontal = TRUE,
-                        expand = TRUE,
-                        fill = TRUE,
-                        container = explore_win)
+                            expand = TRUE,
+                            fill = TRUE,
+                            container = explore_win)
 
 
 explore_var_group <- ggroup(use.scrollwindow = TRUE,
-                           horizontal = FALSE,
-                           expand = TRUE, 
-                           container=explore_pane,
-                           width = 200)
+                            horizontal = FALSE,
+                            expand = TRUE, 
+                            container=explore_pane,
+                            width = 200)
 explore_var_frame <- gframe(text = "Data Sets",
                             horizontal = FALSE,
                             container = explore_var_group,
                             expand = TRUE)
-# populate data set selector
-# TODO add some kind of handler to refresh subitems in tables
+
+## populate data set selector
+## TODO add some kind of handler to refresh subitems in tables
 explore_var_filesel <- gradio(names(rbci.env$importlist),
-                            container = explore_var_frame)
+                              container = explore_var_frame)
 
 
 explore_task_book <- gnotebook(tab.pos = 3,
@@ -50,6 +51,9 @@ source("./gwidgets/explore_interface_summary.R")
 source("./gwidgets/explore_interface_means.R")
 source("./gwidgets/explore_interface_hist.R")
 source("./gwidgets/explore_interface_annotate.R")
+
+# re-init backend (TODO re-organize this)
+source("./backend/explorers.R")
 
 # set some widths (doesn't work if earlier)
 svalue(explore_pane) <- 0.2

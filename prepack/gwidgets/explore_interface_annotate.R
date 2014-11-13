@@ -28,12 +28,12 @@ annotate_varlist <- gradio(
     # update current tag
     svalue(annotate_curtarget) <- 
       paste("Current Target Column:",
-            rbci.env$tags[svalue(explore_var_filesel)]$targetcol)
+            rbci.env$tags[[svalue(explore_var_filesel)]]$targetcol)
             
     # update current tag
     svalue(annotate_curvalue) <- 
       paste("Current Value Column:",
-            rbci.env$tags[svalue(explore_var_filesel)]$valuecol)
+            rbci.env$tags[[svalue(explore_var_filesel)]]$valuecol)
   })
 
 addSpring(annotate_varlist_frame)
@@ -75,7 +75,7 @@ annotate_datatype_chooser <-
 
                 if ( svalue(h$obj) == "Target Column") {
                     ## set target tag
-                    rbci.env$tags[svalue(explore_var_filesel)]$targetcol <-
+                    rbci.env$tags[[svalue(explore_var_filesel)]]$targetcol <-
                         svalue(annotate_varlist)
                     ## update display
                     svalue(annotate_curtarget) <-
@@ -83,7 +83,7 @@ annotate_datatype_chooser <-
                 }
                 else if ( svalue(h$obj) == "Value Column") {
                     ## set value tag
-                    rbci.env$tags[svalue(explore_var_filesel)]$valuecol <-
+                    rbci.env$tags[[svalue(explore_var_filesel)]]$valuecol <-
                         svalue(annotate_varlist)
                     ## update display
                     svalue(annotate_curvalue) <-
@@ -94,7 +94,7 @@ annotate_datatype_chooser <-
                     if (svalue(annotate_curtarget) ==
                         paste("Current Target Column:",
                               svalue(annotate_varlist))) {
-                        rbci.env$tags[svalue(explore_var_filesel)]$targetcol <-
+                        rbci.env$tags[[svalue(explore_var_filesel)]]$targetcol <-
                             NULL
 
                         svalue(annotate_curtarget) <-
@@ -104,7 +104,7 @@ annotate_datatype_chooser <-
                         paste("Current Value Column:",
                               svalue(annotate_varlist))) {
 
-                        rbci.env$tags[svalue(explore_var_filesel)]$valuecol <-
+                        rbci.env$tags[[svalue(explore_var_filesel)]]$valuecol <-
                             NULL
 
                         svalue(annotate_curvalue) <-
