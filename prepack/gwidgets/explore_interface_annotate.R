@@ -38,16 +38,6 @@ annotate_varlist <- gradio(
 
 addSpring(annotate_varlist_frame)
 
-annotate_apply_btn <- 
-  gbutton(text = "Apply",
-          container = annotate_varlist_frame,
-          handler = function(h,...) {
-            # apply changes, issue alert on success or or throw error on fail
-                        # svalue(annotate_varlist)
-            # TODO error handling
-            
-            
-          })
 
 ## TODO second widget group for creating additional columns
 annotate_optframe <- gframe(text = "Annotation Options",
@@ -58,9 +48,7 @@ annotate_optframe <- gframe(text = "Annotation Options",
 glabel("Data Type",
        container = annotate_optframe,
        anchor = c(-1,1))
-# glabel("Current Data Type",
-#        container = annotate_optframe,
-#        anchor = c(-1,1))
+
 annotate_curvartype <- glabel("Current Data Type: ",
                               container = annotate_optframe,
                               anchor = c(-1,1))
@@ -80,14 +68,70 @@ glabel("Column Tag",
        anchor = c(-1,1))
 
 annotate_datatype_chooser <- 
-  gdroplist(c("Target Column", "Value Column"),
+  gdroplist(c("No Tag","Target Column", "Value Column"),
             container = annotate_optframe,
-            anchor = c(-1,1))
-annotate_curtarget <- glabel("Current Target Column:",
-                             container = annotate_optframe,
-                             anchor = c(-1,1))
+            anchor = c(-1,1),
+            handler = function(h, ...) {
+
+                if ( svalue(h$obj) == "Target Column") {
+                    ## set target tag
+                    rbci.env$tags[svalue(explore_var_filesel)]$targetcol <-
+                        svalue(annotate_varlist)
+                    ## update display
+                    svalue(annotate_curtarget) <-
+                        paste("Current Target Column:", svalue(annotate_varlist))
+                }
+                else if ( svalue(h$obj) == "Value Column") {
+                    ## set value tag
+                    rbci.env$tags[svalue(explore_var_filesel)]$valuecol <-
+                        svalue(annotate_varlist)
+                    ## update display
+                    svalue(annotate_curvalue) <-
+                        paste("Current Value Column:", svalue(annotate_varlist))
+                }
+                else if ( svalue(h$obj) == "No Tag") {
+                    ## match tags, then delete if needed
+                    if (svalue(annotate_curtarget) ==
+                        paste("Current Target Column:",
+                              svalue(annotate_varlist))) {
+                        rbci.env$tags[svalue(explore_var_filesel)]$targetcol <-
+                            NULL
+
+                        svalue(annotate_curtarget) <-
+                            paste("Current Target Column: None")
+                    }
+                    if (svalue(annotate_curvalue) <-
+                        paste("Current Value Column:",
+                              svalue(annotate_varlist))) {
+
+                        rbci.env$tags[svalue(explore_var_filesel)]$valuecol <-
+                            NULL
+
+                        svalue(annotate_curvalue) <-
+                            paste("Current Value Column: None")
+                    }
+                }
+            })
+annotate_curtarget <-
+    glabel("Current Target Column:",
+           container = annotate_optframe,
+           anchor = c(-1,1))
+
 annotate_curvalue <- glabel("Current Value Column:",
                             container = annotate_optframe,
                             anchor = c(-1,1))
+
+## annotate_apply_btn <- 
+##   gbutton(text = "Apply",
+##           container = annotate_optframe,
+##           handler = function(h,...) {
+##             # apply changes, issue alert on success or or throw error on fail
+##             # svalue(annotate_varlist)
+##             # TODO error handling
+##             
+##               
+##               
+## 
+##           })
 
 svalue(annotate_mainframe) <- 0.25
