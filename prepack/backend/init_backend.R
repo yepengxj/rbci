@@ -10,7 +10,8 @@ rbci.env$importlist <- list()
 ##    -> targetcol
 ##       valuecol
 rbci.env$tags <- list()
-rbci.env$taglist <- list(targetcol = NULL, valuecol = NULL)
+rbci.env$taglist <- list(targetcol = NULL, valuecol = NULL,
+                         epochcol = NULL)
 rbci.env$filterlist <- list()
 rbci.env$transformlist <- list()
 

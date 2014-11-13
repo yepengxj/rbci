@@ -24,7 +24,8 @@ annotate_varlist <- gradio(
       paste("Current Data Type:", 
             sapply(rbci.env$importlist[[svalue(explore_var_filesel)]],
                    class)[svalue(annotate_varlist)])
-    
+
+    ## TODO: are these updates needed? (probably not)
     ## update current tag
     svalue(annotate_curtarget) <- 
       paste("Current Target Column:",
@@ -34,6 +35,10 @@ annotate_varlist <- gradio(
     svalue(annotate_curvalue) <- 
       paste("Current Value Column:",
             rbci.env$tags[[svalue(explore_var_filesel)]]$valuecol)
+
+    svalue(annotate_curvalue) <- 
+      paste("Current Epoch Column:",
+            rbci.env$tags[[svalue(explore_var_filesel)]]$epochcol)
   })
 
 addSpring(annotate_varlist_frame)
@@ -100,7 +105,7 @@ glabel("Column Tag",
        anchor = c(-1,1))
 
 annotate_datatype_chooser <- 
-  gdroplist(c("No Tag","Target Column", "Value Column"),
+  gdroplist(c("No Tag","Target Column", "Value Column", "Epoch Column"),
             container = annotate_optframe,
             anchor = c(-1,1),
             handler = function(h, ...) {
@@ -120,6 +125,14 @@ annotate_datatype_chooser <-
                 ## update display
                 svalue(annotate_curvalue) <-
                   paste("Current Value Column:", svalue(annotate_varlist))
+              }
+              else if ( svalue(h$obj) == "Epoch Column") {
+                ## set value tag
+                rbci.env$tags[[svalue(explore_var_filesel)]]$epochcol <-
+                  svalue(annotate_varlist)
+                ## update display
+                svalue(annotate_curepoch) <-
+                  paste("Current Epoch Column:", svalue(annotate_varlist))
               }
               else if ( svalue(h$obj) == "No Tag") {
                 ## match tags, then delete if needed
@@ -142,6 +155,16 @@ annotate_datatype_chooser <-
                   svalue(annotate_curvalue) <-
                     paste("Current Value Column: None")
                 }
+                if (svalue(annotate_curepoch) <-
+                  paste("Current Epoch Column:",
+                        svalue(annotate_varlist))) {
+
+                  rbci.env$tags[[svalue(explore_var_filesel)]]$epochcol <-
+                    NULL
+
+                  svalue(annotate_curepoch) <-
+                    paste("Current Epoch Column: None")
+                }
               }
             })
 annotate_curtarget <-
@@ -149,9 +172,15 @@ annotate_curtarget <-
          container = annotate_optframe,
          anchor = c(-1,1))
 
-annotate_curvalue <- glabel("Current Value Column:",
-                            container = annotate_optframe,
-                            anchor = c(-1,1))
+annotate_curvalue <-
+  glabel("Current Value Column:",
+         container = annotate_optframe,
+         anchor = c(-1,1))
+
+annotate_curepoch <-
+  glabel("Current Epoch Column:",
+         container = annotate_optframe,
+         anchor = c(-1,1))
 
 ## annotate_apply_btn <- 
 ##   gbutton(text = "Apply",
