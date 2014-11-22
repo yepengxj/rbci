@@ -36,7 +36,7 @@ annotate_varlist <- gradio(
       paste("Current Value Column:",
             rbci.env$tags[[svalue(explore_var_filesel)]]$valuecol)
 
-    svalue(annotate_curvalue) <- 
+    svalue(annotate_curepoch) <- 
       paste("Current Epoch Column:",
             rbci.env$tags[[svalue(explore_var_filesel)]]$epochcol)
   })
