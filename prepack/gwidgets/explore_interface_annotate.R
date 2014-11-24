@@ -71,31 +71,33 @@ annotate_datatype_apply <-
   gbutton("Apply",
           container = annotate_optframe,
           handler = function(h, ...) {
+              curfile <- svalue(explore_var_filesel)
+              curcol <- svalue(annotate_varlist)
             switch(svalue(annotate_datatype_chooser),
-                   Numeric = {
-                     rbci.env$importlist[[svalue(explore_var_filesel)]][, svalue(annotate_varlist) :=
-                                                                          as.numeric(get(svalue(annotate_varlist)))]
-                   },
-                   Integer = {
-                     rbci.env$importlist[[svalue(explore_var_filesel)]][, svalue(annotate_varlist) :=
-                                                                          as.integer(get(svalue(annotate_varlist)))]
-                   },
-                   Complex = {
-                     rbci.env$importlist[[svalue(explore_var_filesel)]][, svalue(annotate_varlist) :=
-                                                                          as.complex(get(svalue(annotate_varlist)))]
-                   },
-                   Logical = {
-                     rbci.env$importlist[[svalue(explore_var_filesel)]][, svalue(annotate_varlist) :=
-                                                                          as.logical(get(svalue(annotate_varlist)))]},
-                   Character = {
-                     rbci.env$importlist[[svalue(explore_var_filesel)]][, svalue(annotate_varlist) :=
-                                                                          as.character(get(svalue(annotate_varlist)))]
-                   })
-            
+             Numeric = {
+                 rbci.env$importlist[[curfile]][, curcol :=
+                                                    as.numeric(get(curcol))]
+             },
+             Integer = {
+                 rbci.env$importlist[[curfile]][, curcol :=
+                                                    as.integer(get(curcol))]
+             },
+             Complex = {
+                 rbci.env$importlist[[curfile]][, curcol :=
+                                                    as.complex(get(curcol))]
+             },
+             Logical = {
+                 rbci.env$importlist[[curfile]][, curcol :=
+                                                    as.logical(get(curcol))]},
+             Character = {
+                 rbci.env$importlist[[curfile]][, curcol :=
+                                                    as.character(get(curcol))]
+             })
+ 
             svalue(annotate_curvartype) <-
               paste("Current Data Type:", 
-                    sapply(rbci.env$importlist[[svalue(explore_var_filesel)]],
-                           class)[svalue(annotate_varlist)])
+                    sapply(rbci.env$importlist[[curfile]],
+                           class)[curcol])
           })
 
 
@@ -105,65 +107,90 @@ glabel("Column Tag",
        anchor = c(-1,1))
 
 annotate_datatype_chooser <- 
-  gdroplist(c("No Tag","Target Column", "Value Column", "Epoch Column"),
+  gdroplist(c("No Tag","Target Column", "Value Column", "Epoch Column",
+              "Time Column","Channel Column"),
             container = annotate_optframe,
             anchor = c(-1,1),
             handler = function(h, ...) {
+                curfile <- svalue(explore_var_filesel)
+                curcol <- svalue(annotate_varlist)
 
+                ## TODO clean up this vile switch statement
               if ( svalue(h$obj) == "Target Column") {
                 ## set target tag
-                rbci.env$tags[[svalue(explore_var_filesel)]]$targetcol <-
-                  svalue(annotate_varlist)
+                rbci.env$tags[[curfile]]$targetcol <- curcol
                 ## update display
                 svalue(annotate_curtarget) <-
-                  paste("Current Target Column:", svalue(annotate_varlist))
+                  paste("Current Target Column:", curcol)
               }
               else if ( svalue(h$obj) == "Value Column") {
                 ## set value tag
-                rbci.env$tags[[svalue(explore_var_filesel)]]$valuecol <-
-                  svalue(annotate_varlist)
+                rbci.env$tags[[curfile]]$valuecol <- curcol
                 ## update display
                 svalue(annotate_curvalue) <-
-                  paste("Current Value Column:", svalue(annotate_varlist))
+                  paste("Current Value Column:", curcol)
               }
               else if ( svalue(h$obj) == "Epoch Column") {
                 ## set value tag
-                rbci.env$tags[[svalue(explore_var_filesel)]]$epochcol <-
-                  svalue(annotate_varlist)
+                rbci.env$tags[[curfile]]$epochcol <- curcol
                 ## update display
                 svalue(annotate_curepoch) <-
-                  paste("Current Epoch Column:", svalue(annotate_varlist))
+                  paste("Current Epoch Column:", curcol)
+              }
+              else if ( svalue(h$obj) == "Time Column") {
+                ## set value tag
+                rbci.env$tags[[curfile]]$timecol <- curcol
+                ## update display
+                svalue(annotate_curtime) <-
+                  paste("Current Time Column:", curcol)
+              }
+              else if ( svalue(h$obj) == "Channel Column") {
+                ## set value tag
+                rbci.env$tags[[curfile]]$chancol <- curcol
+                ## update display
+                svalue(annotate_curchan) <-
+                  paste("Current Channel Column:", curcol)
               }
               else if ( svalue(h$obj) == "No Tag") {
                 ## match tags, then delete if needed
                 if (svalue(annotate_curtarget) ==
-                    paste("Current Target Column:",
-                          svalue(annotate_varlist))) {
-                  rbci.env$tags[[svalue(explore_var_filesel)]]$targetcol <-
-                    NULL
+                    paste("Current Target Column:", curcol)) {
+                  rbci.env$tags[[curfile]]$targetcol <- NULL
 
                   svalue(annotate_curtarget) <-
                     paste("Current Target Column: None")
                 }
                 if (svalue(annotate_curvalue) <-
-                  paste("Current Value Column:",
-                        svalue(annotate_varlist))) {
+                  paste("Current Value Column:", curcol)) {
 
-                  rbci.env$tags[[svalue(explore_var_filesel)]]$valuecol <-
-                    NULL
+                  rbci.env$tags[[curfile]]$valuecol <- NULL
 
                   svalue(annotate_curvalue) <-
                     paste("Current Value Column: None")
                 }
                 if (svalue(annotate_curepoch) <-
-                  paste("Current Epoch Column:",
-                        svalue(annotate_varlist))) {
+                  paste("Current Epoch Column:", curcol)) {
 
-                  rbci.env$tags[[svalue(explore_var_filesel)]]$epochcol <-
-                    NULL
+                  rbci.env$tags[[curfile]]$epochcol <- NULL
 
                   svalue(annotate_curepoch) <-
                     paste("Current Epoch Column: None")
+                }
+                if (svalue(annotate_curtime) <-
+                  paste("Current Time Column:", curcol)) {
+
+                  rbci.env$tags[[curfile]]$timecol <- NULL
+
+                  svalue(annotate_curtime) <-
+                    paste("Current Time Column: None")
+                }
+                if (svalue(annotate_curchan) <-
+                  paste("Current Channel Column:", curcol)) {
+
+                  rbci.env$tags[[curfile]]$chancol <- NULL
+
+                  svalue(annotate_curchan) <-
+                    paste("Current Channel Column: None")
                 }
               }
             })
@@ -179,6 +206,16 @@ annotate_curvalue <-
 
 annotate_curepoch <-
   glabel("Current Epoch Column:",
+         container = annotate_optframe,
+         anchor = c(-1,1))
+
+annotate_curtime <-
+  glabel("Current Time Column:",
+         container = annotate_optframe,
+         anchor = c(-1,1))
+
+annotate_curchan <-
+  glabel("Current Channel Column:",
          container = annotate_optframe,
          anchor = c(-1,1))
 

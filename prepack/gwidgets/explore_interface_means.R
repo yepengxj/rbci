@@ -24,22 +24,15 @@ means_plot_btn <-
     gbutton(text = "Plot",
             container = means_varlist_frame,
             handler = function(h,...) {
-                
+                curfileind <- svalue(explore_var_filesel,index=TRUE)
+                print(curfileind)
                 print(
                     grand.means.plot(
-                    rbci.env$importlist[[svalue(explore_var_filesel,
-                                                index=TRUE)]],
-                        val.name = rbci.env$tags[[svalue(explore_var_filesel,
-                            index=TRUE)]]$valuecol,
-                        col.groups =
-                            setdiff(names(rbci.env$importlist[[svalue(explore_var_filesel,
-                                                                      index=TRUE)]]),
-                                    c(rbci.env$tags[[svalue(explore_var_filesel,
-                                                            index=TRUE)]]$valuecol,
-                                      rbci.env$tags[[svalue(explore_var_filesel,
-                                                            index=TRUE)]]$targetcol,
-                                  rbci.env$tags[[svalue(explore_var_filesel,
-                                                        index=TRUE)]]$epochcol))
+                        rbci.env$importlist[[curfileind]],
+                        val.name = rbci.env$tags[[curfileind]]$valuecol,
+                        time.name = rbci.env$tags[[curfileind]]$timecol,
+                        chan.name = rbci.env$tags[[curfileind]]$chancol,
+                        targ.name = rbci.env$tags[[curfileind]]$targetcol
                     )
                 )
             })
