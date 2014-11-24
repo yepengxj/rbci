@@ -20,17 +20,18 @@ grand.means.plot <- function(eeg.table,
                              time.name = "Sample",
                              chan.name = "Channel",
                              targ.name = "Class") {
-    print(targ.name)
+
     comb.class.avg <- eeg.table[,mean(get(val.name)), by = c(time.name,
                                                              chan.name,
                                                              targ.name)]
-    comb.class.avg[, targ.name := as.factor(targ.name)]
+    comb.class.avg[, targ.name := as.factor(get(targ.name)),
+                   with = FALSE]
     
     setnames(comb.class.avg, old=colnames(comb.class.avg),
              new=c(colnames(comb.class.avg)[1:length(
                  colnames(comb.class.avg))-1],
                  val.name))
-    
+
     ## checkplot
     preview.plot <- 
         ggplot(comb.class.avg,
