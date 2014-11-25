@@ -21,6 +21,7 @@ transform.pca <- function(targ.name = "Class",
                           scale = scale.data,
                           tol = pca.tol)
 
+        ## pull the pieces we need from each object into standard list
     }
     else {
         ## nonlinear case
@@ -67,7 +68,9 @@ transform.pca <- function(targ.name = "Class",
                                                degree = rbci.env$pcaopts$degree),
                                    features = pc.count, th = pca.tol)
                })
+
+        ## pull the pieces we need from the resulting object into standard list
     }
 
-    
+    ## return list object we created
 }
