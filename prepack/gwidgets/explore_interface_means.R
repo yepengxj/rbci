@@ -3,23 +3,24 @@ means_pane <- gpanedgroup(horizontal = TRUE,
                             fill = TRUE,
                             container = means_tab)
 
-
-means_varlist_frame <- gframe(text = "Data Columns",
-                                horizontal = FALSE,
-                                container = means_pane,
-                                expand = TRUE,
-                                width = 300)
-# populate varlist
-means_varlist <- gcheckboxgroup(
-  names(rbci.env$importlist[[svalue(explore_var_filesel, index=TRUE)]]),
-  container = means_varlist_frame,
-  use.table = TRUE,
-  expand = TRUE)
-
-means_plot_btn <- gbutton(text = "Plot",
-                                 container = means_varlist_frame,
-                                 handler = function(h,...) {
-                                 })
+### if above checkboxgroup not used, check for annotations and send
+### user alert if not present
+means_plot_btn <-
+    gbutton(text = "Plot",
+            container = means_varlist_frame,
+            handler = function(h,...) {
+                curfileind <- svalue(explore_var_filesel,index=TRUE)
+                print(curfileind)
+                print(
+                    grand.means.plot(
+                        rbci.env$importlist[[curfileind]],
+                        val.name = rbci.env$tags[[curfileind]]$valuecol,
+                        time.name = rbci.env$tags[[curfileind]]$timecol,
+                        chan.name = rbci.env$tags[[curfileind]]$chancol,
+                        targ.name = rbci.env$tags[[curfileind]]$targetcol
+                    )
+                )
+            })
 
 means_output_frame <- ggraphics(container = means_pane)
 

@@ -21,9 +21,9 @@ summary_summarize_btn <-
           container = summary_varlist_frame,
           handler = function(h,...) {
             svalue(summary_output_frame) <- 
-              capture.output(summary(rbci.env$importlist[[
-                svalue(explore_var_filesel,
-                       index=TRUE)]][,svalue(summary_varlist),with=FALSE]))
+              summarize(rbci.env$importlist[[svalue(explore_var_filesel,
+                                                    index=TRUE)]],
+                        svalue(summary_varlist))
           })
 
 summary_output_frame <- gtext(text = "Summary output",

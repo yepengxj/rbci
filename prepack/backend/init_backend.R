@@ -2,8 +2,19 @@
 rbci.env <- new.env() # environment for storing GUI state stuff
 rbci.env$opts <- list()
 rbci.env$importlist <- list()
+## tags for annotation
+## hierarchy:
+## rbci.env
+##  -> tags
+##   -> data name
+##    -> targetcol
+##       valuecol
+rbci.env$tags <- list()
+rbci.env$taglist <- list(targetcol = NULL, valuecol = NULL,
+                         epochcol = NULL)
 rbci.env$filterlist <- list()
 rbci.env$transformlist <- list()
+
 # gc() # ensure we have a clean slate
 
 library(tools)

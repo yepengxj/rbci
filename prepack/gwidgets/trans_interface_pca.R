@@ -32,8 +32,8 @@ pca_param_frame <- gframe(text = "PCA Parameters",
                           width = 300)
 
 ## opts
-pca_kernel_type_list <- c("Linear","Gaussian","Laplace","Polynomial","Hyperbolic",
-                          "Bessel","ANOVA")
+pca_kernel_type_list <- c("Linear","Gaussian","Laplace","Polynomial",
+                          "Hyperbolic","Bessel","ANOVA")
 pca_kernel_type_label <- glabel(text = "Kernel Type",
                                 container = pca_param_frame)
 pca_kernel_type_menu <- 
