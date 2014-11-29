@@ -7,7 +7,7 @@ means_pane <- gpanedgroup(horizontal = TRUE,
 ### user alert if not present
 means_plot_btn <-
     gbutton(text = "Plot",
-            container = means_varlist_frame,
+            container = means_pane,
             handler = function(h,...) {
                 curfileind <- svalue(explore_var_filesel,index=TRUE)
                 print(curfileind)
