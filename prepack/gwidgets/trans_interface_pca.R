@@ -10,8 +10,9 @@ pca_varlist_frame <- gframe(text = "Apply Columns",
                             container = pca_pane,
                             expand = TRUE,
                             width = 300)
-# populate varlist
-# TODO Update features spinbox on change
+
+### populate varlist
+### TODO Update features spinbox on change
 pca_varlist <- gcheckboxgroup(
   names(rbci.env$importlist[[svalue(trans_var_filesel, index=TRUE)]]),
   container = pca_varlist_frame,
@@ -41,93 +42,93 @@ pca_kernel_type_menu <-
             text = "Kernel Type",
             container = pca_param_frame,
             handler = function (h,...) {
-              # enable or disable param GUI opts on type change
+                ## enable or disable param GUI opts on type change
 
-              ## param names by type
-              # sigma for rbf/Laplace
-              # degree, scale, offset for Polynomial
-              # scale, offset for tanhdot
-              # sigma, order, degree, for Bessel
-              # sigma, degree for ANOVA
-              switch (svalue(h$obj),
-                      "Linear" = {
-                        enabled(pca_band_layout[1,1]) <- FALSE
-                        enabled(pca_band_layout[2,1]) <- FALSE
-                        enabled(pca_band_layout[1,2]) <- FALSE
-                        enabled(pca_band_layout[2,2]) <- FALSE
-                        enabled(pca_band_layout[3,1]) <- FALSE
-                        enabled(pca_band_layout[4,1]) <- FALSE
-                      },
-                      "Laplace" = {
-                        enabled(pca_band_layout[1,1]) <- TRUE
-                        enabled(pca_band_layout[2,1]) <- TRUE
-                        svalue(pca_band_layout[1,1]) <- "Sigma"
-                        
-                        enabled(pca_band_layout[1,2]) <- FALSE
-                        enabled(pca_band_layout[2,2]) <- FALSE
-                        enabled(pca_band_layout[3,1]) <- FALSE
-                        enabled(pca_band_layout[4,1]) <- FALSE
-                      },
-                      "Gaussian" = {
-                        enabled(pca_band_layout[1,1]) <- TRUE
-                        enabled(pca_band_layout[2,1]) <- TRUE
-                        svalue(pca_band_layout[1,1]) <- "Sigma"
-                        
-                        enabled(pca_band_layout[1,2]) <- FALSE
-                        enabled(pca_band_layout[2,2]) <- FALSE
-                        enabled(pca_band_layout[3,1]) <- FALSE
-                        enabled(pca_band_layout[4,1]) <- FALSE
-                      },
-                      "Polynomial" = {
-                        enabled(pca_band_layout[1,1]) <- TRUE
-                        enabled(pca_band_layout[2,1]) <- TRUE
-                        svalue(pca_band_layout[1,1]) <- "Degree"
-                        
-                        enabled(pca_band_layout[1,2]) <- TRUE
-                        enabled(pca_band_layout[2,2]) <- TRUE
-                        svalue(pca_band_layout[1,2]) <- "Scale"
-                        
-                        enabled(pca_band_layout[3,1]) <- TRUE
-                        enabled(pca_band_layout[4,1]) <- TRUE
-                        svalue(pca_band_layout[3,1]) <- "Offset"
-                      },
-                      "Hyperbolic" = {
-                        enabled(pca_band_layout[1,1]) <- TRUE
-                        enabled(pca_band_layout[2,1]) <- TRUE
-                        svalue(pca_band_layout[1,1]) <- "Scale"
-                        
-                        enabled(pca_band_layout[1,2]) <- TRUE
-                        enabled(pca_band_layout[2,2]) <- TRUE
-                        svalue(pca_band_layout[1,2]) <- "Offset"
-                        
-                        enabled(pca_band_layout[3,1]) <- FALSE
-                        enabled(pca_band_layout[4,1]) <- FALSE
-                      },
-                      "Bessel" = {
-                        enabled(pca_band_layout[1,1]) <- TRUE
-                        enabled(pca_band_layout[2,1]) <- TRUE
-                        svalue(pca_band_layout[1,1]) <- "Sigma"
-                        
-                        enabled(pca_band_layout[1,2]) <- TRUE
-                        enabled(pca_band_layout[2,2]) <- TRUE
-                        svalue(pca_band_layout[1,2]) <- "Order"
-                        
-                        enabled(pca_band_layout[3,1]) <- TRUE
-                        enabled(pca_band_layout[4,1]) <- TRUE
-                        svalue(pca_band_layout[3,1]) <- "Degree"
-                      },
-                      "ANOVA" = {
-                        enabled(pca_band_layout[1,1]) <- TRUE
-                        enabled(pca_band_layout[2,1]) <- TRUE
-                        svalue(pca_band_layout[1,1]) <- "Sigma"
-                        
-                        enabled(pca_band_layout[1,2]) <- TRUE
-                        enabled(pca_band_layout[2,2]) <- TRUE
-                        svalue(pca_band_layout[1,2]) <- "Degree"
-                        
-                        enabled(pca_band_layout[3,1]) <- FALSE
-                        enabled(pca_band_layout[4,1]) <- FALSE
-                      })
+                ## param names by type
+                ## sigma for rbf/Laplace
+                ## degree, scale, offset for Polynomial
+                ## scale, offset for tanhdot
+                ## sigma, order, degree, for Bessel
+                ## sigma, degree for ANOVA
+                switch (svalue(h$obj),
+                        "Linear" = {
+                            enabled(pca_band_layout[1,1]) <- FALSE
+                            enabled(pca_band_layout[2,1]) <- FALSE
+                            enabled(pca_band_layout[1,2]) <- FALSE
+                            enabled(pca_band_layout[2,2]) <- FALSE
+                            enabled(pca_band_layout[3,1]) <- FALSE
+                            enabled(pca_band_layout[4,1]) <- FALSE
+                        },
+                        "Laplace" = {
+                            enabled(pca_band_layout[1,1]) <- TRUE
+                            enabled(pca_band_layout[2,1]) <- TRUE
+                            svalue(pca_band_layout[1,1]) <- "Sigma"
+                            
+                            enabled(pca_band_layout[1,2]) <- FALSE
+                            enabled(pca_band_layout[2,2]) <- FALSE
+                            enabled(pca_band_layout[3,1]) <- FALSE
+                            enabled(pca_band_layout[4,1]) <- FALSE
+                        },
+                        "Gaussian" = {
+                            enabled(pca_band_layout[1,1]) <- TRUE
+                            enabled(pca_band_layout[2,1]) <- TRUE
+                            svalue(pca_band_layout[1,1]) <- "Sigma"
+                            
+                            enabled(pca_band_layout[1,2]) <- FALSE
+                            enabled(pca_band_layout[2,2]) <- FALSE
+                            enabled(pca_band_layout[3,1]) <- FALSE
+                            enabled(pca_band_layout[4,1]) <- FALSE
+                        },
+                        "Polynomial" = {
+                            enabled(pca_band_layout[1,1]) <- TRUE
+                            enabled(pca_band_layout[2,1]) <- TRUE
+                            svalue(pca_band_layout[1,1]) <- "Degree"
+                            
+                            enabled(pca_band_layout[1,2]) <- TRUE
+                            enabled(pca_band_layout[2,2]) <- TRUE
+                            svalue(pca_band_layout[1,2]) <- "Scale"
+                            
+                            enabled(pca_band_layout[3,1]) <- TRUE
+                            enabled(pca_band_layout[4,1]) <- TRUE
+                            svalue(pca_band_layout[3,1]) <- "Offset"
+                        },
+                        "Hyperbolic" = {
+                            enabled(pca_band_layout[1,1]) <- TRUE
+                            enabled(pca_band_layout[2,1]) <- TRUE
+                            svalue(pca_band_layout[1,1]) <- "Scale"
+                            
+                            enabled(pca_band_layout[1,2]) <- TRUE
+                            enabled(pca_band_layout[2,2]) <- TRUE
+                            svalue(pca_band_layout[1,2]) <- "Offset"
+                            
+                            enabled(pca_band_layout[3,1]) <- FALSE
+                            enabled(pca_band_layout[4,1]) <- FALSE
+                        },
+                        "Bessel" = {
+                            enabled(pca_band_layout[1,1]) <- TRUE
+                            enabled(pca_band_layout[2,1]) <- TRUE
+                            svalue(pca_band_layout[1,1]) <- "Sigma"
+                            
+                            enabled(pca_band_layout[1,2]) <- TRUE
+                            enabled(pca_band_layout[2,2]) <- TRUE
+                            svalue(pca_band_layout[1,2]) <- "Order"
+                            
+                            enabled(pca_band_layout[3,1]) <- TRUE
+                            enabled(pca_band_layout[4,1]) <- TRUE
+                            svalue(pca_band_layout[3,1]) <- "Degree"
+                        },
+                        "ANOVA" = {
+                            enabled(pca_band_layout[1,1]) <- TRUE
+                            enabled(pca_band_layout[2,1]) <- TRUE
+                            svalue(pca_band_layout[1,1]) <- "Sigma"
+                            
+                            enabled(pca_band_layout[1,2]) <- TRUE
+                            enabled(pca_band_layout[2,2]) <- TRUE
+                            svalue(pca_band_layout[1,2]) <- "Degree"
+                            
+                            enabled(pca_band_layout[3,1]) <- FALSE
+                            enabled(pca_band_layout[4,1]) <- FALSE
+                        })
             })
 
 
@@ -160,32 +161,53 @@ enabled(pca_band_layout[4,1]) <- FALSE
 
 
 ## application params
-pca_grouping_frame <- gframe(text = "Data Grouping",
-                             horizontal = FALSE,
-                             container = pca_param_frame,
-                             expand = TRUE,
-                             width = 300)
-# trial/group vars
-pca_grouping_layout <- glayout(container = pca_grouping_frame)
+## TODO replace this stuff with annotator module button
+## pca_grouping_frame <- gframe(text = "Data Grouping",
+##                              horizontal = FALSE,
+##                              container = pca_param_frame,
+##                              expand = TRUE,
+##                              width = 300)
+## # trial/group vars
+## pca_grouping_layout <- glayout(container = pca_grouping_frame)
+## 
+## pca_grouping_layout[1,1] <- "First Group (Trial)"
+## pca_grouping_layout[2,1] <- 
+##   gcombobox(
+##     names(rbci.env$importlist[[svalue(trans_var_filesel, index=TRUE)]]))
+## 
+## pca_grouping_layout[3,1] <- "Second Group (Channel)"
+## pca_grouping_layout[4,1] <- 
+##   gcombobox(
+##     names(rbci.env$importlist[[svalue(trans_var_filesel, index=TRUE)]]))
 
-pca_grouping_layout[1,1] <- "First Group (Trial)"
-pca_grouping_layout[2,1] <- 
-  gcombobox(
-    names(rbci.env$importlist[[svalue(trans_var_filesel, index=TRUE)]]))
-
-pca_grouping_layout[3,1] <- "Second Group (Channel)"
-pca_grouping_layout[4,1] <- 
-  gcombobox(
-    names(rbci.env$importlist[[svalue(trans_var_filesel, index=TRUE)]]))
-
-## output params
+### output params
 pca_output_frame <- gframe(text = "KL Output Options",
                            horizontal = FALSE,
                            container = pca_param_frame,
                            expand = TRUE,
                            width = 300)
 
-# apply pca button
+## compute pca button
+pca_compute_button <-
+    gbutton("Compute PCA",
+            container = pca_output_frame,
+            handler = function(h,...){
+                input.name <- svalue(trans_var_filesel)
+                input.data <- rbci.env$importlist[[input.name]]
+                input.tags <- rbci.env$tags[[input.name]]
+                                        # TODO ensure these outputs are displayed
+                rbci.env$transformlist[[make.unique(paste0(input.name,
+                                                           'pca'))]] <- 
+                    transform.pca(targ.name = input.tags$targetcol,
+                                  epoch.name = input.tags$epochcol,
+                                  time.name = input.tags$timecol,
+                                  eeg.table = input.data,
+                                  kernel.type = svalue(pca_kernel_type_menu),
+                                  pc.count = svalue(pca_band_layout[4,2]))
+                
+            })
+
+## apply pca button
 pca_apply_btn <- gbutton("Apply KL to Data",
                          container = pca_output_frame)
 # refresh dataset frame on run
@@ -194,18 +216,19 @@ tool_output_name <- gedit(text = "Output.Variable",
                           container = pca_output_frame,
                           width = 25)
 
-# save pca
-pca_save_btn <- gfilebrowse(text = "Save Transformed Data",
-                            type = "save",
-                            container = pca_output_frame,
-                            handler = function (h,...) {
-                              
-                              ## below to backend
-                              # save file
-                              
-                              # update list to include
-                              
-                            })
+## save pca
+## TODO this is better moved to the report module
+## pca_save_btn <- gfilebrowse(text = "Save Transformed Data",
+##                             type = "save",
+##                             container = pca_output_frame,
+##                             handler = function (h,...) {
+##                               
+##                               ## below to backend
+##                               # save file
+##                               
+##                               # update list to include
+##                               
+##                             })
 
 
 # plot variances

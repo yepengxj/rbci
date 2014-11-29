@@ -1,6 +1,7 @@
 ###### Initialize backend processing #######
 rbci.env <- new.env() # environment for storing GUI state stuff
 rbci.env$opts <- list()
+## list for imported data
 rbci.env$importlist <- list()
 ## tags for annotation
 ## hierarchy:
@@ -13,7 +14,10 @@ rbci.env$tags <- list()
 rbci.env$taglist <- list(targetcol = NULL, valuecol = NULL,
                          epochcol = NULL)
 rbci.env$filterlist <- list()
+## list for computed transforms
 rbci.env$transformlist <- list()
+## list for transformed data
+rbci.env$transdatalist <- list()
 
 # gc() # ensure we have a clean slate
 
@@ -31,10 +35,12 @@ library(data.table)
 
 library(ggplot2)
 
-# misc utility functions
+### misc utility functions
 source("./backend/misc.R")
 
-# importer backend
+### importer backend
 source("./backend/importers.R")
-# explorer backend
+### explorer backend
 source("./backend/explorers.R")
+### transformer backend
+source("./backend/transformers.R")
