@@ -93,7 +93,7 @@ filter_output_frame <- gframe(text = "Filter Output Options",
                                 width = 300)
 
 # apply filter button
-filter_apply_btn <- gbutton("Apply Filter Data",
+filter_apply_btn <- gbutton("Apply Filter to Data",
                             container = filter_output_frame)
 
 # save filter

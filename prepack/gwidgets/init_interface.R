@@ -42,14 +42,6 @@ filter_btn <- gbutton(
     source("./gwidgets/filter_interface.R")
   })
 
-tool_btn <- gbutton(
-  text      = "Custom Tool Designer",
-  container = init_btn_group,
-  handler   = function(h, ...)
-  {
-    source("./gwidgets/tool_interface.R")
-  })
-
 transform_btn <- gbutton(
   text      = "Transforms/Unsupervised Learning",
   container = init_btn_group,
@@ -80,6 +72,14 @@ opts_btn <- gbutton(
   handler   = function(h, ...)
   {
     source("./gwidgets/opts_interface.R")
+  })
+
+tool_btn <- gbutton(
+  text      = "Custom Tool Designer",
+  container = init_btn_group,
+  handler   = function(h, ...)
+  {
+    source("./gwidgets/tool_interface.R")
   })
 
 quit_btn <- gbutton(
