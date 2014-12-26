@@ -93,8 +93,23 @@ filter_output_frame <- gframe(text = "Filter Output Options",
                                 width = 300)
 
 # apply filter button
-filter_apply_btn <- gbutton("Apply Filter to Data",
-                            container = filter_output_frame)
+filter_apply_btn <-
+    gbutton("Apply Filter to Data",
+            container = filter_output_frame,
+            handler = function(h,...){
+                filt.type <- svalue(filter_type_menu)
+                filt.stopband <- c(svalue(filter_band_layout[2,1]),
+                                   svalue(filter_band_layout[2,2]))
+                filt.passband <- c(svalue(filter_band_layout[4,1]),
+                                   svalue(filter_band_layout[4,2]))
+                filt.groups <- c(svalue(filter_grouping_layout[2,1]),
+                                 svalue(filter_grouping_layout[4,1]))
+                
+                rbci.env$filter <- simple.filter(filt.type,
+                                                 filt.stopband,
+                                                 filt.passband,
+                                                 filt.groups)
+                })
 
 # save filter
 filter_save_btn <- gbutton("Save Filtered Data",
