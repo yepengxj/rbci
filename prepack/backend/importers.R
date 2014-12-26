@@ -7,7 +7,6 @@
 #' @param options A list of named options
 #' @return If import OK, outputs a preview of the imported data 
 #' @name Import backends
-NULL
 
 #' @rdname matlab.type2.import
 matlab_type2_import <- function(init.struct,eeg.ind,tgt.ind,preview = FALSE) {

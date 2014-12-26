@@ -48,21 +48,12 @@ filter_band_label <- glabel(text = "Filter Band",
 filter_band_layout <- glayout(container = filter_param_frame)
 
 # stop band start
-filter_band_layout[1,1] <- "Stopband Start"
+filter_band_layout[1,1] <- "Start"
 filter_band_layout[2,1] <- gspinbutton(from = 0, to = 1, by = 0.01)
   
 # stop band end
-filter_band_layout[1,2] <- "Stopband End"
+filter_band_layout[1,2] <- "End"
 filter_band_layout[2,2] <- gspinbutton(from = 0, to = 1, by = 0.01)
-
-# pass band start
-filter_band_layout[3,1] <- "Passband Start"
-filter_band_layout[4,1] <- gspinbutton(from = 0, to = 1, by = 0.01)
-
-# pass band end
-filter_band_layout[3,2] <- "Passband End"
-filter_band_layout[4,2] <- gspinbutton(from = 0, to = 1, by = 0.01)
-
 
 ## application params
 filter_grouping_frame <- gframe(text = "Filter Apply Rules",
@@ -98,18 +89,32 @@ filter_apply_btn <-
             container = filter_output_frame,
             handler = function(h,...){
                 filt.type <- svalue(filter_type_menu)
-                filt.stopband <- c(svalue(filter_band_layout[2,1]),
+                filt.band <- c(svalue(filter_band_layout[2,1]),
                                    svalue(filter_band_layout[2,2]))
-                filt.passband <- c(svalue(filter_band_layout[4,1]),
-                                   svalue(filter_band_layout[4,2]))
                 filt.groups <- c(svalue(filter_grouping_layout[2,1]),
                                  svalue(filter_grouping_layout[4,1]))
                 
+                ## get the designed filter
                 rbci.env$filter <- simple.filter(filt.type,
-                                                 filt.stopband,
-                                                 filt.passband,
+                                                 filt.band
                                                  filt.groups)
-                })
+                
+                ## plot the filter as confirmation that it worked
+                visible(filter_plot_frame,TRUE)
+                plot.filter(rbci.env$filter)
+                
+                ## apply the filter, add new data file to list
+                append(rbci.env$importlist,
+                       apply.filter(
+                           signal.table = svalue(filter_var_filesel),
+                           filt.groups = c(svalue(filter_grouping_layout[2,1]),
+                               svalue(filter_grouping_layout[4,1])),
+                           val.col = svalue(filter_varlist),
+                           filter.obj = rbci.env$filter))
+                ## ensure names are straight
+                names(rbci.env$importlist) <-
+                    make.unique(names(rbci.env$importlist))
+            })
 
 # save filter
 filter_save_btn <- gbutton("Save Filtered Data",
