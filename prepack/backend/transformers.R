@@ -103,3 +103,16 @@ transform.pca <- function(targ.name = "Class",
         
     }
 }
+
+transform.kmeans <- function(kmeans.data,
+                             val.col,
+                             kmeans.type,
+                             centers,
+                             max.iters,
+                             groups) {
+### wrapper function for kmeans functions, for easy extension
+    
+    kmeans(kmeans.data[,get(val.col)], centers, max.iters,
+           algorithm = kmeans.type)
+
+}
