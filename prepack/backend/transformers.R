@@ -117,13 +117,28 @@ transform.kmeans <- function(kmeans.data,
 
 }
 
-transform.csp <- function(table.data, col.groups) {
-
-    ## compute correlation matrices by trial
-
+transform.csp <- function(table.data, time.col, chan.col, val.col, trial.col,
+                          class.col, avg.type) {
+    
+    ## compute correlation matrices by trial, class
+    setkeyv(table.data,class.col)
+    correlation.mats.list <- foreach(table.data[,unique(get(class.col))]) %do% {
+                                        # this loop is deliberately serial:
+                                        # not worth trying to parallelize in
+                                        # most cases
+        acorr.table(table.data,
+                    time.col, chan.col, val.col, trial.col)
+    }
+                                    
     ## average matrices by class
-
+    avg.corr.mats <- lapply(correlation.mats.list, function(x) {
+        ## each of these inputs is a cube of matrices
+        ## we want to average over the 3rd dimension
+        apply(x,c(1,2),mean) # just like that
+    })
+    
     ## jointly diagonalize
-
+    require(JADE) # Cardoso et. al's diagonalization algorithms
     ## make list of eigenvectors/eigenvalues, return
+    rjd(abind3curry(avg.corr.mats))
 }

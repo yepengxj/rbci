@@ -32,6 +32,13 @@ csp_param_frame <- gframe(text = "csp Parameters",
                              width = 300)
 
 ## opts
+csp_avg_type_list <- c("Arithmetic","Geometric","Harmonic")
+csp_avg_type_label <- glabel(text = "Average Type",
+                             container = csp_param_frame)
+csp_avg_type_menu <-
+    gdroplist(csp_avg_type_list,
+              text = "Average Type",
+              container = csp_param_frame)
 
 ## application params
 csp_grouping_frame <- gframe(text = "Data Grouping",
@@ -68,10 +75,14 @@ csp_apply_btn <-
                             svalue(csp_grouping_layout[4,1]))
                 csp.data <- svalue(trans_var_filesel)
                 csp.col <- svalue(csp_varlist_frame)
+                csp.avg.type <- svalue(csp_avg_type_menu)
                 
                 ## do clustering, get model
                 rbci.env$transformlist[paste(csp.data,"csp",sep=".")] <-
-                    transform.csp(csp.data,csp.col,groups))
+                    transform.csp(table.data = csp.data,
+                                  val.col = csp.col,
+                                  col.groups = groups,
+                                  avg.type = csp.avg.type)
                 ## no need to make list names unique here
             })
 
