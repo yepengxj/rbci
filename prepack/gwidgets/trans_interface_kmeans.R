@@ -152,12 +152,12 @@ kmeans_save_btn <-
                 type = "save",
                 container = kmeans_output_frame,
                 handler = function (h,...) {
-                    
+                    k.data <- svalue(trans_var_filesel)
                     ## save file
                     save(rbci.env$transformlist[paste(k.data,"kmeans",sep=".")],
                          file = gfile(
                          filter = list("RData" = list(patterns = c("*.RData")))),
-                         type = "save"))
+                         type = "save")
                     
                 })
 

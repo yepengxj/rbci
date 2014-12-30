@@ -40,7 +40,7 @@ trans_kmeans_tab <- gframe(label = "k-means",
                         container = trans_task_book)
 
 source("./gwidgets/trans_interface_pca.R")
-# source("./gwidgets/trans_interface_csp.R")
+source("./gwidgets/trans_interface_csp.R")
 source("./gwidgets/trans_interface_kmeans.R")
 
 # set some widths (doesn't work if earlier)

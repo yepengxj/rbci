@@ -116,3 +116,14 @@ transform.kmeans <- function(kmeans.data,
            algorithm = kmeans.type)
 
 }
+
+transform.csp <- function(table.data, col.groups) {
+
+    ## compute correlation matrices by trial
+
+    ## average matrices by class
+
+    ## jointly diagonalize
+
+    ## make list of eigenvectors/eigenvalues, return
+}
