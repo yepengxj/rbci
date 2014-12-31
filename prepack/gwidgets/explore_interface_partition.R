@@ -86,8 +86,6 @@ partition_band_layout[3,2] <- "Set 3 Proportion"
 partition_band_layout[4,2] <- gspinbutton(from = 0, to = 1, by = 0.001)
 
 enabled.list(state = FALSE,
-             partition_band_layout[1,2],
-             partition_band_layout[2,2],
              partition_band_layout[3,1],
              partition_band_layout[3,2],
              partition_band_layout[4,1],
@@ -166,7 +164,7 @@ partition_apply_btn <-
             })
 
 ## save partition
-## Leave off for reporter also?
+## Leave off for reporter also
 # partition_save_btn <- gbutton("Save Partitioned Data",
 #                           container = partition_output_frame)
 # refresh dataset frame on run
