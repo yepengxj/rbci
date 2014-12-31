@@ -24,10 +24,16 @@ process_frame <- gframe(text = "Processed Steps",
 
 # populate step selector
 # TODO add some kind of handler to refresh subitems in tables
-process_step_sel <- gcheckboxgroup(names(rbci.env$steplist),
+process_step_sel <- gtable(names(rbci.env$steplist),
                                    container = process_frame,
                                    use.table = TRUE,
                                    expand = TRUE)
+
+process_step_up <- gbutton(text = "",
+                           container = process_frame,
+                           handler = function(h, ...) {
+                           })
+
 # addSpring(process_frame)
 
 ## output options
