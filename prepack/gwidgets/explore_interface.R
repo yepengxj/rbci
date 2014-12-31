@@ -46,11 +46,15 @@ hist_tab <- gframe(label = "Histogram",
 annotate_tab <- gframe(label = "Annotate",
                        container = explore_task_book)
 
+partition_tab <- gframe(label = "Partition",
+                        container = explore_task_book)
+
 # Load subitems (into tabs)
 source("./gwidgets/explore_interface_summary.R")
 source("./gwidgets/explore_interface_means.R")
 source("./gwidgets/explore_interface_hist.R")
 source("./gwidgets/explore_interface_annotate.R")
+source("./gwidgets/explore_interface_partition.R")
 
 # re-init backend (TODO re-organize this)
 source("./backend/explorers.R")

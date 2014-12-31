@@ -11,3 +11,17 @@ load_obj <- function(f)
   nm <- load(f, env)[1]
   env[[nm]]
 }
+
+### pseudo-curry of gwidgets enabled() method to enable bulk enable/disable
+### widgets
+enabled.list <- function(state = TRUE, ...) {
+    require(gWidgets)
+    ### TODO throw error if state not T/F
+
+    ### TODO throw error if not passed good objs
+    objs <- list(...)
+    
+    lapply(objs, function(x) {
+        enabled(x) <- state
+    })
+}
