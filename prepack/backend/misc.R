@@ -25,3 +25,8 @@ enabled.list <- function(state = TRUE, ...) {
         enabled(x) <- state
     })
 }
+
+### hacky widget refresher, destroys and recreates widgets
+refresh.widget <- function(old.widget, new.widget = old.widget) {
+    
+}
