@@ -34,7 +34,11 @@ filter_task_book <- gnotebook(tab.pos = 3,
 filter_simple_tab <- gframe(label = "Simple Filtering",
                             container = filter_task_book)
 
+filter_downsample_tab <- gframe(label = "Downsampling",
+                                container = filter_task_book)
+
 source("./gwidgets/filter_interface_simple.R")
+source("./gwidgets/filter_interface_downsample.R")
 
 # set some widths (doesn't work if earlier)
 svalue(filter_pane) <- 0.2
