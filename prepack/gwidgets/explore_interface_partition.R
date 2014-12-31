@@ -148,17 +148,22 @@ partition_apply_btn <-
                        })
                 
 ### TODO throw error if props are malformed
-                
-                part.file <- rbci.env$importlist[svalue(explore_var_filesel)]
+                file.name <- svalue(explore_var_filesel)
+                part.file <- rbci.env$importlist[file.name]
                 part.col <- svalue(partition_grouping_layout[2,1])
                 part.type <- svalue(partition_type_menu)
                 
                 ## apply the partition, add new data tables to list
-                append(rbci.env$importlist,
-                       partition.table(part.file,
-                                       part.col,
-                                       part.props,
-                                       part.type))
+                new.tables <- partition.table(part.file,
+                                              part.col,
+                                              part.props,
+                                              part.type)
+                ## naming for clarity
+                names(new.tables) <- paste(file.name,
+                                           "part", seq_along(new.tables),
+                                           sep = ".")
+                
+                append(rbci.env$importlist,new.tables)
                 ## ensure names are straight
                 names(rbci.env$importlist) <-
                     make.unique(names(rbci.env$importlist))
