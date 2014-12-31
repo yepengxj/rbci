@@ -25,16 +25,13 @@ partition_param_frame <- gframe(text = "Partition Parameters",
                              expand = TRUE)
 
 ### type
-## partition_type_list <- c("Lowpass","Bandpass","Highpass","Stopband")
-## partition_type_label <- glabel(text = "Partition Type",
-##                            container = partition_param_frame)
-# partition_type_menu <- 
-#   gdroplist(partition_type_list,
-#             text = "Partition Type",
-#             container = partition_param_frame,
-#             handler = function (h,...) {
-#               # enable or disable band param GUI opts on type change
-#            })
+partition_type_list <- c("Random","Sequential")
+partition_type_label <- glabel(text = "Partition Type",
+                           container = partition_param_frame)
+partition_type_menu <- 
+    gdroplist(partition_type_list,
+              text = "Partition Type",
+              container = partition_param_frame)
 
 ### numerical entry (spinboxes)
 partition_band_label <- glabel(text = "Numerical Parameters",
@@ -154,10 +151,14 @@ partition_apply_btn <-
                 
                 part.file <- rbci.env$importlist[svalue(explore_var_filesel)]
                 part.col <- svalue(partition_grouping_layout[2,1])
+                part.type <- svalue(partition_type_menu)
                 
                 ## apply the partition, add new data tables to list
                 append(rbci.env$importlist,
-                       partition.table(part.file,part.col,part.props))
+                       partition.table(part.file,
+                                       part.col,
+                                       part.props,
+                                       part.type))
                 ## ensure names are straight
                 names(rbci.env$importlist) <-
                     make.unique(names(rbci.env$importlist))
