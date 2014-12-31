@@ -96,7 +96,7 @@ filter_apply_btn <-
                 
                 ## get the designed filter
                 rbci.env$filter <- simple.filter(filt.type,
-                                                 filt.band
+                                                 filt.band,
                                                  filt.groups)
                 
                 ## plot the filter as confirmation that it worked
