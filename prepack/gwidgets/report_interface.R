@@ -26,7 +26,12 @@ process_frame <- gframe(text = "Processed Steps",
 process_step_sel <- gtable(tabulate.steplist(rbci.env$steplist),
                            container = process_frame,
                            use.table = TRUE,
-                           expand = TRUE)
+                           expand = TRUE,
+                           handler = function(h,...){
+                               
+                               
+                               
+                           })
 
 ### controls for changing step ordering/enabledness
 process_step_up <- gbutton(
@@ -64,23 +69,9 @@ report_output_sel <- gfilebrowse(text = "Output directory name",
 report_output_btn <- gbutton(text = "Generate Report",
                              container = process_frame)
 
-report_task_book <- gnotebook(tab.pos = 3,
-                             container = report_pane)
-
-text_tab <- gframe(label = "Text",
-                  container = report_task_book)
-
-graphics_tab <- gframe(label = "Graphics",
-                  container = report_task_book)
-
-script_tab <- gframe(label = "Script",
-                    container = report_task_book)
-
 
 # Load subitems (into tabs)
 source("./gwidgets/report_interface_text.R")
-source("./gwidgets/report_interface_graphics.R")
-source("./gwidgets/report_interface_script.R")
 
 # set some widths (doesn't work if earlier)
-svalue(report_pane) <- 0.2
+svalue(report_pane) <- 0.4

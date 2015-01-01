@@ -1,37 +1,41 @@
-# elements:
-# verbosity:
-## output only
-## parameters/plugin outputs
-## all of the above and code
-# format:
-## raw
-## Markdown
-## knitted
+# text_pane <- gpanedgroup(horizontal = FALSE,
+#                          expand = TRUE,
+#                          fill = TRUE,
+#                          container = report_pane)
 
-text_pane <- gpanedgroup(horizontal = TRUE,
-                              expand = TRUE,
-                              fill = TRUE,
-                              container = text_tab)
+text_pane_group <- ggroup(container = report_pane,
+                          horizontal = FALSE)
 
-text_opts_frame <- gframe("Text Output Options",
+step_summary <- glabel("Summary: ",
+                       container = text_pane_group)
+
+step_code_frame <- gframe("Section Code",
                           horizontal = FALSE,
-                          container = text_pane)
+                          container = text_pane_group,
+                          expand = TRUE)
 
-glabel("Verbosity", container = text_opts_frame)
-verbosity_levels <- c("Output only", "Function I/O", "Full")
-text_opts_verbose <- gdroplist(verbosity_levels,
-                               container = text_opts_frame)
+step_code_text <- gtext(container = step_code_frame, # step_code_frame,
+                        font.attr = c(family="monospace"),
+                        expand = TRUE)
 
-glabel("Format", container = text_opts_frame)
-format_types <- c("Raw", "Markdown", "HTML")
-text_opts_format <- gdroplist(format_types,
-                              container = text_opts_frame)
+step_run_export <-
+    gbutton("Run This Step and Save",
+            container = step_code_frame,
+            handler = function(h,...){
+                
+            })
 
+report_opts_frame <- gframe("Report Options",
+                            horizontal = TRUE,
+                            container = text_pane_group)
 
-addSpring(text_opts_frame)
-text_reload_button <- gbutton("Update Preview",
-                              container = text_opts_frame)
+report_opts_title <- glabel("Report Title",
+                            editable = TRUE,
+                            container = report_opts_frame,
+                            expand = TRUE)
 
-text_output_preview <- gtext("Output preview will appear here.",
-                             container = text_pane,
+report_opts_author <- glabel("Report Author",
+                             editable = TRUE,
+                             container = report_opts_frame,
                              expand = TRUE)
+
