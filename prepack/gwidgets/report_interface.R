@@ -23,13 +23,12 @@ process_frame <- gframe(text = "Processed Steps",
                           expand = TRUE)
 
 ### populate step selector
-### TODO add some kind of handler to refresh subitems in tables
-process_step_sel <- gtable(names(rbci.env$steplist),
-                                   container = process_frame,
-                                   use.table = TRUE,
-                                   expand = TRUE)
+process_step_sel <- gtable(tabulate.steplist(rbci.env$steplist),
+                           container = process_frame,
+                           use.table = TRUE,
+                           expand = TRUE)
 
-### controls for changing step ordering 
+### controls for changing step ordering/enabledness
 process_step_up <- gbutton(
     text = "▲",
     container = process_frame,
@@ -45,6 +44,13 @@ process_step_down <-
                 scoot.gtable.row(process_step_sel,
                                  svalue(process_step_sel, index = TRUE),
                                  "down")
+            })
+process_step_toggle <-
+    gbutton(text = "Enable/Disable",
+            container = process_frame,
+            handler = function(h, ...) {
+                toggle.row(process_step_sel,
+                           svalue(process_step_sel, index = TRUE))
             })
 
 # addSpring(process_frame)
