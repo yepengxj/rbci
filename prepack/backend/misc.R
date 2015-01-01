@@ -33,14 +33,52 @@ refresh.widget <- function(old.widget, new.widget = old.widget) {
 }
 
 scoot.gtable.row <- function(input.gtable, input.row, direction = "up") {
+### Scoots rows up or down in a data.frame-like gtable or gdf
+### Relies on cool frame-like coercing of gtable[] 
 ### TODO unique row checking/exception
-    my.row <- rowscan.data.frame(input.gtable, input.row)
+### TODO error checking on table ends (fails silently currently)
+    require(gWidgets)
+
+    ## what kind of row arg did we get? a row or a row index?
+    switch(class(input.row),
+           "data.frame" = {
+               ## if we got a row, scan to find its index
+               my.ind <- rowscan.data.frame(input.gtable, input.row)
+           },
+           "integer" = {
+               ## if we got an index, pull the row
+               my.ind <- input.row
+               input.row <- input.gtable[input.row,]
+           })
+
+    ## pick out the swapping buddy
+    switch(direction,
+           "up" = {
+               row.ind <- my.ind-1
+               swap.row <- input.gtable[row.ind,]
+           },
+           "down" = {
+               row.ind <- my.ind+1
+               swap.row <- input.gtable[row.ind,]
+           })
+    
+    ## make the swap
+    input.gtable[row.ind,] <- input.row
+    input.gtable[my.ind,] <- swap.row
+
+    ## no returns should be necessary, since changes are by ref
+### TODO use later for error handling
+    return()
 }
 
 rowscan.data.frame <- function(df,row) {
 ### finds the row index(es) of a given row in a given dataframe
 ### from https://stat.ethz.ch/pipermail/r-help/2010-November/261170.html
+    
+    ## first candidate: fails on type issues
+    ## rows <- which(apply(mapply(df, row, FUN="=="), MARGIN=1, FUN=all))
 
-    rows <- which(apply(mapply(df, row, FUN="=="), MARGIN=1, FUN=all));
-
+    ## string search: works, might be slow
+### TODO revisit this
+    which((apply(df, 1, toString) %in% toString(row)))
 }
