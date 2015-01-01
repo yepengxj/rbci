@@ -22,7 +22,7 @@ rbci.env$taglist <- list(targetcol = NULL,
 ##  -> summary.text string
 ##  -> code.expr expression
 ##  -> enabled boolean
-rbci.env$steplist <- list(steps = NULL)
+rbci.env$steplist <- list()
 ### TODO revisit these
 rbci.env$filterlist <- list()
 ## list for computed transforms
