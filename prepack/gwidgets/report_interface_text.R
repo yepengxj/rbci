@@ -22,8 +22,13 @@ step_run_export <-
     gbutton("Run This Step and Save",
             container = step_code_frame,
             handler = function(h,...){
+                this.step.code <-
+                    svalue(process_step_sel,"code")
                 
-                
+                save(export.single.step(this.step.code),
+                     file = gfile(
+                         filter = list("RData" = list(patterns = c("*.RData"))),
+                         type = "save"))
             })
 
 report_opts_frame <- gframe("Report Options",

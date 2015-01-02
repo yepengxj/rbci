@@ -7,7 +7,8 @@ tabulate.steplist <- function(steplist) {
         t(sapply(steplist,unlist))
     } else {
         ## return a dummy df that matches structure
-        return(t(as.matrix(list(summary.text=NULL,code=NULL,enabled=FALSE))))
+### TODO revisit this
+        return(t(as.matrix(list(summary.text=NULL, code=NULL, enabled=FALSE))))
     }
 
 }
@@ -19,6 +20,17 @@ toggle.row <- function(steplist.table, row.ind) {
     
 }
 
+export.single.step <- function(some.code) {
+### evaluates a single step of code as stored by the reporter;
+### expects a string
+    
+    ## run given code, capture output
+    code.result <- capture.output({
+        eval(parse(some.code))
+    })
+
+}
+
 build.report <- function(steplist.table, report.title, report.author,
                          output.dir) {
     
@@ -26,10 +38,11 @@ build.report <- function(steplist.table, report.title, report.author,
     step.list <- steplist.table[steplist.table$enabled,]
     
     ## get an R Markdown file ready
-    file.name <- paste(output.dir, strsplit(report.title, " ")[[1]][1],
-                      sep = "/") 
+    file.name <- paste(output.dir, "/", strsplit(report.title, " ")[[1]][1],
+                       ".Rmd", # needed?
+                       sep = "")
     file.create(file.name)
-
+    
     file.conn <- file(file.name, open = "a")
     ## write header junk like title and author
     writeLines(make.report.head(report.title,report.author), file.conn)
@@ -40,8 +53,15 @@ build.report <- function(steplist.table, report.title, report.author,
         writeLines(c(this.step$summary,"```",this.step$code,"```"))
         
     })
+    close(file.conn)
     
     ## call knitr on resulting Rmd file
+    ## do some directory finagling to make sure knitr is happy
+    cur.dir <- getwd()
+    setwd(output.dir)
+    knit2html(basename(file.name))
+    if (interactive()) browseURL(paste(file_path_sans_ext(basename(file.name))))
+    setwd(cur.dir) # undo dir finagle
 }
 
 make.report.head <- function(report.title, report.author) {
