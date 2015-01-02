@@ -29,7 +29,7 @@ process_step_sel <- gtable(tabulate.steplist(rbci.env$steplist),
                            expand = TRUE,
                            handler = function(h,...){
                                ## update previewers
-                               
+### TODO fix this
                                svalue(step_code_text) <-
                                    svalue(h$obj, drop = FALSE)$code
                                

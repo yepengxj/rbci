@@ -1,5 +1,5 @@
 ### libraries required
-## should be consolidates here
+## should be consolidated here like a package.json file
 
 library(tools)
 library(parallel)

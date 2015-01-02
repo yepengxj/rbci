@@ -3,7 +3,7 @@
 source("./dependencies.R")
 
 ### load data structures
-source("./structures.R")
+source("./backend/structures.R")
 
 ### misc utility functions
 source("./backend/misc.R")
