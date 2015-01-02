@@ -218,7 +218,7 @@ tool_output_name <- gedit(text = "Output.Variable",
 
 ## save pca
 ## TODO this is better moved to the report module
-## pca_save_btn <- gfilebrowse(text = "Save Transformed Data",
+## pca_save_btn <- gfilebrowse(text = "Save Transformed Data",0
 ##                             type = "save",
 ##                             container = pca_output_frame,
 ##                             handler = function (h,...) {
