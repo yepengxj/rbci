@@ -22,7 +22,7 @@ load_obj <- function(f)
 enabled.list <- function(state = TRUE, ...) {
     require(gWidgets)
     ### TODO throw error if state not T/F
-
+    
     ### TODO throw error if not passed good objs
     objs <- list(...)
     
@@ -70,7 +70,7 @@ scoot.gtable.row <- function(input.gtable, input.row, direction = "up") {
     ## make the swap
     input.gtable[row.ind,] <- input.row
     input.gtable[my.ind,] <- swap.row
-
+    
     ## no returns should be necessary, since changes are by ref
 ### TODO use later for error handling
     return()
@@ -82,7 +82,7 @@ rowscan.data.frame <- function(df,row) {
     
     ## first candidate: fails on type issues
     ## rows <- which(apply(mapply(df, row, FUN="=="), MARGIN=1, FUN=all))
-
+    
     ## string search: works, might be slow
 ### TODO revisit this
     which((apply(df, 1, toString) %in% toString(row)))
@@ -92,8 +92,8 @@ rowscan.data.frame <- function(df,row) {
 acorr.table <- function(input.table, time.col, chan.col, val.col, trial.col) {
     require(data.table)
     require(foreach)
-
-   ## in case we haven't been given something properly keyed
+    
+    ## in case we haven't been given something properly keyed
     setkeyv(input.table, trial.col, chan.col, sample.col)
     corr.dt <- foreach(seq_len(max(get(trial.col))),
                          .inorder = FALSE,
@@ -102,6 +102,6 @@ acorr.table <- function(input.table, time.col, chan.col, val.col, trial.col) {
         
         cor(dcast.data.table(input.table[J(get(trial.col))],
                              as.formula(paste(time.col,"~",chan.col)),
-                             value.var = val.col)
+                             value.var = val.col))
     }
 }

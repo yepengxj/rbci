@@ -12,10 +12,10 @@ tabulate.steplist <- function(steplist) {
 
 }
 
-### TODO fixme
 toggle.row <- function(steplist.table, row.ind) {
 ### toggles enabled.col of steplist.table
-    steplist.table[row.ind,]$enabled <- !steplist.table[row.ind,]$enabled
+    steplist.table[row.ind,]$enabled <-
+        !as.logical(steplist.table[row.ind,'enabled'])
     
 }
 
