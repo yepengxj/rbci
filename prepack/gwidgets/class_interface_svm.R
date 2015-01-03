@@ -32,9 +32,9 @@ svm_param_frame <- gframe(text = "svm Parameters",
                           width = 300)
 
 ## opts
-svm_kernel_type_list <- c("Linear (LiblineaR)","Gaussian (kernlab)",
-                          "Laplace (kernlab)","Polynomial (kernlab)",
-                          "Hyperbolic (kernlab)","Bessel (kernlab)",
+svm_kernel_type_list <- c("Linear (LiblineaR)", "Gaussian (kernlab)",
+                          "Laplace (kernlab)", "Polynomial (kernlab)",
+                          "Hyperbolic (kernlab)", "Bessel (kernlab)",
                           "ANOVA RBF (kernlab)", "Spline (kernlab)")
 svm_kernel_type_label <- glabel(text = "Kernel Type (library)",
                                 container = svm_param_frame)
@@ -196,43 +196,42 @@ svm_grouping_layout[4,1] <-
 svm_output_frame <- gframe(text = "Output Options",
                            horizontal = FALSE,
                            container = svm_param_frame,
-                           expand = TRUE,
-                           width = 300)
+                           expand = TRUE)
 
+svm_output_layout <- glayout(container = svm_output_frame)
 # apply svm button
-svm_apply_btn <- gbutton("Train",
-                         container = svm_output_frame)
-svm_apply_btn <- gbutton("Test",
-                         container = svm_output_frame)
-# refresh dataset frame on run
-# alert complete (progress bar?)
-tool_output_name <- gedit(text = "Model.Output.Var",
-                          container = svm_output_frame,
-                          width = 25)
-result_output_name <- gedit(text = "Result.Output.Var",
-                            container = svm_output_frame,
-                            width = 25)
+svm_output_layout[1,1] <-
+    gbutton("Train",
+            handler = function(h,...){
+                
+            })
+svm_output_layout[1,2] <-
+    gbutton("Test",
+            handler = function(h,...){
+                
+            })
 
-# save svm
-svm_save_btn <- gfilebrowse(text = "Save Model",
-                            type = "save",
-                            container = svm_output_frame,
-                            handler = function (h,...) {
-                              
-                              ## below to backend
-                              # save file
-                              # update list to include
-                              
-                            })
+## refresh dataset frame on run
+## alert complete (progress bar?)
+
+### save svm
+svm_output_layout[2,1] <-
+    gbutton(text = "Export Model",
+            handler = function (h,...) {
+                
+                ## save file
+                ## update list to include
+                save(output.model), ## TODO need to organize this
+                     file = gfile(
+                         filter = list("RData"= list(patterns = c("*.RData"))),
+                         type = "save"))
+                
+            })
 
 
-# plot variances
-svm_table_btn <- gbutton("Print Table",
-                            container = svm_output_frame)
-svm_model_btn <- gbutton("Print Model",
-                            container = svm_output_frame)
-svm_plot_btn <- gbutton("Plot Model (Overview)",
-                         container = svm_output_frame)
+svm_output_layout[2,2] <- gbutton("Print Table")
+svm_output_layout[3,1] <- gbutton("Print Model")
+svm_output_layout[3,2] <- gbutton("Plot Model (Overview)")
 
 # plot pane
 
