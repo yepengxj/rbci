@@ -221,7 +221,7 @@ svm_output_layout[2,1] <-
                 
                 ## save file
                 ## update list to include
-                save(output.model), ## TODO need to organize this
+                save(output.model, ## TODO need to organize this
                      file = gfile(
                          filter = list("RData"= list(patterns = c("*.RData"))),
                          type = "save"))

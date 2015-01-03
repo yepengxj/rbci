@@ -43,7 +43,7 @@ bayes_tab <- gframe(label = "Naive Bayes",
 # Load subitems (into tabs)
 source("./gwidgets/class_interface_sda.R")
 source("./gwidgets/class_interface_svm.R")
-# source("./gwidgets/class_interface_bayes.R")
+source("./gwidgets/class_interface_bayes.R")
 
 # set some widths (doesn't work if earlier)
 svalue(class_pane) <- 0.2

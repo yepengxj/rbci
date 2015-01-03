@@ -43,12 +43,12 @@ sda_band_layout[1,1] <- "Shrinkage (correlation matrix)"
 sda_band_layout[2,1] <- gspinbutton(from = 0, to = 1, by = 0.01)
 
 # stop band end
-sda_band_layout[1,2] <- "Shrinkage (variances)"
-sda_band_layout[2,2] <- gspinbutton(from = 0, to = 1, by = 0.01)
+sda_band_layout[3,1] <- "Shrinkage (variances)"
+sda_band_layout[4,1] <- gspinbutton(from = 0, to = 1, by = 0.01)
 
 # pass band start
-sda_band_layout[3,1] <- "Shrinkage (frequencies)"
-sda_band_layout[4,1] <- gspinbutton(from = 0, to = 1, by = 0.01)
+sda_band_layout[5,1] <- "Shrinkage (frequencies)"
+sda_band_layout[6,1] <- gspinbutton(from = 0, to = 1, by = 0.01)
 
 
 ## application params
@@ -77,40 +77,40 @@ sda_output_frame <- gframe(text = "Output Options",
                            expand = TRUE,
                            width = 300)
 
+sda_output_layout <- glayout(container = sda_output_frame)
 # apply sda button
-sda_apply_btn <- gbutton("Run",
-                         container = sda_output_frame)
-# refresh dataset frame on run
-# alert complete (progress bar?)
-model_output_name <- gedit(text = "Model.Output.Var",
-                          container = sda_output_frame,
-                          width = 25)
-result_output_name <- gedit(text = "Result.Output.Var",
-                           container = sda_output_frame,
-                           width = 25)
+sda_output_layout[1,1] <-
+    gbutton("Train",
+            handler = function(h,...){
+                
+            })
+sda_output_layout[1,2] <-
+    gbutton("Test",
+            handler = function(h,...){
+                
+            })
+
+## refresh dataset frame on run
+## alert complete (progress bar?)
+
+### save sda
+sda_output_layout[2,1] <-
+    gbutton(text = "Export Model",
+            handler = function (h,...) {
+                
+                ## save file
+                ## update list to include
+                save(output.model, ## TODO need to organize this
+                     file = gfile(
+                         filter = list("RData"= list(patterns = c("*.RData"))),
+                         type = "save"))
+                
+            })
 
 
-# save sda
-sda_save_btn <- gfilebrowse(text = "Save Model",
-                            type = "save",
-                            container = sda_output_frame,
-                            handler = function (h,...) {
-                              
-                              ## below to backend
-                              # save file
-                              
-                              # update list to include
-                              
-                            })
-
-
-# plot variances
-sda_table_btn <- gbutton("Print Table",
-                            container = sda_output_frame)
-sda_model_btn <- gbutton("Print Model",
-                            container = sda_output_frame)
-sda_plot_btn <- gbutton("Plot Model (Overview)",
-                        container = sda_output_frame)
+sda_output_layout[2,2] <- gbutton("Print Table")
+sda_output_layout[3,1] <- gbutton("Print Model")
+sda_output_layout[3,2] <- gbutton("Plot Model (Overview)")
 
 
 sda_output_frame <- gtext(text = "sda output",
