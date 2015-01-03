@@ -11,7 +11,6 @@ svm_varlist_frame <- gframe(text = "Apply Columns",
                             expand = TRUE,
                             width = 300)
 # populate varlist
-# TODO Update features spinbox on change
 svm_varlist <- gcheckboxgroup(
   names(rbci.env$importlist[[svalue(class_var_filesel, index=TRUE)]]),
   container = svm_varlist_frame,
@@ -161,7 +160,7 @@ svm_band_layout[3,1] <- ""
 svm_band_layout[4,1] <- gspinbutton(from = 0, to = 1, by = 0.01)
 
 # pass band end
-svm_band_layout[3,2] <- "# of Features (0 = all)"
+svm_band_layout[3,2] <- "Cost"
 svm_band_layout[4,2] <- gspinbutton(from = 0, to = length(svm_varlist), by = 1)
 enabled(svm_band_layout[1,1]) <- FALSE
 enabled(svm_band_layout[2,1]) <- FALSE
