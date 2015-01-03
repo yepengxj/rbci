@@ -203,6 +203,9 @@ svm_output_layout[1,1] <-
     gbutton("Train",
             handler = function(h,...){
                 
+                rbci.env$cur.model <-
+                    train.svm.model()
+                
             })
 svm_output_layout[1,2] <-
     gbutton("Test",
