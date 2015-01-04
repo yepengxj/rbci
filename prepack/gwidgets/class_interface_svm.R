@@ -51,7 +51,7 @@ svm_kernel_type_menu <-
               # sigma, order, degree, for Bessel
               # sigma, degree for ANOVA
               switch (svalue(h$obj),
-                      "Linear (LiblineaR)" = {
+                      "Linear" = {
                         enabled(svm_band_layout[1,1]) <- FALSE
                         enabled(svm_band_layout[2,1]) <- FALSE
                         enabled(svm_band_layout[1,2]) <- FALSE
@@ -59,7 +59,7 @@ svm_kernel_type_menu <-
                         enabled(svm_band_layout[3,1]) <- FALSE
                         enabled(svm_band_layout[4,1]) <- FALSE
                       },
-                      "Laplace (kernlab)" = {
+                      "Laplace" = {
                         enabled(svm_band_layout[1,1]) <- TRUE
                         enabled(svm_band_layout[2,1]) <- TRUE
                         svalue(svm_band_layout[1,1]) <- "Sigma"
@@ -69,7 +69,7 @@ svm_kernel_type_menu <-
                         enabled(svm_band_layout[3,1]) <- FALSE
                         enabled(svm_band_layout[4,1]) <- FALSE
                       },
-                      "Gaussian (kernlab)" = {
+                      "Gaussian" = {
                         enabled(svm_band_layout[1,1]) <- TRUE
                         enabled(svm_band_layout[2,1]) <- TRUE
                         svalue(svm_band_layout[1,1]) <- "Sigma"
@@ -79,7 +79,7 @@ svm_kernel_type_menu <-
                         enabled(svm_band_layout[3,1]) <- FALSE
                         enabled(svm_band_layout[4,1]) <- FALSE
                       },
-                      "Polynomial (kernlab)" = {
+                      "Polynomial" = {
                         enabled(svm_band_layout[1,1]) <- TRUE
                         enabled(svm_band_layout[2,1]) <- TRUE
                         svalue(svm_band_layout[1,1]) <- "Degree"
@@ -92,7 +92,7 @@ svm_kernel_type_menu <-
                         enabled(svm_band_layout[4,1]) <- TRUE
                         svalue(svm_band_layout[3,1]) <- "Offset"
                       },
-                      "Hyperbolic (kernlab)" = {
+                      "Hyperbolic" = {
                         enabled(svm_band_layout[1,1]) <- TRUE
                         enabled(svm_band_layout[2,1]) <- TRUE
                         svalue(svm_band_layout[1,1]) <- "Scale"
@@ -104,7 +104,7 @@ svm_kernel_type_menu <-
                         enabled(svm_band_layout[3,1]) <- FALSE
                         enabled(svm_band_layout[4,1]) <- FALSE
                       },
-                      "Bessel (kernlab)" = {
+                      "Bessel" = {
                         enabled(svm_band_layout[1,1]) <- TRUE
                         enabled(svm_band_layout[2,1]) <- TRUE
                         svalue(svm_band_layout[1,1]) <- "Sigma"
@@ -117,7 +117,7 @@ svm_kernel_type_menu <-
                         enabled(svm_band_layout[4,1]) <- TRUE
                         svalue(svm_band_layout[3,1]) <- "Degree"
                       },
-                      "ANOVA RBF (kernlab)" = {
+                      "ANOVA RBF" = {
                         enabled(svm_band_layout[1,1]) <- TRUE
                         enabled(svm_band_layout[2,1]) <- TRUE
                         svalue(svm_band_layout[1,1]) <- "Sigma"
@@ -129,7 +129,7 @@ svm_kernel_type_menu <-
                         enabled(svm_band_layout[3,1]) <- FALSE
                         enabled(svm_band_layout[4,1]) <- FALSE
                       },
-                      "Spline (kernlab)" = {
+                      "Spline" = {
                         enabled(svm_band_layout[1,1]) <- FALSE
                         enabled(svm_band_layout[2,1]) <- FALSE
                         
