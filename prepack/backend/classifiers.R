@@ -78,6 +78,32 @@ table.svm.model <- function(svm.prediction, test.data) {
 }
 
 ### SDA functions
+train.sda.model <- function(train.data,
+                            target.col,
+                            feature.cols,
+                            sda.lambda,
+                            sda.lambda.var) {
 
+    sda.model <-
+        sda(lambda.freqs = 1, # uniform prior
+            as.matrix(train.data[,feature.cols,with=FALSE]),
+            train.data[,get(target.col)],
+            lambda = sda.lambda,
+            lambda.var = sda.lambda.var)
+
+}
+
+test.sda.model <- function(sda.model, test.data) {
+    predict(sda.model, test.data)
+}
+
+### TODO sda does not have a native plot function
+
+table.sda.model <- function(sda.prediction, test.data) {
+
+    table(predicted = sda.prediction$class,
+          data = test.data)
+
+}
 
 ### Bayes functions
