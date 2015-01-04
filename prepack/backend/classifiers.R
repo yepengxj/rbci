@@ -108,10 +108,28 @@ table.sda.model <- function(sda.prediction, test.data) {
 
 ### Bayes functions
 
-train.bayes.model <- function() {}
+train.bayes.model <- function(train.data,
+                              bayes.smooth,
+                              target.col,
+                              feature.cols) {
+    
+    bayes.model <-naiveBayes(formula,
+               data = train.data,
+               laplace = bayes.smooth)
+    
+    
+}
 
-test.bayes.model <- function() {}
+test.bayes.model <- function(bayes.model, test.data) {
 
-plot.bayes.model <- function() {}
+    predict(bayes.model, test.data)
+    
+}
 
-table.bayes.model <- function() {}
+### TODO bayes does not have a native plot function
+
+table.bayes.model <- function(bayes.prediction, test.data) {
+    
+    table(bayes.prediction, test.data)
+    
+}

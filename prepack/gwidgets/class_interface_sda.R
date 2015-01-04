@@ -110,8 +110,6 @@ sda_output_layout[2,1] <-
 
 sda_output_layout[2,2] <- gbutton("Print Table")
 sda_output_layout[3,1] <- gbutton("Print Model")
-sda_output_layout[3,2] <- gbutton("Plot Model (Overview)")
-
 
 sda_output_frame <- gtext(text = "sda output",
                            font.attr=c(family="monospace"),
