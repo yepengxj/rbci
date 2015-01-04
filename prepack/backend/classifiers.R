@@ -107,3 +107,11 @@ table.sda.model <- function(sda.prediction, test.data) {
 }
 
 ### Bayes functions
+
+train.bayes.model <- function() {}
+
+test.bayes.model <- function() {}
+
+plot.bayes.model <- function() {}
+
+table.bayes.model <- function() {}
