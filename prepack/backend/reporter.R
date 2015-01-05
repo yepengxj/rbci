@@ -67,6 +67,7 @@ build.report <- function(steplist.table, report.title, report.author,
 make.report.head <- function(report.title, report.author) {
 ### convenience function for generating a decent rmarkdown header
 ### TODO add settings
+### TODO add backend function importer (for now import all funcs; show=false)
     
     c(paste(report.title,"\n","======","\n",sep=""),
       paste("## ",report.author,"\n",sep=""),

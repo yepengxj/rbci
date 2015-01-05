@@ -53,8 +53,8 @@ partition_tab <- gframe(label = "Partition",
 source("./gwidgets/explore_interface_summary.R")
 source("./gwidgets/explore_interface_means.R")
 source("./gwidgets/explore_interface_hist.R")
-source("./gwidgets/explore_interface_annotate.R")
 source("./gwidgets/explore_interface_partition.R")
+# source("./gwidgets/explore_interface_annotate.R")
 
 # re-init backend (TODO re-organize this)
 source("./backend/explorers.R")
