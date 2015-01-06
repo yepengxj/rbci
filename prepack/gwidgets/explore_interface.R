@@ -43,8 +43,8 @@ means_tab <- gframe(label = "Grand Means",
 hist_tab <- gframe(label = "Histogram",
                    container = explore_task_book)
 
-annotate_tab <- gframe(label = "Annotate",
-                       container = explore_task_book)
+# annotate_tab <- gframe(label = "Annotate",
+#                        container = explore_task_book)
 
 partition_tab <- gframe(label = "Partition",
                         container = explore_task_book)
@@ -58,6 +58,7 @@ source("./gwidgets/explore_interface_partition.R")
 
 # re-init backend (TODO re-organize this)
 source("./backend/explorers.R")
+source("./backend/partition_table.R")
 
 # set some widths (doesn't work if earlier)
 svalue(explore_pane) <- 0.2
