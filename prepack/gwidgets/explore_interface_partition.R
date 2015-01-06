@@ -102,7 +102,7 @@ partition_apply_btn <-
             container = partition_output_frame,
             handler = function(h,...){
                 ## proportion inputs depend on how many subsets we have
-                switch(svalue(partition_band_layout[2,1]),
+                switch(as.character(svalue(partition_band_layout[2,1])),
                        "2"={
                            part.props <-
                                c(svalue(partition_band_layout[2,2]),
