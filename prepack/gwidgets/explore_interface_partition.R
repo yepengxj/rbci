@@ -1,27 +1,7 @@
-# button pane
-partition_pane <- gframe(text = "Partition Data",
-                         horizontal = TRUE,
-                         expand = TRUE,
-                         fill = TRUE,
-                         container = partition_tab)
-
-
-partition_varlist_frame <- gframe(text = "Data Columns",
-                                  horizontal = FALSE,
-                                  container = partition_pane,
-                                  expand = TRUE)
-
-# populate varlist
-partition_varlist <- gcheckboxgroup(
-  names(rbci.env$importlist[[svalue(explore_var_filesel, index=TRUE)]]),
-  container = partition_varlist_frame,
-  use.table = TRUE,
-  expand = TRUE)
-
 ## partition params
 partition_param_frame <- gframe(text = "Partition Parameters",
                              horizontal = FALSE,
-                             container = partition_pane,
+                             container = partition_tab,
                              expand = TRUE)
 
 ### type
@@ -127,6 +107,7 @@ partition_apply_btn <-
                            part.props <-
                                c(svalue(partition_band_layout[2,2]),
                                  1-svalue(partition_band_layout[2,2]))
+                           print('case 2')
                        },
                        "3"={
                            prop.total <- sum(svalue(partition_band_layout[2,2]),
@@ -135,6 +116,7 @@ partition_apply_btn <-
                                c(svalue(partition_band_layout[2,2]),
                                  svalue(partition_band_layout[4,1]),
                                  1-prop.total)
+                           print('case 3')
                        },
                        "4"={
                            ## normalize
@@ -145,11 +127,14 @@ partition_apply_btn <-
                                            svalue(partition_band_layout[4,1]),
                                            svalue(partition_band_layout[4,2]),
                                            1-prop.total)
+                           print('case 4')
                        })
+                print(svalue(partition_band_layout[2,1]))
+                print(part.props)
                 
 ### TODO throw error if props are malformed
                 file.name <- svalue(explore_var_filesel)
-                part.file <- rbci.env$importlist[file.name]
+                part.file <- rbci.env$importlist[[file.name]]
                 part.col <- svalue(partition_grouping_layout[2,1])
                 part.type <- svalue(partition_type_menu)
                 
@@ -163,7 +148,7 @@ partition_apply_btn <-
                                            "part", seq_along(new.tables),
                                            sep = ".")
                 
-                append(rbci.env$importlist,new.tables)
+                rbci.env$importlist <- append(rbci.env$importlist,new.tables)
                 ## ensure names are straight
                 names(rbci.env$importlist) <-
                     make.unique(names(rbci.env$importlist))
