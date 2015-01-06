@@ -24,7 +24,7 @@ partition_band_layout[2,1] <-
     gspinbutton(from = 2, to = 4, by = 1,
                 value = 2,
                 handler = function(h,...){
-                    switch(svalue(h$obj),
+                    switch(as.character(svalue(h$obj)),
                            "2"={
                                enabled(partition_band_layout[1,2]) <- TRUE
                                enabled(partition_band_layout[2,2]) <- TRUE
@@ -107,7 +107,6 @@ partition_apply_btn <-
                            part.props <-
                                c(svalue(partition_band_layout[2,2]),
                                  1-svalue(partition_band_layout[2,2]))
-                           print('case 2')
                        },
                        "3"={
                            prop.total <- sum(svalue(partition_band_layout[2,2]),
@@ -116,7 +115,6 @@ partition_apply_btn <-
                                c(svalue(partition_band_layout[2,2]),
                                  svalue(partition_band_layout[4,1]),
                                  1-prop.total)
-                           print('case 3')
                        },
                        "4"={
                            ## normalize
@@ -127,10 +125,7 @@ partition_apply_btn <-
                                            svalue(partition_band_layout[4,1]),
                                            svalue(partition_band_layout[4,2]),
                                            1-prop.total)
-                           print('case 4')
                        })
-                print(svalue(partition_band_layout[2,1]))
-                print(part.props)
                 
 ### TODO throw error if props are malformed
                 file.name <- svalue(explore_var_filesel)
