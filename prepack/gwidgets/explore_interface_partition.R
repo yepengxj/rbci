@@ -143,7 +143,8 @@ partition_apply_btn <-
                                            "part", seq_along(new.tables),
                                            sep = ".")
                 
-                rbci.env$importlist <- append(rbci.env$importlist,new.tables)
+                rbci.env$importlist <-
+                    append(rbci.env$importlist,list(new.tables))
                 ## ensure names are straight
                 names(rbci.env$importlist) <-
                     make.unique(names(rbci.env$importlist))

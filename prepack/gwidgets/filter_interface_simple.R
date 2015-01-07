@@ -49,11 +49,11 @@ filter_band_layout <- glayout(container = filter_param_frame)
 
 # stop band start
 filter_band_layout[1,1] <- "Start"
-filter_band_layout[2,1] <- gspinbutton(from = 0, to = 1, by = 0.01)
+filter_band_layout[2,1] <- gspinbutton(from = 0, to = 1, by = 0.0001)
   
 # stop band end
 filter_band_layout[1,2] <- "End"
-filter_band_layout[2,2] <- gspinbutton(from = 0, to = 1, by = 0.01)
+filter_band_layout[2,2] <- gspinbutton(from = 0, to = 1, by = 0.0001)
 
 ## application params
 filter_grouping_frame <- gframe(text = "Filter Apply Rules",
@@ -93,6 +93,8 @@ filter_apply_btn <-
                                    svalue(filter_band_layout[2,2]))
                 filt.groups <- c(svalue(filter_grouping_layout[2,1]),
                                  svalue(filter_grouping_layout[4,1]))
+                file.name <- svalue(filter_var_filesel)
+                filt.file <- rbci.env$importlist[[file.name]]
                 
                 ## get the designed filter
                 rbci.env$filter <- simple.filter(filt.type,
@@ -104,13 +106,18 @@ filter_apply_btn <-
                 plot.filter(rbci.env$filter)
                 
                 ## apply the filter, add new data file to list
-                append(rbci.env$importlist,
-                       apply.filter(
-                           signal.table = svalue(filter_var_filesel),
-                           filt.groups = c(svalue(filter_grouping_layout[2,1]),
-                               svalue(filter_grouping_layout[4,1])),
-                           val.col = svalue(filter_varlist),
-                           filter.obj = rbci.env$filter))
+                new.table <- list(apply.filter(
+                               signal.table = filt.file,
+                               filt.groups = filt.groups,
+                               val.col = svalue(filter_varlist),
+                               filter.obj = rbci.env$filter))
+                names(new.table) <- paste(file.name,
+                                           "filt", seq_along(new.table),
+                                           sep = ".")
+                str(new.table)
+                rbci.env$importlist <-
+                    append(rbci.env$importlist, new.table)
+                           
                 ## ensure names are straight
                 names(rbci.env$importlist) <-
                     make.unique(names(rbci.env$importlist))
