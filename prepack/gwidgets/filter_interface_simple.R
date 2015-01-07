@@ -76,13 +76,14 @@ filter_grouping_layout[4,1] <-
   gcombobox(
     names(rbci.env$importlist[[svalue(filter_var_filesel, index=TRUE)]]))
 
+
+
 ## output params
 filter_output_frame <- gframe(text = "Filter Output Options",
                                 horizontal = FALSE,
                                 container = filter_param_frame,
-                                expand = TRUE,
                                 width = 300)
-
+addSpring(filter_output_frame)
 # apply filter button
 filter_apply_btn <-
     gbutton("Apply Filter to Data",
@@ -123,9 +124,7 @@ filter_apply_btn <-
                     make.unique(names(rbci.env$importlist))
             })
 
-# save filter
-filter_save_btn <- gbutton("Save Filtered Data",
-                           container = filter_output_frame)
+
 # refresh dataset frame on run
 # alert complete (progress bar?)
 
