@@ -159,7 +159,7 @@ enabled(pca_band_layout[2,2]) <- FALSE
 enabled(pca_band_layout[3,1]) <- FALSE
 enabled(pca_band_layout[4,1]) <- FALSE
 
-
+addSpring(pca_param_frame)
 ## application params
 ## TODO replace this stuff with annotator module button
 ## pca_grouping_frame <- gframe(text = "Data Grouping",
@@ -181,7 +181,7 @@ enabled(pca_band_layout[4,1]) <- FALSE
 ##     names(rbci.env$importlist[[svalue(trans_var_filesel, index=TRUE)]]))
 
 ### output params
-pca_output_frame <- gframe(text = "KL Output Options",
+pca_output_frame <- gframe(text = "PCA Output Options",
                            horizontal = FALSE,
                            container = pca_param_frame,
                            expand = TRUE,
@@ -195,9 +195,8 @@ pca_compute_button <-
                 input.name <- svalue(trans_var_filesel)
                 input.data <- rbci.env$importlist[[input.name]]
                 input.tags <- rbci.env$tags[[input.name]]
-                                        # TODO ensure these outputs are displayed
-                rbci.env$transformlist[[make.unique(paste0(input.name,
-                                                           'pca'))]] <- 
+### TODO ensure these outputs are displayed
+                rbci.env$importlist[[paste(input.name,'pca',sep=".")]] <- 
                     transform.pca(targ.name = input.tags$targetcol,
                                   epoch.name = input.tags$epochcol,
                                   time.name = input.tags$timecol,
@@ -208,34 +207,29 @@ pca_compute_button <-
             })
 
 ## apply pca button
-pca_apply_btn <- gbutton("Apply KL to Data",
-                         container = pca_output_frame)
 # refresh dataset frame on run
 # alert complete (progress bar?)
-tool_output_name <- gedit(text = "Output.Variable",
-                          container = pca_output_frame,
-                          width = 25)
-
-## save pca
-## TODO this is better moved to the report module
-## pca_save_btn <- gfilebrowse(text = "Save Transformed Data",0
-##                             type = "save",
-##                             container = pca_output_frame,
-##                             handler = function (h,...) {
-##                               
-##                               ## below to backend
-##                               # save file
-##                               
-##                               # update list to include
-##                               
-##                             })
-
 
 # plot variances
-pca_variance_btn <- gbutton("Plot Eigenvalues",
-                            container = pca_output_frame)
-pca_subspace_btn <- gbutton("Plot 2D Subspaces",
-                            container = pca_output_frame)
+pca_variance_btn <-
+    gbutton("Plot Eigenvalues",
+            container = pca_output_frame,
+            handler = function(h,...){
+                
+                pca.obj <- rbci.env$importlist[[svalue(trans_var_filesel)]]
+                print(plot(pca.obj))
+                
+            })
+pca_subspace_btn <-
+    gbutton("Plot 2D Subspaces",
+            container = pca_output_frame,
+            handler = function(h,...){
+### TODO add hex binning etc.
+### see https://github.com/vqv/ggbiplot/blob/master/README.markdown
+                pca.obj <- rbci.env$importlist[[svalue(trans_var_filesel)]]
+                print(ggbiplot(pca.obj))
+                
+            })
 
 # plot pane
 

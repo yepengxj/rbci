@@ -12,3 +12,4 @@ library(reshape2)
 library(gdata) # for cleanups: keep()
 library(data.table)
 library(ggplot2)
+library(ggbiplot) # devtools-dependent
