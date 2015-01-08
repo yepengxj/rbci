@@ -4,13 +4,24 @@ library(kernlab) # nonlinear PCA
 transform.pca <- function(targ.name = "Class",
                           epoch.name = "Trial",
                           time.name = "Time",
-                          eeg.table,
+                          split.col = "Channel",
+                          val.col = "Voltage",
+                          input.table,
                           kernel.type,
                           pc.count = 2,
                           scale.data = FALSE,
-                          pca.opts,
+                          pca.opts, # TODO needed?
                           pca.tol = sqrt(.Machine$double.eps)) {
 
+    ## break out to channels for PCA function
+    eeg.table <- channel.form(input.table,
+                              value.col = val.col,
+                              split.col = split.col,
+                              class.col = targ.name,
+                              time.col = time.name,
+                              trial.col = epoch.name,
+                              has.dups = FALSE)
+    
     if (kernel.type == "Linear") {
         eeg.pca <- prcomp(reformulate(termlabels =
                                           setdiff(colnames(eeg.table),
@@ -142,3 +153,41 @@ transform.csp <- function(table.data, time.col, chan.col, val.col, trial.col,
     ## make list of eigenvectors/eigenvalues, return
     rjd(abind3curry(avg.corr.mats))
 }
+
+##### converting from long table form to channel-split wide form #####
+## for multivariate repeated time series
+channel.form <- function(input.table,
+                         value.col = "Voltage",
+                         split.col = "Channel",
+                         class.col = "Class",
+                         time.col = "Time",
+                         trial.col = "Trial",
+                         has.dups = FALSE) {
+# Converts long table format to slightly wider format split by channels.
+# For epoched datasets.
+    
+  # add id col if there are duplicates, replace trial column
+  if (has.dups == TRUE) {
+    input.table[,c(trial.col):= sample.int(nrow(input.table))]
+    setkeyv(input.table,trial.col)
+    #trial.col = "id"
+  }
+  
+  chan.table <- dcast.data.table(input.table, 
+                   as.formula(paste(class.col,"+",time.col,"+",trial.col,"~",
+                                    split.col,sep = "")),
+                   value.var = value.col)
+#                   fun.aggregate=identity) # TODO review this
+  setnames(chan.table,old=names(chan.table),
+           new=c(class.col,time.col,trial.col,
+               paste("Ch",input.table[,unique(get(split.col))],sep="")))
+            
+  # data.table is not picky about column order, but we need to be in case of
+  # coercion to matrices etc.
+  setcolorder(chan.table,
+              c(class.col,time.col,trial.col,
+                paste("Ch",sort(input.table[,unique(get(split.col))]),sep="")))
+                
+  return(chan.table)
+}
+

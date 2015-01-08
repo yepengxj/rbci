@@ -43,17 +43,20 @@ filter_type_menu <-
            })
 
 # band entry (spinboxes)
-filter_band_label <- glabel(text = "Filter Band",
+filter_band_label <- glabel(text = "Filter Band (Hz)",
                             container = filter_param_frame)
 filter_band_layout <- glayout(container = filter_param_frame)
 
 # stop band start
 filter_band_layout[1,1] <- "Start"
-filter_band_layout[2,1] <- gspinbutton(from = 0, to = 1, by = 0.0001)
+filter_band_layout[2,1] <- gspinbutton(from = 0, to = 4096, by = 0.01)
   
 # stop band end
 filter_band_layout[1,2] <- "End"
-filter_band_layout[2,2] <- gspinbutton(from = 0, to = 1, by = 0.0001)
+filter_band_layout[2,2] <- gspinbutton(from = 0, to = 4096, by = 0.01)
+
+filter_band_layout[3,1] <- "Sampling Rate (Hz)"
+filter_band_layout[3,2] <- gspinbutton(from = 0.01, to = 4096, by = 0.01)
 
 ## application params
 filter_grouping_frame <- gframe(text = "Filter Apply Rules",
@@ -82,6 +85,7 @@ filter_grouping_layout[4,1] <-
 filter_output_frame <- gframe(text = "Filter Output Options",
                                 horizontal = FALSE,
                                 container = filter_param_frame,
+                                expand = TRUE,
                                 width = 300)
 addSpring(filter_output_frame)
 # apply filter button
@@ -89,6 +93,8 @@ filter_apply_btn <-
     gbutton("Apply Filter to Data",
             container = filter_output_frame,
             handler = function(h,...){
+### TODO error checking on filt vals
+                
                 filt.type <- svalue(filter_type_menu)
                 filt.band <- c(svalue(filter_band_layout[2,1]),
                                    svalue(filter_band_layout[2,2]))
@@ -96,15 +102,17 @@ filter_apply_btn <-
                                  svalue(filter_grouping_layout[4,1]))
                 file.name <- svalue(filter_var_filesel)
                 filt.file <- rbci.env$importlist[[file.name]]
+                filt.srate <- svalue(filter_band_layout[3,2])
                 
                 ## get the designed filter
                 rbci.env$filter <- simple.filter(filt.type,
-                                                 filt.band,
+                                                 filt.band/0.2/(filt.srate/2),
                                                  filt.groups)
                 
                 ## plot the filter as confirmation that it worked
                 visible(filter_plot_frame,TRUE)
-                plot.filter(rbci.env$filter)
+                print(plot.filter(rbci.env$filter,
+                                  sample.rate = filt.srate))
                 
                 ## apply the filter, add new data file to list
                 new.table <- list(apply.filter(
@@ -115,7 +123,7 @@ filter_apply_btn <-
                 names(new.table) <- paste(file.name,
                                            "filt", seq_along(new.table),
                                            sep = ".")
-                str(new.table)
+                
                 rbci.env$importlist <-
                     append(rbci.env$importlist, new.table)
                            
@@ -124,13 +132,11 @@ filter_apply_btn <-
                     make.unique(names(rbci.env$importlist))
             })
 
+## refresh dataset frame on run
+## alert complete (progress bar?)
 
-# refresh dataset frame on run
-# alert complete (progress bar?)
 
-
-# plot pane
-
+## plot pane
 # filter plot on right side
 filter_plot_frame <- ggraphics(container = simple_filter_pane)
 

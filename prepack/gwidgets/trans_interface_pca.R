@@ -4,31 +4,10 @@ pca_pane <- gpanedgroup(horizontal = TRUE,
                         fill = TRUE,
                         container = trans_pca_tab)
 
-
-pca_varlist_frame <- gframe(text = "Apply Columns",
-                            horizontal = FALSE,
-                            container = pca_pane,
-                            expand = TRUE,
-                            width = 300)
-
-### populate varlist
-### TODO Update features spinbox on change
-pca_varlist <- gcheckboxgroup(
-  names(rbci.env$importlist[[svalue(trans_var_filesel, index=TRUE)]]),
-  container = pca_varlist_frame,
-  use.table = TRUE,
-  expand = TRUE)
-
-pca_action_pane <- gpanedgroup(horizontal = TRUE,
-                               expand = TRUE,
-                               fill = TRUE,
-                               container = pca_pane)
-
-
 ## pca params
 pca_param_frame <- gframe(text = "PCA Parameters",
                           horizontal = FALSE,
-                          container = pca_action_pane,
+                          container = pca_pane,
                           expand = TRUE,
                           width = 300)
 
@@ -151,7 +130,12 @@ pca_band_layout[4,1] <- gspinbutton(from = 0, to = 1, by = 0.01)
 
 # pass band end
 pca_band_layout[3,2] <- "# of Features (0 = all)"
-pca_band_layout[4,2] <- gspinbutton(from = 0, to = length(pca_varlist), by = 1)
+pca_band_layout[4,2] <-
+    gspinbutton(
+        from = 0, # TODO fix upper limit
+        to = 300,
+        by = 1)
+
 enabled(pca_band_layout[1,1]) <- FALSE
 enabled(pca_band_layout[2,1]) <- FALSE
 enabled(pca_band_layout[1,2]) <- FALSE
@@ -159,32 +143,46 @@ enabled(pca_band_layout[2,2]) <- FALSE
 enabled(pca_band_layout[3,1]) <- FALSE
 enabled(pca_band_layout[4,1]) <- FALSE
 
+addSpring(pca_param_frame)
 
 ## application params
-## TODO replace this stuff with annotator module button
-## pca_grouping_frame <- gframe(text = "Data Grouping",
-##                              horizontal = FALSE,
-##                              container = pca_param_frame,
-##                              expand = TRUE,
-##                              width = 300)
-## # trial/group vars
-## pca_grouping_layout <- glayout(container = pca_grouping_frame)
-## 
-## pca_grouping_layout[1,1] <- "First Group (Trial)"
-## pca_grouping_layout[2,1] <- 
-##   gcombobox(
-##     names(rbci.env$importlist[[svalue(trans_var_filesel, index=TRUE)]]))
-## 
-## pca_grouping_layout[3,1] <- "Second Group (Channel)"
-## pca_grouping_layout[4,1] <- 
-##   gcombobox(
-##     names(rbci.env$importlist[[svalue(trans_var_filesel, index=TRUE)]]))
+pca_grouping_frame <- gframe(text = "Data Grouping",
+                             horizontal = FALSE,
+                             container = pca_param_frame,
+                             expand = TRUE,
+                             width = 300)
+# trial/group vars
+pca_grouping_layout <- glayout(container = pca_grouping_frame)
+
+pca_grouping_layout[1,1] <- "Data Variable (Voltage)"
+pca_grouping_layout[2,1] <- 
+    gcombobox(
+        names(rbci.env$importlist[[svalue(trans_var_filesel, index=TRUE)]]))
+
+pca_grouping_layout[1,2] <- "Time Variable (Sample)"
+pca_grouping_layout[2,2] <- 
+    gcombobox(
+        names(rbci.env$importlist[[svalue(trans_var_filesel, index=TRUE)]]))
+
+pca_grouping_layout[3,1] <- "Target Variable (Class)"
+pca_grouping_layout[4,1] <- 
+    gcombobox(
+        names(rbci.env$importlist[[svalue(trans_var_filesel, index=TRUE)]]))
+
+pca_grouping_layout[3,2] <- "Channel Variable"
+pca_grouping_layout[4,2] <- 
+    gcombobox(
+        names(rbci.env$importlist[[svalue(trans_var_filesel, index=TRUE)]]))
+
+pca_grouping_layout[5,1] <- "Epoch Group (Trial)"
+pca_grouping_layout[6,1] <- 
+    gcombobox(
+        names(rbci.env$importlist[[svalue(trans_var_filesel, index=TRUE)]]))
 
 ### output params
-pca_output_frame <- gframe(text = "KL Output Options",
+pca_output_frame <- gframe(text = "PCA Output Options",
                            horizontal = FALSE,
                            container = pca_param_frame,
-                           expand = TRUE,
                            width = 300)
 
 ## compute pca button
@@ -194,54 +192,64 @@ pca_compute_button <-
             handler = function(h,...){
                 input.name <- svalue(trans_var_filesel)
                 input.data <- rbci.env$importlist[[input.name]]
-                input.tags <- rbci.env$tags[[input.name]]
-                                        # TODO ensure these outputs are displayed
-                rbci.env$transformlist[[make.unique(paste0(input.name,
-                                                           'pca'))]] <- 
-                    transform.pca(targ.name = input.tags$targetcol,
-                                  epoch.name = input.tags$epochcol,
-                                  time.name = input.tags$timecol,
-                                  eeg.table = input.data,
-                                  kernel.type = svalue(pca_kernel_type_menu),
-                                  pc.count = svalue(pca_band_layout[4,2]))
+                input.val <- svalue(pca_grouping_layout[2,1])
+                input.targ <- svalue(pca_grouping_layout[4,1])
+                input.epoc <- svalue(pca_grouping_layout[6,1])
+                input.time <- svalue(pca_grouping_layout[2,2])
+                input.chan <- svalue(pca_grouping_layout[4,2])
                 
+                new.table <-
+                    list(
+                        transform.pca(targ.name = input.targ,
+                                      epoch.name = input.epoc,
+                                      time.name = input.time,
+                                      input.table = input.data,
+                                      split.col = input.chan,
+                                      val.col = input.val,
+                                      kernel.type = svalue(pca_kernel_type_menu),
+                                      pc.count = svalue(pca_band_layout[4,2])))
+                
+                names(new.table) <- paste(input.name,
+                                          "pca", seq_along(new.table),
+                                          sep = ".")
+                
+                rbci.env$importlist <- append(rbci.env$importlist,
+                                              new.table)
+                
+                ## ensure names are straight
+                names(rbci.env$importlist) <-
+                    make.unique(names(rbci.env$importlist))
             })
 
 ## apply pca button
-pca_apply_btn <- gbutton("Apply KL to Data",
-                         container = pca_output_frame)
 # refresh dataset frame on run
 # alert complete (progress bar?)
-tool_output_name <- gedit(text = "Output.Variable",
-                          container = pca_output_frame,
-                          width = 25)
-
-## save pca
-## TODO this is better moved to the report module
-## pca_save_btn <- gfilebrowse(text = "Save Transformed Data",0
-##                             type = "save",
-##                             container = pca_output_frame,
-##                             handler = function (h,...) {
-##                               
-##                               ## below to backend
-##                               # save file
-##                               
-##                               # update list to include
-##                               
-##                             })
-
 
 # plot variances
-pca_variance_btn <- gbutton("Plot Eigenvalues",
-                            container = pca_output_frame)
-pca_subspace_btn <- gbutton("Plot 2D Subspaces",
-                            container = pca_output_frame)
+pca_variance_btn <-
+    gbutton("Plot Eigenvalues",
+            container = pca_output_frame,
+            handler = function(h,...){
+                
+                pca.obj <- rbci.env$importlist[[svalue(trans_var_filesel)]]
+                print(plot(pca.obj))
+                
+            })
+pca_subspace_btn <-
+    gbutton("Plot 2D Subspaces",
+            container = pca_output_frame,
+            handler = function(h,...){
+### TODO add hex binning etc.
+### see https://github.com/vqv/ggbiplot/blob/master/README.markdown
+                pca.obj <- rbci.env$importlist[[svalue(trans_var_filesel)]]
+                print(ggbiplot(pca.obj))
+                
+            })
 
 # plot pane
 
 # pca plot on right side
-pca_plot_frame <- ggraphics(container = pca_action_pane)
+pca_plot_frame <- ggraphics(container = pca_pane)
 
 # set some widths (doesn't work if earlier)
-svalue(pca_pane) <- 0.2
-svalue(pca_action_pane) <- 0.2
+svalue(pca_pane) <- 0.4
