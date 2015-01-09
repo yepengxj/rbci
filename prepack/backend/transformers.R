@@ -129,7 +129,7 @@ transform.kmeans <- function(kmeans.data,
 }
 
 transform.csp <- function(table.data, time.col, chan.col, val.col, trial.col,
-                          class.col, avg.type) {
+                          class.col, avg.type, pair.count = 2) {
     
     ## compute correlation matrices by trial, class
     setkeyv(table.data,class.col)
@@ -152,6 +152,7 @@ transform.csp <- function(table.data, time.col, chan.col, val.col, trial.col,
     require(JADE) # Cardoso et. al's diagonalization algorithms
     ## make list of eigenvectors/eigenvalues, return
     rjd(abind3curry(avg.corr.mats))
+### TODO return only as many pairs as required by input
 }
 
 ##### converting from long table form to channel-split wide form #####
