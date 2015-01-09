@@ -130,16 +130,33 @@ transform.kmeans <- function(kmeans.data,
 
 transform.csp <- function(table.data, time.col, chan.col, val.col, trial.col,
                           class.col, avg.type, pair.count = 2) {
+
+    ## convert to wide channel form
+    ## returns a table with cols Class, Sample, Trial, Ch1, Ch2..
+    table.channel <- channel.form(table.data,
+                                  value.col = val.col,
+                                  split.col = chan.col,
+                                  class.col = class.col,
+                                  time.col = time.col,
+                                  trial.col = trial.col,
+                                  has.dups = FALSE)
+    
+    ## my.table.wide[Trial==1][,names(my.table.wide)[4:19],with=FALSE]
     
     ## compute correlation matrices by trial, class
     setkeyv(table.data,class.col)
-    correlation.mats.list <- foreach(table.data[,unique(get(class.col))]) %do% {
+    correlation.mats.list <- # a list of lists; class( trial(...
+        foreach(this.class = table.data[,unique(get(class.col))]) %:%
+            foreach(this.trial = table.data[,unique(get(trial.col))] %do% {
                                         # this loop is deliberately serial:
                                         # not worth trying to parallelize in
-                                        # most cases
-        acorr.table(table.data,
-                    time.col, chan.col, val.col, trial.col)
-    }
+                                        # most cases? TODO
+                cor(table.channel[(get(trial.col) == this.trial &&
+                                       get(class.col) == this.class),
+                                  names(table.channel)[4:length(names(table.channel))],
+                                  with=FALSE]
+                    )
+            }
                                     
     ## average matrices by class
     avg.corr.mats <- lapply(correlation.mats.list, function(x) {
