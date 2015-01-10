@@ -128,8 +128,12 @@ transform.kmeans <- function(kmeans.data,
 
 }
 
-transform.csp <- function(table.data, time.col, chan.col, val.col, trial.col,
-                          class.col, avg.type, pair.count = 2) {
+transform.csp <- function(table.data,
+                          time.col, chan.col,
+                          val.col, trial.col,
+                          class.col,
+                          avg.type = "Arithmetic",
+                          pair.count = 2) {
 
     ## convert to wide channel form
     ## returns a table with cols Class, Sample, Trial, Ch1, Ch2..
@@ -145,28 +149,41 @@ transform.csp <- function(table.data, time.col, chan.col, val.col, trial.col,
     
     ## compute correlation matrices by trial, class
     setkeyv(table.data,class.col)
+    ## build map of trials/classes
+    class.trial.map <- lapply(table.channel[,unique(get(class.col))], 
+                              function(x){ table.channel[J(x),unique(get(trial.col))] })
     correlation.mats.list <- # a list of lists; class( trial(...
-        foreach(this.class = table.data[,unique(get(class.col))]) %:%
-            foreach(this.trial = table.data[,unique(get(trial.col))] %do% {
+        lapply(class.trial.map, function(class.trials) { # dumb hybrid approach?
+            foreach (this.trial = class.trials, 
+                     .combine = abind3curry) %do% {
                                         # this loop is deliberately serial:
                                         # not worth trying to parallelize in
                                         # most cases? TODO
-                cor(table.channel[(get(trial.col) == this.trial &&
-                                       get(class.col) == this.class),
-                                  names(table.channel)[4:length(names(table.channel))],
-                                  with=FALSE]
-                    )
-            }
-                                    
+                         cor(table.channel[get(trial.col) == this.trial,
+                                           names(table.channel)[4:length(names(table.channel))],
+                                           with=FALSE]
+                             )
+                     }
+        })
+            
+    ## str(correlation.mats.list)
     ## average matrices by class
     avg.corr.mats <- lapply(correlation.mats.list, function(x) {
         ## each of these inputs is a cube of matrices
         ## we want to average over the 3rd dimension
-        apply(x,c(1,2),mean) # just like that
+        switch(avg.type,
+               "Arithmetic" = {
+                   apply(x,c(1,2),mean) # just like that
+               },
+               "Geometric" = {
+                   apply(x,c(1,2),geometric.mean)
+               },
+               "Harmonic" = {
+                   apply(x,c(1,2),harmonic.mean)
+               })
     })
-    
+
     ## jointly diagonalize
-    require(JADE) # Cardoso et. al's diagonalization algorithms
     ## make list of eigenvectors/eigenvalues, return
     rjd(abind3curry(avg.corr.mats))
 ### TODO return only as many pairs as required by input

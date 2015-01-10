@@ -13,3 +13,5 @@ library(gdata) # for cleanups: keep()
 library(data.table)
 library(ggplot2)
 library(ggbiplot) # devtools-dependent
+library(JADE) # joint diagonalization
+library(psych) # geometric, harmonic means
