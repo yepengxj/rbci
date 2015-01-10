@@ -4,30 +4,10 @@ csp_pane <- gpanedgroup(horizontal = TRUE,
                         fill = TRUE,
                         container = trans_csp_tab)
 
-
-csp_varlist_frame <- gframe(text = "Apply Columns",
-                            horizontal = FALSE,
-                            container = csp_pane,
-                            expand = TRUE,
-                            width = 300)
-
-# populate varlist
-csp_varlist <- gcheckboxgroup(
-  names(rbci.env$importlist[[svalue(trans_var_filesel, index=TRUE)]]),
-  container = csp_varlist_frame,
-  use.table = TRUE,
-  expand = TRUE)
-
-csp_action_pane <- gpanedgroup(horizontal = TRUE,
-                               expand = TRUE,
-                               fill = TRUE,
-                               container = csp_pane)
-
-
 ## csp params
 csp_param_frame <- gframe(text = "CSP Parameters",
                              horizontal = FALSE,
-                             container = csp_action_pane,
+                             container = csp_pane,
                              expand = TRUE,
                              width = 300)
 
@@ -111,6 +91,7 @@ csp_apply_btn <-
                                       avg.type = csp.avgtype,
                                       pair.count = csp.paircount)
                         )
+                
                 names(new.table) <- paste(csp.name,
                                           "csp", seq_along(new.table),
                                           sep = ".")
@@ -121,17 +102,11 @@ csp_apply_btn <-
                 ## ensure names are straight
                 names(rbci.env$importlist) <-
                     make.unique(names(rbci.env$importlist))
-
+                
             })
 
 ## refresh dataset frame on run
 ## alert complete
-
-# tool_output_name <- gedit(text = "Output.Variable",
-#                           container = csp_output_frame,
-#                           width = 25)
-
-
 
 ## plot variances
 csp_plot_btn <-
@@ -140,15 +115,16 @@ csp_plot_btn <-
             handler = function(h,...) {
                 ## automatically selects csp plot from selected data
                 ## TODO add error handling if no preexisting csp data
-                plot(rbci.env$transformlist[paste(k.data,"csp",sep=".")])
+                csp.name <- svalue(trans_var_filesel)
+                csp.data <- plot(rbci.env$importlist[[csp.name]])
                 
             })
 
-## plot pane
+## TODO plot pane
 
 ## csp plot on right side
-csp_plot_frame <- ggraphics(container = csp_action_pane)
+## csp_plot_frame <- ggraphics(container = csp_pane)
 
 ## set some widths (doesn't work if earlier)
 svalue(csp_pane) <- 0.2
-svalue(csp_action_pane) <- 0.2
+## svalue(csp_pane) <- 0.2
