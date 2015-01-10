@@ -8,6 +8,7 @@ library(doMC)
 library(R.matlab) # for importing matfiles
 library(signal) # signal processing lib
 library(abind)
+library(R.utils)
 library(reshape2)
 library(gdata) # for cleanups: keep()
 library(data.table)

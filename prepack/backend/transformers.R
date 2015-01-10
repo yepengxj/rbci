@@ -145,7 +145,15 @@ transform.csp <- function(table.data,
                                   trial.col = trial.col,
                                   has.dups = FALSE)
     
-    ## my.table.wide[Trial==1][,names(my.table.wide)[4:19],with=FALSE]
+    num.channels <- length(names(table.channel))-3
+    if (pair.count == 0) { # all columns case
+        pair.count = num.channels/2
+        ### TODO fit odd channels
+    }
+
+    ## construct vector pairing (first, last, etc.)
+    pair.vec <- c((num.channels+1)-seq_len(pair.count),
+                  seq_len(pair.count))
     
     ## compute correlation matrices by trial, class
     setkeyv(table.data,class.col)
@@ -185,8 +193,10 @@ transform.csp <- function(table.data,
 
     ## jointly diagonalize
     ## make list of eigenvectors/eigenvalues, return
-    rjd(abind3curry(avg.corr.mats))
-### TODO return only as many pairs as required by input
+    lapply(rjd(abind3curry(avg.corr.mats)), function(x) {
+        ## return only as many pairs as required by input        
+        extract(x, indices=list("2"=pair.vec))
+    })
 }
 
 ##### converting from long table form to channel-split wide form #####
