@@ -109,7 +109,7 @@ csp_extract_btn <-
 ## apply csp button
 csp_apply_button <-
     gbutton("Apply CSP",
-            container = csp_output_grame,
+            container = csp_output_frame,
             handler = function(h,...) {
                 data.name <- svalue(csp_apply_list)
                 data.file <- rbci.env$importlist[[data.name]]
@@ -140,12 +140,12 @@ csp_apply_button <-
                 
                 names(rbci.env$importlist) <-
                     make.unique(names(rbci.env$importlist))
-
+                
             })
 
 csp_apply_list <-
     gdroplist(names(rbci.env$importlist),
-              container = pca_output_frame)
+              container = csp_output_frame)
 
 ## refresh dataset frame on run
 ## alert complete
