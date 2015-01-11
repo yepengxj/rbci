@@ -186,7 +186,9 @@ transform.csp <- function(table.data,
     setkeyv(table.data,class.col)
     ## build map of trials/classes
     class.trial.map <- lapply(table.channel[,unique(get(class.col))], 
-                              function(x){ table.channel[J(x),unique(get(trial.col))] })
+                              function(x){
+                                  table.channel[J(x),unique(get(trial.col))]
+                              })
     correlation.mats.list <- # a list of lists; class( trial(...
         lapply(class.trial.map, function(class.trials) { # dumb hybrid approach?
             foreach (this.trial = class.trials, 
@@ -224,6 +226,18 @@ transform.csp <- function(table.data,
         ## return only as many pairs as required by input        
         extract(x, indices=list("2"=pair.vec))
     })
+}
+
+transform.cs <- function(csp.model,
+                         targ.name,
+                         epoch.name,
+                         time.name,
+                         split.col,
+                         val.col,
+                         long.data.set) {
+### TODO error checking on input
+
+    
 }
 
 ##### converting from long table form to channel-split wide form #####

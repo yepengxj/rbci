@@ -111,7 +111,36 @@ csp_apply_button <-
     gbutton("Apply CSP",
             container = csp_output_grame,
             handler = function(h,...) {
+                data.name <- svalue(csp_apply_list)
+                data.file <- rbci.env$importlist[[data.name]]
+                csp.name <- svalue(trans_var_filesel)
+                csp.data <- rbci.env$importlist[[input.name]]
+                input.val <- svalue(csp_grouping_layout[6,2])
+                input.targ <- svalue(csp_grouping_layout[4,1])
+                input.epoc <- svalue(csp_grouping_layout[6,1])
+                input.time <- svalue(csp_grouping_layout[2,2])
+                input.chan <- svalue(csp_grouping_layout[4,2])                
                 
+                new.table <- list(
+                    transform.cs(csp.model = pca.data,
+                                 targ.name = input.targ,
+                                 epoch.name = input.epoc,
+                                 time.name = input.time,
+                                 split.col = input.chan,
+                                 val.col = input.val,
+                                 long.data.set = data.file)
+                    )
+                
+                names(new.table) <- paste(csp.name,
+                                          "cs", seq_along(new.table),
+                                          sep = ".")
+                
+                rbci.env$importlist <- append(rbci.env$importlist,
+                                              new.table)
+                
+                names(rbci.env$importlist) <-
+                    make.unique(names(rbci.env$importlist))
+
             })
 
 csp_apply_list <-
