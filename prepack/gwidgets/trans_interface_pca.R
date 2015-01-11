@@ -22,7 +22,7 @@ pca_kernel_type_menu <-
             container = pca_param_frame,
             handler = function (h,...) {
                 ## enable or disable param GUI opts on type change
-
+                
                 ## param names by type
                 ## sigma for rbf/Laplace
                 ## degree, scale, offset for Polynomial
@@ -185,10 +185,13 @@ pca_output_frame <- gframe(text = "PCA Output Options",
                            container = pca_param_frame,
                            width = 300)
 
+pca_output_layout <- glayout(container = pca_output_frame,
+                             expand = TRUE)
+
 ## compute pca button
-pca_compute_button <-
+pca_output_layout[1,1] <-
     gbutton("Compute PCA",
-            container = pca_output_frame,
+#            container = pca_output_frame,
             handler = function(h,...){
                 input.name <- svalue(trans_var_filesel)
                 input.data <- rbci.env$importlist[[input.name]]
@@ -210,7 +213,7 @@ pca_compute_button <-
                                       pc.count = svalue(pca_band_layout[4,2])))
                 
                 names(new.table) <- paste(input.name,
-                                          "pca", seq_along(new.table),
+                                          "pcamodel", seq_along(new.table),
                                           sep = ".")
                 
                 rbci.env$importlist <- append(rbci.env$importlist,
@@ -226,18 +229,18 @@ pca_compute_button <-
 # alert complete (progress bar?)
 
 # plot variances
-pca_variance_btn <-
+pca_output_layout[1,2] <-
     gbutton("Plot Eigenvalues",
-            container = pca_output_frame,
+#            container = pca_output_frame,
             handler = function(h,...){
                 
                 pca.obj <- rbci.env$importlist[[svalue(trans_var_filesel)]]
                 print(plot(pca.obj))
                 
             })
-pca_subspace_btn <-
+pca_output_layout[2,2] <-
     gbutton("Plot 2D Subspaces",
-            container = pca_output_frame,
+#            container = pca_output_frame,
             handler = function(h,...){
 ### TODO add hex binning etc.
 ### see https://github.com/vqv/ggbiplot/blob/master/README.markdown
@@ -245,6 +248,29 @@ pca_subspace_btn <-
                 print(ggbiplot(pca.obj))
                 
             })
+
+pca_output_layout[2,1] <-
+    gbutton("Transform Data Set (PC)",
+#            container = pca_output_frame,
+            handler = function(h,...){
+                transform.file <- svalue(pca_output_layout[3,1])
+                new.table <-
+                    transform.pc(rbci.env$importlist[transform.file])
+                
+                names(new.table) <- paste(input.name,
+                                          "pc", seq_along(new.table),
+                                          sep = ".")
+                
+                rbci.env$importlist <- append(rbci.env$importlist,
+                                              new.table)
+                
+                names(rbci.env$importlist) <-
+                    make.unique(names(rbci.env$importlist))
+            })
+
+pca_output_layout[3,1] <-
+    gdroplist(names(rbci.env$importlist))
+#              container = pca_output_frame)
 
 # plot pane
 
