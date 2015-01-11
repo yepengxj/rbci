@@ -1,18 +1,25 @@
 # button pane
-csp_pane <- gpanedgroup(horizontal = TRUE,
-                        expand = TRUE,
-                        fill = TRUE,
-                        container = trans_csp_tab)
+# csp_pane <- gpanedgroup(horizontal = TRUE,
+#                         expand = TRUE,
+#                         fill = TRUE,
+#                         container = trans_csp_tab)
 
 ## csp params
 csp_param_frame <- gframe(text = "CSP Parameters",
                              horizontal = FALSE,
-                             container = csp_pane,
+                             container = trans_csp_tab,
                              expand = TRUE,
                              width = 300)
 
+## application params
+csp_grouping_frame <- gframe(text = "Data Grouping",
+                                horizontal = FALSE,
+                                container = csp_param_frame,
+                                expand = TRUE,
+                                width = 300)
+
 ## opts
-csp_grouping_layout <- glayout(container = csp_param_frame)
+csp_grouping_layout <- glayout(container = csp_grouping_frame)
 
 csp_avg_type_list <- c("Arithmetic","Geometric","Harmonic")
 
@@ -50,12 +57,6 @@ csp_feat_num_label <- glabel(text = "# of Spatial Pairs (0 = all)",
 csp_feat_num <- gspinbutton(from = 0, to = 100, by = 1,
                             container = csp_param_frame)
 
-## application params
-csp_grouping_frame <- gframe(text = "Data Grouping",
-                                horizontal = FALSE,
-                                container = csp_param_frame,
-                                expand = TRUE,
-                                width = 300)
 
 ## output params
 csp_output_frame <- gframe(text = "Output Options",
@@ -64,9 +65,9 @@ csp_output_frame <- gframe(text = "Output Options",
                               expand = TRUE,
                               width = 300)
 
-## apply csp button
-csp_apply_btn <-
-    gbutton("Process Data",
+## extract csp button
+csp_extract_btn <-
+    gbutton("Extract CSP",
             container = csp_output_frame,
             handler = function (h,...) {
                 csp.name <- svalue(trans_var_filesel)
@@ -105,20 +106,32 @@ csp_apply_btn <-
                 
             })
 
+## apply csp button
+csp_apply_button <-
+    gbutton("Apply CSP",
+            container = csp_output_grame,
+            handler = function(h,...) {
+                
+            })
+
+csp_apply_list <-
+    gdroplist(names(rbci.env$importlist),
+              container = pca_output_frame)
+
 ## refresh dataset frame on run
 ## alert complete
 
 ## plot variances
-csp_plot_btn <-
-    gbutton("Plot CSP (Biplot)",
-            container = csp_output_frame,
-            handler = function(h,...) {
-                ## automatically selects csp plot from selected data
-                ## TODO add error handling if no preexisting csp data
-                csp.name <- svalue(trans_var_filesel)
-                csp.data <- plot(rbci.env$importlist[[csp.name]])
-                
-            })
+# csp_plot_btn <-
+#     gbutton("Plot CSP (Biplot)",
+#             container = csp_output_frame,
+#             handler = function(h,...) {
+#                 ## automatically selects csp plot from selected data
+#                 ## TODO add error handling if no preexisting csp data
+#                 csp.name <- svalue(trans_var_filesel)
+#                 csp.data <- plot(rbci.env$importlist[[csp.name]])
+#                 
+#             })
 
 ## TODO plot pane
 
@@ -126,5 +139,5 @@ csp_plot_btn <-
 ## csp_plot_frame <- ggraphics(container = csp_pane)
 
 ## set some widths (doesn't work if earlier)
-svalue(csp_pane) <- 0.2
+## svalue(csp_pane) <- 0.2
 ## svalue(csp_pane) <- 0.2
