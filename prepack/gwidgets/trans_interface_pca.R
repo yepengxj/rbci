@@ -231,7 +231,7 @@ pca_output_layout[1,1] <-
 # plot variances
 pca_output_layout[1,2] <-
     gbutton("Plot Eigenvalues",
-#            container = pca_output_frame,
+##            container = pca_output_frame,
             handler = function(h,...){
                 
                 pca.obj <- rbci.env$importlist[[svalue(trans_var_filesel)]]
@@ -240,7 +240,7 @@ pca_output_layout[1,2] <-
             })
 pca_output_layout[2,2] <-
     gbutton("Plot 2D Subspaces",
-#            container = pca_output_frame,
+##            container = pca_output_frame,
             handler = function(h,...){
 ### TODO add hex binning etc.
 ### see https://github.com/vqv/ggbiplot/blob/master/README.markdown
@@ -253,11 +253,27 @@ pca_output_layout[2,1] <-
     gbutton("Transform Data Set (PC)",
 #            container = pca_output_frame,
             handler = function(h,...){
-                transform.file <- svalue(pca_output_layout[3,1])
-                new.table <-
-                    transform.pc(rbci.env$importlist[transform.file])
+                data.name <- svalue(pca_output_layout[3,1])
+                data.file <- rbci.env$importlist[[data.name]]
+                pca.name <- svalue(trans_var_filesel)
+                pca.data <- rbci.env$importlist[[input.name]]
+                input.val <- svalue(pca_grouping_layout[2,1])
+                input.targ <- svalue(pca_grouping_layout[4,1])
+                input.epoc <- svalue(pca_grouping_layout[6,1])
+                input.time <- svalue(pca_grouping_layout[2,2])
+                input.chan <- svalue(pca_grouping_layout[4,2])                
                 
-                names(new.table) <- paste(input.name,
+                new.table <- list(
+                    transform.pc(pca.model = pca.data,
+                                 targ.name = input.targ,
+                                 epoch.name = input.epoc,
+                                 time.name = input.time,
+                                 split.col = input.chan,
+                                 val.col = input.val,
+                                 long.data.set = data.file)
+                    )
+                
+                names(new.table) <- paste(pca.name,
                                           "pc", seq_along(new.table),
                                           sep = ".")
                 

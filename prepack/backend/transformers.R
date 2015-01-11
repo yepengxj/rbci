@@ -122,6 +122,7 @@ transform.pc <- function(pca.model,
                          split.col = "Channel",
                          val.col = "Voltage",
                          long.data.set) {
+### TODO error checking on input
     
     ## convert long.data.set to wide form
     eeg.table <- channel.form(long.data.set,
@@ -134,10 +135,11 @@ transform.pc <- function(pca.model,
     
     ## do PCA prediction
     pca.pred <- as.data.table(predict(pca.model, newdata = eeg.table))
-    
-    pca.pred[,get(class.col) := eeg.table[,get(class.col)]]
-    pca.pred[,get(trial.col) := eeg.table[,get(trial.col)]]
-    pca.pred[,get(class.col) := as.factor(get(class.col))]
+    pca.pred[, targ.name := eeg.table[,get(targ.name)], with = FALSE]
+    pca.pred[, epoch.name := eeg.table[,get(epoch.name)], with = FALSE]
+    pca.pred[, targ.name := as.factor(get(targ.name)), with = FALSE]
+
+    return(pca.pred)
 }
 
 transform.kmeans <- function(kmeans.data,
