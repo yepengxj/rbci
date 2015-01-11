@@ -115,6 +115,31 @@ transform.pca <- function(targ.name = "Class",
     }
 }
 
+transform.pc <- function(pca.model,
+                         targ.name = "Class",
+                         epoch.name = "Trial",
+                         time.name = "Time",
+                         split.col = "Channel",
+                         val.col = "Voltage",
+                         long.data.set) {
+    
+    ## convert long.data.set to wide form
+    eeg.table <- channel.form(long.data.set,
+                              value.col = val.col,
+                              split.col = split.col,
+                              class.col = targ.name,
+                              time.col = time.name,
+                              trial.col = epoch.name,
+                              has.dups = FALSE)
+    
+    ## do PCA prediction
+    pca.pred <- as.data.table(predict(pca.model, newdata = eeg.table))
+    
+    pca.pred[,get(class.col) := eeg.table[,get(class.col)]]
+    pca.pred[,get(trial.col) := eeg.table[,get(trial.col)]]
+    pca.pred[,get(class.col) := as.factor(get(class.col))]
+}
+
 transform.kmeans <- function(kmeans.data,
                              val.col,
                              kmeans.type,
