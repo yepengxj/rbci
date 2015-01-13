@@ -5,7 +5,7 @@ kmeans_pane <- gpanedgroup(horizontal = TRUE,
                            container = trans_kmeans_tab)
 
 
-kmeans_varlist_frame <- gframe(text = "Apply Columns",
+kmeans_varlist_frame <- gframe(text = "Cluster Column",
                                horizontal = FALSE,
                                container = kmeans_pane,
                                expand = TRUE,
@@ -81,37 +81,6 @@ kmeans_band_layout[2,1] <- gspinbutton(from = 0, by = 1)
 kmeans_band_layout[1,2] <- "Max. Iterations"
 kmeans_band_layout[2,2] <- gspinbutton(from = 1, by = 1)
 
-# kmeans_band_layout[3,1] <- ""
-# kmeans_band_layout[4,1] <- gspinbutton(from = 0, to = 1, by = 0.01)
-# 
-# kmeans_band_layout[3,2] <- "# of Features (0 = all)"
-# kmeans_band_layout[4,2] <- gspinbutton(from = 0, to = length(kmeans_varlist), by = 1)
-
-# enabled(kmeans_band_layout[1,1]) <- FALSE
-# enabled(kmeans_band_layout[2,1]) <- FALSE
-# enabled(kmeans_band_layout[1,2]) <- FALSE
-# enabled(kmeans_band_layout[2,2]) <- FALSE
-
-
-## application params
-kmeans_grouping_frame <- gframe(text = "Data Grouping",
-                                horizontal = FALSE,
-                                container = kmeans_param_frame,
-                                expand = TRUE,
-                                width = 300)
-# trial/group vars
-kmeans_grouping_layout <- glayout(container = kmeans_grouping_frame)
-
-kmeans_grouping_layout[1,1] <- "First Group (Trial)"
-kmeans_grouping_layout[2,1] <- 
-  gcombobox(
-    names(rbci.env$importlist[[svalue(trans_var_filesel, index=TRUE)]]))
-
-kmeans_grouping_layout[3,1] <- "Second Group (Channel)"
-kmeans_grouping_layout[4,1] <- 
-  gcombobox(
-    names(rbci.env$importlist[[svalue(trans_var_filesel, index=TRUE)]]))
-
 ## output params
 kmeans_output_frame <- gframe(text = "Cluster Output Options",
                               horizontal = FALSE,
@@ -127,51 +96,54 @@ kmeans_apply_btn <-
                 k.type <- svalue(kmeans_algorithm_type_menu)
                 k.center <- svalue(kmeans_band_layout[2,1])
                 k.iter <- svalue(kmeans_band_layout[2,2])
-                k.groups <- c(svalue(k_means_grouping_layout[2,1]),
-                              svalue(k_means_grouping_layout[4,1]))
-                k.data <- svalue(trans_var_filesel)
-                k.col <- svalue(kmeans_varlist_frame)
+                k.trial <- svalue(kmeans_grouping_layout[2,1])
+                k.chan <- svalue(kmeans_grouping_layout[4,1])
+                k.dataname <- svalue(trans_var_filesel)
+                k.datafile <- rbci.env$importlist[[k.dataname]]
+                k.col <- svalue(kmeans_varlist)
                 
                 ## do clustering, get model
-                rbci.env$transformlist[paste(k.data,"kmeans",sep=".")] <-
-                    transform.kmeans(k.data, k.col,
-                                     k.type, k.center, k.iter, k.groups)
-                ## no need to make list names unique here
+                new.table <-
+                    list(
+                        transform.kmeans(k.datafile, k.col,
+                                         k.type, k.center, k.iter)
+##                                         k.trial, k.chan)
+                        )
+                names(new.table) <- paste(k.dataname,
+                                          "kmeansmodel", seq_along(new.table),
+                                          sep = ".")
+
+                rbci.env$importlist <- append(rbci.env$importlist,
+                                              new.table)
+                
+                names(rbci.env$importlist) <-
+                    make.unique(names(rbci.env$importlist))
             })
 
 ## refresh dataset frame on run
 ## alert complete
-
-# tool_output_name <- gedit(text = "Output.Variable",
-#                           container = kmeans_output_frame,
-#                           width = 25)
-
-## save kmeans
-kmeans_save_btn <-
-    gfilebrowse(text = "Save Cluster Data",
-                type = "save",
-                container = kmeans_output_frame,
-                handler = function (h,...) {
-                    k.data <- svalue(trans_var_filesel)
-                    ## save file
-                    save(rbci.env$transformlist[paste(k.data,"kmeans",sep=".")],
-                         file = gfile(
-                         filter = list("RData" = list(patterns = c("*.RData")))),
-                         type = "save")
-                    
-                })
-
 
 ## plot variances
 kmeans_plot_btn <-
     gbutton("Plot Clustered Data",
             container = kmeans_output_frame,
             handler = function(h,...) {
-                ## automatically selects kmeans plot from selected data
-                ## TODO add error handling if no preexisting kmeans data
-                plot(rbci.env$transformlist[paste(k.data,"kmeans",sep=".")])
-                
+                k.dataname <- svalue(trans_var_filesel)
+                k.datafile <- rbci.env$importlist[[k.dataname]]
+                k.tgtname <- svalue(kmeans_data_list)
+                k.tgtfile <- rbci.env$importlist[[k.tgtname]]
+
+                print(clusplot(k.tgtfile, k.datafile$cluster,
+                               color=TRUE, shade=TRUE, 
+                               labels=2, lines=0))
+
             })
+
+## cluster plot target data
+kmeans_plotdata_label <- glabel("Plot Data Set")
+kmeans_data_list <-
+    gdroplist(names(rbci.env$importlist),
+              container = kmeans_output_frame)
 
 ## plot pane
 
