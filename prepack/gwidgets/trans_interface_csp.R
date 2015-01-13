@@ -114,7 +114,7 @@ csp_apply_button <-
                 data.name <- svalue(csp_apply_list)
                 data.file <- rbci.env$importlist[[data.name]]
                 csp.name <- svalue(trans_var_filesel)
-                csp.data <- rbci.env$importlist[[input.name]]
+                csp.data <- rbci.env$importlist[[csp.name]]
                 input.val <- svalue(csp_grouping_layout[6,2])
                 input.targ <- svalue(csp_grouping_layout[4,1])
                 input.epoc <- svalue(csp_grouping_layout[6,1])
@@ -130,7 +130,7 @@ csp_apply_button <-
                                  val.col = input.val,
                                  long.data.set = data.file)
                     )
-                
+
                 names(new.table) <- paste(csp.name,
                                           "cs", seq_along(new.table),
                                           sep = ".")
