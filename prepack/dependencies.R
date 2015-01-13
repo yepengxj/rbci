@@ -17,4 +17,4 @@ library(ggplot2)    # general plotting engine
 library(ggbiplot)   # ggidevtools-dependent
 library(JADE)       # joint diagonalization
 library(psych)      # geometric, harmonic means
-library(cluster)    # clusplot
+library(cluster)    # clusplot, silhouette

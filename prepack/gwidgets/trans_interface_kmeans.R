@@ -96,8 +96,6 @@ kmeans_apply_btn <-
                 k.type <- svalue(kmeans_algorithm_type_menu)
                 k.center <- svalue(kmeans_band_layout[2,1])
                 k.iter <- svalue(kmeans_band_layout[2,2])
-                k.trial <- svalue(kmeans_grouping_layout[2,1])
-                k.chan <- svalue(kmeans_grouping_layout[4,1])
                 k.dataname <- svalue(trans_var_filesel)
                 k.datafile <- rbci.env$importlist[[k.dataname]]
                 k.col <- svalue(kmeans_varlist)
@@ -132,12 +130,27 @@ kmeans_plot_btn <-
                 k.datafile <- rbci.env$importlist[[k.dataname]]
                 k.tgtname <- svalue(kmeans_data_list)
                 k.tgtfile <- rbci.env$importlist[[k.tgtname]]
-
+                
                 print(clusplot(k.tgtfile, k.datafile$cluster,
                                color=TRUE, shade=TRUE, 
                                labels=2, lines=0))
-
+                
             })
+
+kmeans_plotsil_btn <-
+    gbutton("Plot Silhouette",
+            container = kmeans_output_frame,
+            handler = function(h,...) {
+                k.dataname <- svalue(trans_var_filesel)
+                k.datafile <- rbci.env$importlist[[k.dataname]]
+                k.tgtname <- svalue(kmeans_data_list)
+                k.tgtfile <- rbci.env$importlist[[k.tgtname]]
+                
+                dissE <- daisy(k.tgtfile)
+                sil <- silhouette(k.datafile$cluster, dissE)
+                print(plot(sil))
+            })
+
 
 ## cluster plot target data
 kmeans_plotdata_label <- glabel("Plot Data Set")
