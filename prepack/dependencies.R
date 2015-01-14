@@ -19,3 +19,4 @@ library(JADE)       # joint diagonalization
 library(psych)      # geometric, harmonic means
 library(cluster)    # clusplot, silhouette
 library(sda)        # sda classifier
+library(LiblineaR)  # linear svm classifier

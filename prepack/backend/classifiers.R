@@ -7,19 +7,23 @@ train.svm.model <- function(train.data,
                             cost.param,
                             kern.params = list(),
                             ...) {
+
+    ## sanitize params
+    cost.param <- if(is.na(as.numeric(cost.param)) ||
+                     (as.numeric(cost.param) > 0)) 1 else cost.param # R standard elvis op
     
     if (kern.type == "Linear") {
         ## use LiblineaR
         ## assume uniform prior for now
-        class.labels <- train.data[,levels(target.col)]
+        class.labels <- train.data[, levels(factor(get(target.col)))]
         weights <- rep(1, times = length(class.labels))/length(class.labels)
-        setNames(weights, c(class.labels))
+        weights <- setNames(weights, c(class.labels))
 
         svm.model <-
             LiblineaR(wi = weights,
                       cost = cost.param,
-                      type = 3,
-                      data = train.data[,feature.cols,with=FALSE],
+                      type = 3, # TODO comment this
+                      data = train.data[, feature.cols, with=FALSE],
                       labels = train.data[,get(target.col)])
         
     } else {
