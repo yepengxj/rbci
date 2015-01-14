@@ -1,13 +1,15 @@
-# button pane
+## button pane
 svm_pane <- gpanedgroup(horizontal = TRUE,
                         expand = TRUE,
                         fill = TRUE,
                         container = svm_tab)
 
+svm_param_group <- ggroup(container = svm_pane,
+                          horizontal = TRUE)
 
-svm_varlist_frame <- gframe(text = "Apply Columns",
+svm_varlist_frame <- gframe(text = "Feature Columns",
                             horizontal = FALSE,
-                            container = svm_pane,
+                            container = svm_param_group,
                             expand = TRUE,
                             width = 300)
 # populate varlist
@@ -17,24 +19,18 @@ svm_varlist <- gcheckboxgroup(
   use.table = TRUE,
   expand = TRUE)
 
-svm_action_pane <- gpanedgroup(horizontal = TRUE,
-                               expand = TRUE,
-                               fill = TRUE,
-                               container = svm_pane)
-
-
 ## svm params
-svm_param_frame <- gframe(text = "svm Parameters",
+svm_param_frame <- gframe(text = "SVM Parameters",
                           horizontal = FALSE,
-                          container = svm_action_pane,
+                          container = svm_param_group,
                           expand = TRUE,
                           width = 300)
 
 ## opts
-svm_kernel_type_list <- c("Linear (LiblineaR)", "Gaussian (kernlab)",
-                          "Laplace (kernlab)", "Polynomial (kernlab)",
-                          "Hyperbolic (kernlab)", "Bessel (kernlab)",
-                          "ANOVA RBF (kernlab)", "Spline (kernlab)")
+svm_kernel_type_list <- c("Linear", "Gaussian",
+                          "Laplace", "Polynomial",
+                          "Hyperbolic", "Bessel",
+                          "ANOVA RBF", "Spline")
 svm_kernel_type_label <- glabel(text = "Kernel Type (library)",
                                 container = svm_param_frame)
 svm_kernel_type_menu <- 
@@ -141,8 +137,16 @@ svm_kernel_type_menu <-
                       })
             })
 
+## target variable
+svm_target_label <- glabel("Target Variable",
+                           container = svm_param_frame)
 
-# numerical entries (spinboxes)
+svm_target_list <-
+    gcombobox(
+        container = svm_param_frame,
+        names(rbci.env$importlist[[svalue(class_var_filesel, index=TRUE)]]))
+
+## numerical entries (spinboxes)
 svm_band_label <- glabel(text = "Numerical Parameters",
                          container = svm_param_frame)
 svm_band_layout <- glayout(container = svm_param_frame)
@@ -171,24 +175,6 @@ enabled(svm_band_layout[4,1]) <- FALSE
 
 
 ## application params
-svm_grouping_frame <- gframe(text = "Data Grouping",
-                             horizontal = FALSE,
-                             container = svm_param_frame,
-                             expand = TRUE,
-                             width = 300)
-# trial/group vars
-svm_grouping_layout <- glayout(container = svm_grouping_frame)
-
-svm_grouping_layout[1,1] <- "First Group (Trial)"
-svm_grouping_layout[2,1] <- 
-  gcombobox(
-    names(rbci.env$importlist[[svalue(class_var_filesel, index=TRUE)]]))
-
-svm_grouping_layout[3,1] <- "Second Group (Channel)"
-svm_grouping_layout[4,1] <- 
-  gcombobox(
-    names(rbci.env$importlist[[svalue(class_var_filesel, index=TRUE)]]))
-
 # training/test fractions
 
 ## output params
@@ -200,46 +186,66 @@ svm_output_frame <- gframe(text = "Output Options",
 svm_output_layout <- glayout(container = svm_output_frame)
 # apply svm button
 svm_output_layout[1,1] <-
-    gbutton("Train",
+    gbutton("Train Model",
+            handler = function(h,...){
+                train.name <- svalue(class_var_filesel)
+                train.data <- rbci.env$importlist[[train.name]]
+                svm.kern <- svalue(svm_kernel_type_menu)
+                svm.target <- svalue(svm_target_list)
+                svm.features <- svalue(svm_varlist)
+                svm.cost <- svalue(svm_band_layout[4,2])
+                svm.kernparams <- list(
+                    svalue(svm_band_layout[2,1]),
+                    svalue(svm_band_layout[2,2]),
+                    svalue(svm_band_layout[4,1]))
+
+                new.table <-
+                    list(
+                        train.svm.model(train.data,
+                                        svm.kern,
+                                        svm.target,
+                                        svm.features,
+                                        svm.cost,
+                                        svm.lambda.var)
+                        )
+                
+                names(new.table) <- paste(train.name,
+                                          "svmmodel", seq_along(new.table),
+                                          sep = ".")
+                
+                rbci.env$importlist <- append(rbci.env$importlist,
+                                              new.table)
+                
+                ## ensure names are straight
+                names(rbci.env$importlist) <-
+                    make.unique(names(rbci.env$importlist))
+
+            })
+
+svm_test_btn <- 
+    gbutton("Test Model",
+            container = svm_output_frame,
             handler = function(h,...){
                 
-                rbci.env$cur.model <-
-                    train.svm.model()
-                
-            })
-svm_output_layout[1,2] <-
-    gbutton("Test",
-            handler = function(h,...){
-                
             })
 
-## refresh dataset frame on run
-## alert complete (progress bar?)
+svm_test_label <- glabel("Test Set",
+                         container = svm_output_frame)
+svm_test_list <-
+    gdroplist(container = svm_output_frame,
+              names(rbci.env$importlist))
 
-### save svm
-svm_output_layout[2,1] <-
-    gbutton(text = "Export Model",
-            handler = function (h,...) {
-                
-                ## save file
-                ## update list to include
-                save(output.model, ## TODO need to organize this
-                     file = gfile(
-                         filter = list("RData"= list(patterns = c("*.RData"))),
-                         type = "save"))
-                
-            })
+### TODO refresh dataset frame on run
+### TODO alert complete (progress bar?)
 
-
-svm_output_layout[2,2] <- gbutton("Print Table")
-svm_output_layout[3,1] <- gbutton("Print Model")
-svm_output_layout[3,2] <- gbutton("Plot Model (Overview)")
+svm_output_layout[1,2] <- gbutton("Print Table")
+svm_output_layout[2,1] <- gbutton("Print Model")
+svm_output_layout[2,2] <- gbutton("Plot Model (Overview)")
 
 # plot pane
 
 # svm plot on right side
-svm_plot_frame <- ggraphics(container = svm_action_pane)
+svm_plot_frame <- ggraphics(container = svm_pane)
 
 # set some widths (doesn't work if earlier)
-svalue(svm_pane) <- 0.2
-svalue(svm_action_pane) <- 0.2
+svalue(svm_pane) <- 0.5
