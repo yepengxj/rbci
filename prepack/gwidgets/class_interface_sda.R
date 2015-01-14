@@ -95,22 +95,7 @@ sda_output_layout[1,1] <-
 ## refresh dataset frame on run
 ## alert complete (progress bar?)
 
-### save sda
-sda_output_layout[2,1] <-
-    gbutton(text = "Export Model",
-            handler = function (h,...) {
-                
-                ## save file
-                ## update list to include
-                save(output.model, ## TODO need to organize this
-                     file = gfile(
-                         filter = list("RData"= list(patterns = c("*.RData"))),
-                         type = "save"))
-                
-            })
-
-
-sda_output_layout[2,2] <-
+sda_output_layout[1,2] <-
     gbutton("Print Table",
             handler = function(h,...){
                 sda.name <- svalue(class_var_filesel)
@@ -128,7 +113,12 @@ sda_output_layout[2,2] <-
                         )
                 return()
             })
-sda_output_layout[1,2] <- gbutton("Print Model")
+sda_output_layout[1,3] <-
+    gbutton("Print Model",
+            handler = function(h,...){
+                
+                
+            })
 
 sda_test_btn <-
     gbutton("Test Model",
