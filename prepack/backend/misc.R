@@ -32,9 +32,9 @@ enabled.list <- function(state = TRUE, ...) {
 }
 
 ### hacky widget refresher, destroys and recreates widgets
-refresh.widget <- function(old.widget, new.widget = old.widget) {
+refresh.widget <- function(container, old.widget, new.widget = old.widget) {
     delete(old.widget$container, old.widget)
-    new.widget
+    add(container, new.widget)
 }
 
 scoot.gtable.row <- function(input.gtable, input.row, direction = "up") {
