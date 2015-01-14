@@ -18,3 +18,4 @@ library(ggbiplot)   # ggidevtools-dependent
 library(JADE)       # joint diagonalization
 library(psych)      # geometric, harmonic means
 library(cluster)    # clusplot, silhouette
+library(sda)        # sda classifier

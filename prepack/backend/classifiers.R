@@ -86,15 +86,17 @@ train.sda.model <- function(train.data,
     
     sda.model <-
         sda(lambda.freqs = 1, # uniform prior
-            as.matrix(train.data[,feature.cols,with=FALSE]),
+            as.matrix(train.data[, c(feature.cols), with = FALSE]),
             train.data[,get(target.col)],
             lambda = sda.lambda,
             lambda.var = sda.lambda.var)
-
+    
 }
 
-test.sda.model <- function(sda.model, test.data) {
-    predict(sda.model, test.data)
+test.sda.model <- function(sda.model, test.data, feature.cols) {
+### TODO error checking on input
+    
+    predict(sda.model, as.matrix(test.data[, feature.cols, with=FALSE]))
 }
 
 ### TODO sda does not have a native plot function

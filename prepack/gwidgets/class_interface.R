@@ -46,4 +46,4 @@ source("./gwidgets/class_interface_svm.R")
 source("./gwidgets/class_interface_bayes.R")
 
 # set some widths (doesn't work if earlier)
-svalue(class_pane) <- 0.2
+svalue(class_pane) <- 0.3
