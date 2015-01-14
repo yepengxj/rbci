@@ -110,7 +110,7 @@ kmeans_apply_btn <-
                 names(new.table) <- paste(k.dataname,
                                           "kmeansmodel", seq_along(new.table),
                                           sep = ".")
-
+                
                 rbci.env$importlist <- append(rbci.env$importlist,
                                               new.table)
                 
@@ -130,9 +130,10 @@ kmeans_plot_btn <-
                 k.datafile <- rbci.env$importlist[[k.dataname]]
                 k.tgtname <- svalue(kmeans_data_list)
                 k.tgtfile <- rbci.env$importlist[[k.tgtname]]
-                
-                print(clusplot(k.tgtfile, k.datafile$cluster,
-                               color=TRUE, shade=TRUE, 
+
+                print(clusplot(k.tgtfile,
+                               k.datafile$cluster,
+                               color=TRUE, shade=TRUE,
                                labels=2, lines=0))
                 
             })
