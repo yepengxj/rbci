@@ -46,11 +46,6 @@ sda_band_layout[2,1] <- gspinbutton(from = 0, to = 1, by = 0.01)
 sda_band_layout[3,1] <- "Shrinkage (variances)"
 sda_band_layout[4,1] <- gspinbutton(from = 0, to = 1, by = 0.01)
 
-# pass band start
-sda_band_layout[5,1] <- "Shrinkage (binary frequencies)"
-sda_band_layout[6,1] <- gspinbutton(from = 0, to = 1, by = 0.01)
-
-
 ## application params
 sda_target_frame <- gframe(text = "Target Variable",
                            horizontal = FALSE,
@@ -94,7 +89,6 @@ sda_output_layout[1,1] <-
                 train.data <- rbci.env$importlist[[train.name]]
                 sda.target <- svalue(sda_target_list)
                 sda.features <- svalue(sda_varlist)
-                sda.prior <- svalue(sda_band_layout[6,1])
                 sda.lambda <- svalue(sda_band_layout[2,1])
                 sda.lambda.var <- svalue(sda_band_layout[4,1])
                 
