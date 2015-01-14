@@ -18,5 +18,7 @@ source("./backend/apply_filter.R")
 source("./backend/downsample_dt.R")
 ### transformer backend
 source("./backend/transformers.R")
+### classifier backend
+source("./backend/classifiers.R")
 ### reporter backend
 source("./backend/reporter.R")

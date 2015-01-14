@@ -83,7 +83,7 @@ train.sda.model <- function(train.data,
                             feature.cols,
                             sda.lambda,
                             sda.lambda.var) {
-
+    
     sda.model <-
         sda(lambda.freqs = 1, # uniform prior
             as.matrix(train.data[,feature.cols,with=FALSE]),

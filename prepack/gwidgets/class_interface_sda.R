@@ -5,7 +5,7 @@ sda_pane <- gpanedgroup(horizontal = TRUE,
                         container = sda_tab)
 
 
-sda_varlist_frame <- gframe(text = "Apply Columns",
+sda_varlist_frame <- gframe(text = "Feature Columns",
                             horizontal = FALSE,
                             container = sda_pane,
                             expand = TRUE,
@@ -47,11 +47,19 @@ sda_band_layout[3,1] <- "Shrinkage (variances)"
 sda_band_layout[4,1] <- gspinbutton(from = 0, to = 1, by = 0.01)
 
 # pass band start
-sda_band_layout[5,1] <- "Shrinkage (frequencies)"
+sda_band_layout[5,1] <- "Shrinkage (binary frequencies)"
 sda_band_layout[6,1] <- gspinbutton(from = 0, to = 1, by = 0.01)
 
 
 ## application params
+sda_target_frame <- gframe(text = "Target Variable",
+                           horizontal = FALSE,
+                           container = sda_param_frame)
+
+sda_target_list <-
+    gcombobox(
+        names(rbci.env$importlist[[svalue(class_var_filesel, index=TRUE)]]))
+
 sda_grouping_frame <- gframe(text = "Data Grouping",
                              horizontal = FALSE,
                              container = sda_param_frame,
@@ -82,6 +90,34 @@ sda_output_layout <- glayout(container = sda_output_frame)
 sda_output_layout[1,1] <-
     gbutton("Train",
             handler = function(h,...){
+                train.name <- svalue(class_var_filesel)
+                train.data <- rbci.env$importlist[[train.name]]
+                sda.target <- svalue(sda_target_list)
+                sda.features <- svalue(sda_varlist)
+                sda.prior <- svalue(sda_band_layout[6,1])
+                sda.lambda <- svalue(sda_band_layout[2,1])
+                sda.lambda.var <- svalue(sda_band_layout[4,1])
+                
+                new.table <-
+                    list(
+                        train.sda.model(train.data,
+                                        sda.target,
+                                        sda.features,
+                                        sda.prior,
+                                        sda.lambda,
+                                        sda.lambda.var)
+                        )
+                
+                names(new.table) <- paste(input.name,
+                                          "sdamodel", seq_along(new.table),
+                                          sep = ".")
+                
+                rbci.env$importlist <- append(rbci.env$importlist,
+                                              new.table)
+                
+                ## ensure names are straight
+                names(rbci.env$importlist) <-
+                    make.unique(names(rbci.env$importlist))
                 
             })
 sda_output_layout[1,2] <-
