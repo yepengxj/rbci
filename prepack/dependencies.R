@@ -19,7 +19,8 @@ cran.dependencies = c(
     "psych"     ,  # geometric, harmonic means
     "cluster"   ,  # clusplot, silhouette
     "sda"       ,  # sda classifier
-    "LiblineaR"    # linear svm classifier    
+    "LiblineaR" ,  # linear svm classifier
+    "kernlab"      # kernel pca/svm lib
     )
 
 github.dependencies = list(
@@ -36,11 +37,12 @@ lapply(cran.dependencies, function(x) {
 })
 
 lapply(github.dependencies, function(x) {
-    if (!(require(x, character.only = TRUE))) {
+    package.basename <- eval.parent(quote(names(X)))[substitute(x)[[3]]]
+    
+    if (!(require(package.basename, character.only = TRUE))) {
         install_github(x)
     }
-
-    package.basename <- eval.parent(quote(names(X)))[substitute(x)[[3]]]
+    
     ## print(package.basename)
     library(package.basename,
             character.only = TRUE)
