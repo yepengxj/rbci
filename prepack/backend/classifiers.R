@@ -10,8 +10,8 @@ train.svm.model <- function(train.data,
 
     ## sanitize params
     cost.param <- if(is.na(as.numeric(cost.param)) ||
-                     (as.numeric(cost.param) > 0)) 1 else cost.param # R standard elvis op
-    
+                     !(as.numeric(cost.param) > 0)) 1 else cost.param # R standard elvis op
+
     if (kern.type == "Linear") {
         ## use LiblineaR
         ## assume uniform prior for now

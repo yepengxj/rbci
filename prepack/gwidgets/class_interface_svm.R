@@ -155,15 +155,12 @@ svm_band_layout <- glayout(container = svm_param_frame)
 svm_band_layout[1,1] <- ""
 svm_band_layout[2,1] <- gspinbutton(from = 0, to = 1, by = 0.01)
 
-# stop band end
 svm_band_layout[1,2] <- ""
 svm_band_layout[2,2] <- gspinbutton(from = 0, to = 1, by = 0.01)
 
-# pass band start
 svm_band_layout[3,1] <- ""
 svm_band_layout[4,1] <- gspinbutton(from = 0, to = 1, by = 0.01)
 
-# pass band end
 svm_band_layout[3,2] <- "Cost"
 svm_band_layout[4,2] <- gspinbutton(from = 0, to = length(svm_varlist), by = 1)
 enabled(svm_band_layout[1,1]) <- FALSE
