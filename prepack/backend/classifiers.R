@@ -51,14 +51,15 @@ train.svm.model <- function(train.data,
                  x = as.formula(paste(target.col,"~", feature.cols)))
         
     }
-    return(list(svm.model))
+    return(svm.model)
 }
 
-test.svm.model <- function(test.data, svm.model, ...) {
+test.svm.model <- function(test.data, svm.model, feature.cols) {
     ## all decent SVM packages overload predict(), but just in case this is for
     ## portability
+
     predict(svm.model,
-            test.data)
+            test.data[,feature.cols, with = FALSE])
     
 }
 

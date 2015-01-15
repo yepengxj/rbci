@@ -223,11 +223,38 @@ svm_test_btn <-
     gbutton("Test Model",
             container = svm_output_frame,
             handler = function(h,...){
+                svm.name <- svalue(class_var_filesel)
+                svm.model <- rbci.env$importlist[[svm.name]]
+                test.dataname <- svalue(svm_test_list)
+                test.data <- rbci.env$importlist[[test.dataname]]
+                test.feats <- svalue(svm_varlist)
                 
+                new.table <-
+                    test.svm.model(test.data,
+                                   svm.model,
+                                   test.feats)
+                
+                names(new.table) <- paste(test.dataname,
+                                          "svmtest", seq_along(new.table),
+                                          sep = ".")
+                
+                rbci.env$importlist <- append(rbci.env$importlist,
+                                              new.table)
+                
+                ## ensure names are straight
+                names(rbci.env$importlist) <-
+                    make.unique(names(rbci.env$importlist))
+
             })
 
-svm_test_label <- glabel("Test Set",
-                         container = svm_output_frame)
+svm_test_label <-
+    glabel("Test Set",
+           container = svm_output_frame,
+           handler = function(h,...) {
+               
+
+           })
+
 svm_test_list <-
     gdroplist(container = svm_output_frame,
               names(rbci.env$importlist))
