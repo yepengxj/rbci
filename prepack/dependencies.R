@@ -2,25 +2,27 @@
 ## should be consolidated here like a package.json file in node
 
 cran.dependencies = c(
-    "tools"     ,  
-    "devtools"  ,  # for installing github libs
-    "parallel"  ,  # TODO needed?
-    "foreach"   ,  # explicit parallel frontend
-    "doMC"      ,  # local multicore backend
-    "R.matlab"  ,  # for importing matfiles
-    "signal"    ,  # signal processing lib
-    "abind"     ,  # multivariate array concatenator
-    "R.utils"   ,  
-    "reshape2"  ,  # for dcast, melt
-    "gdata"     ,  # for cleanups: keep""
-    "data.table",  # hyperfast memory-efficient data struct
-    "ggplot2"   ,  # general plotting engine
-    "JADE"      ,  # joint diagonalization
-    "psych"     ,  # geometric, harmonic means
-    "cluster"   ,  # clusplot, silhouette
-    "sda"       ,  # sda classifier
-    "LiblineaR" ,  # linear svm classifier
-    "kernlab"      # kernel pca/svm lib
+    "gWidgets"      ,  # GUI framework
+    "gWidgetsRGtk2" ,  # bindings for GTK2
+    "tools"         ,  
+    "devtools"      ,  # for installing github libs
+    "parallel"      ,  # TODO needed?
+    "foreach"       ,  # explicit parallel frontend
+    "doMC"          ,  # local multicore backend
+    "R.matlab"      ,  # for importing matfiles
+    "signal"        ,  # signal processing lib
+    "abind"         ,  # multivariate array concatenator
+    "R.utils"       ,  
+    "reshape2"      ,  # for dcast, melt
+    "gdata"         ,  # for cleanups: keep""
+    "data.table"    ,  # hyperfast memory-efficient data struct
+    "ggplot2"       ,  # general plotting engine
+    "JADE"          ,  # joint diagonalization
+    "psych"         ,  # geometric, harmonic means
+    "cluster"       ,  # clusplot, silhouette
+    "sda"           ,  # sda classifier
+    "LiblineaR"     ,  # linear svm classifier
+    "kernlab"          # kernel pca/svm lib
     )
 
 github.dependencies = list(

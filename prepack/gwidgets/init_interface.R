@@ -1,8 +1,5 @@
-library(gWidgets)
-library(gWidgetsRGtk2)
-options("guiToolkit"="RGtk2")
-
 source("./backend/init_backend.R")
+options("guiToolkit"="RGtk2")
 
 init_win <- gwindow("R BCI",
                     width = 200)
