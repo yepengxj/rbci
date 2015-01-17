@@ -121,15 +121,16 @@ train.bayes.model <- function(train.data,
                               target.col,
                               feature.cols) {
     
-    bayes.model <-naiveBayes(formula,
-               data = train.data,
-               laplace = bayes.smooth)
+    bayes.model <-
+        naiveBayes(formula = as.formula(paste(target.col,"~", feature.cols)),
+                   data = train.data,
+                   laplace = bayes.smooth)
     
     
 }
 
 test.bayes.model <- function(bayes.model, test.data) {
-
+    ### TODO fixme
     predict(bayes.model, test.data)
     
 }

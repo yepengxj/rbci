@@ -74,16 +74,14 @@ bayes_output_layout[1,1] <-
                 train.data <- rbci.env$importlist[[train.name]]
                 bayes.target <- svalue(bayes_target_list)
                 bayes.features <- svalue(bayes_varlist)
-                bayes.lambda <- svalue(bayes_band_layout[2,1])
-                bayes.lambda.var <- svalue(bayes_band_layout[4,1])
+                bayes.smooth <- svalue(bayes_band_layout[2,1])
 
                 new.table <-
                     list(
                         train.bayes.model(train.data,
-                                        bayes.target,
-                                        bayes.features,
-                                        bayes.lambda,
-                                        bayes.lambda.var)
+                                          bayes.smooth,
+                                          bayes.target,
+                                          bayes.features)
                         )
                 
                 names(new.table) <- paste(train.name,
@@ -146,8 +144,8 @@ bayes_test_btn <-
                 new.table <-
                     list(
                         test.bayes.model(test.model,
-                                       test.data,
-                                       test.feats)
+                                       test.data)
+                                       # test.feats)
                         )
                 
                 names(new.table) <- paste(test.dataname,

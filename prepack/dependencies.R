@@ -22,7 +22,8 @@ cran.dependencies = c(
     "cluster"       ,  # clusplot, silhouette
     "sda"           ,  # sda classifier
     "LiblineaR"     ,  # linear svm classifier
-    "kernlab"          # kernel pca/svm lib
+    "kernlab"       ,  # kernel pca/svm lib
+    "e1071"            # naiveBayes classifier
     )
 
 github.dependencies = list(
