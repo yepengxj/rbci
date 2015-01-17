@@ -9,6 +9,9 @@ cran.dependencies = c(
     "parallel"      ,  # TODO needed?
     "foreach"       ,  # explicit parallel frontend
     "doMC"          ,  # local multicore backend
+    "doSNOW"        ,  # SNOW cluster backend
+    "doMPI"         ,  # MPI cluster backend
+    "doRedis"       ,  # Redis job store backend
     "R.matlab"      ,  # for importing matfiles
     "signal"        ,  # signal processing lib
     "abind"         ,  # multivariate array concatenator
