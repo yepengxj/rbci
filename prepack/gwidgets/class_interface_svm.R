@@ -249,11 +249,7 @@ svm_test_btn <-
 
 svm_test_label <-
     glabel("Test Set",
-           container = svm_output_frame,
-           handler = function(h,...) {
-               
-
-           })
+           container = svm_output_frame)
 
 svm_test_list <-
     gdroplist(container = svm_output_frame,
@@ -262,14 +258,32 @@ svm_test_list <-
 ### TODO refresh dataset frame on run
 ### TODO alert complete (progress bar?)
 
-svm_output_layout[1,2] <- gbutton("Print Table")
+svm_output_layout[1,2] <-
+    gbutton("Print Table",
+            handler = function(h,...) {
+                svm.name <- svalue(class_var_filesel)
+                svm.pred <- rbci.env$importlist[[svm.name]]
+                data.name <- svalue(svm_test_list)
+                target.col <- svalue(svm_target_list)
+                data.actual <-
+                    rbci.env$importlist[[data.name]][,target.col,with=FALSE]
+
+                ## send table to widget
+                svalue(svm_output_frame) <-
+                    capture.output(
+                        table(predicted = svm.pred,
+                              data = data.actual[[target.col]])
+                        )
+                return()
+            })
 svm_output_layout[2,1] <- gbutton("Print Model")
-svm_output_layout[2,2] <- gbutton("Plot Model (Overview)")
 
 # plot pane
 
-# svm plot on right side
-svm_plot_frame <- ggraphics(container = svm_pane)
+svm_output_frame <- gtext(text = "svm output",
+                           font.attr=c(family="monospace"),
+#                           width = window.width*0.4,
+                           container = svm_pane)
 
 # set some widths (doesn't work if earlier)
 svalue(svm_pane) <- 0.5

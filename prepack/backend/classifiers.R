@@ -24,7 +24,7 @@ train.svm.model <- function(train.data,
                       cost = cost.param,
                       type = 3, # TODO comment this
                       data = train.data[, feature.cols, with=FALSE],
-                      labels = train.data[,get(target.col)])
+                      labels = train.data[,factor(get(target.col))])
         
     } else {
         ## use kernlab
