@@ -276,7 +276,18 @@ svm_output_layout[1,2] <-
                         )
                 return()
             })
-svm_output_layout[2,1] <- gbutton("Print Model")
+svm_output_layout[2,1] <-
+    gbutton("Print Model",
+            handler = function(h,...) {
+                svm.name <- svalue(class_var_filesel)
+                svm.model <- rbci.env$importlist[[svm.name]]
+
+                svalue(svm_output_frame) <-
+                    capture.output(
+                        print(svm.model)
+                        )
+                
+            })
 
 # plot pane
 

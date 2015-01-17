@@ -116,7 +116,13 @@ sda_output_layout[1,2] <-
 sda_output_layout[1,3] <-
     gbutton("Print Model",
             handler = function(h,...){
-                
+                sda.name <- svalue(class_var_filesel)
+                sda.model <- rbci.env$importlist[[sda.name]]
+
+                svalue(sda_output_frame) <-
+                    capture.output(
+                        print(sda.model)
+                        )
                 
             })
 
