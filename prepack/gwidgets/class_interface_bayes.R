@@ -113,7 +113,7 @@ bayes_output_layout[1,2] <-
                 ## send table to widget
                 svalue(bayes_output_frame) <-
                     capture.output(
-                        table(predicted = bayes.pred[['class']],
+                        table(predicted = bayes.pred,
                               data = data.actual[[target.col]])
                         )
                 return()

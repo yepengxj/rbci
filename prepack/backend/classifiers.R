@@ -120,7 +120,9 @@ train.bayes.model <- function(train.data,
                               bayes.smooth,
                               target.col,
                               feature.cols) {
-    
+
+    ## validate target as factor type
+    train.data[,c(target.col) := factor(get(target.col))]
     bayes.model <-
         naiveBayes(formula = as.formula(paste(target.col,"~", feature.cols)),
                    data = train.data,
@@ -130,9 +132,9 @@ train.bayes.model <- function(train.data,
 }
 
 test.bayes.model <- function(bayes.model, test.data) {
-    ### TODO fixme
-    predict(bayes.model, test.data)
-    
+
+    bayes.pred <- predict(bayes.model, test.data)
+    return(bayes.pred)
 }
 
 ### TODO bayes does not have a native plot function
