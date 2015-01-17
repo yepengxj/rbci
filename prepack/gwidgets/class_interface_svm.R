@@ -276,7 +276,7 @@ svm_output_layout[1,2] <-
                         )
                 return()
             })
-svm_output_layout[2,1] <-
+svm_output_layout[1,3] <-
     gbutton("Print Model",
             handler = function(h,...) {
                 svm.name <- svalue(class_var_filesel)

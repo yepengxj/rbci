@@ -4,10 +4,12 @@ bayes_pane <- gpanedgroup(horizontal = TRUE,
                         fill = TRUE,
                         container = bayes_tab)
 
+bayes_param_group <- ggroup(container = bayes_pane,
+                          horizontal = TRUE)
 
 bayes_varlist_frame <- gframe(text = "Apply Columns",
                             horizontal = FALSE,
-                            container = bayes_pane,
+                            container = bayes_param_group,
                             expand = TRUE,
                             width = 300)
 # populate varlist
@@ -18,16 +20,11 @@ bayes_varlist <- gcheckboxgroup(
   use.table = TRUE,
   expand = TRUE)
 
-bayes_action_pane <- gpanedgroup(horizontal = TRUE,
-                               expand = TRUE,
-                               fill = TRUE,
-                               container = bayes_pane)
-
 
 ## bayes params
 bayes_param_frame <- gframe(text = "Naive Bayes Parameters",
                           horizontal = FALSE,
-                          container = bayes_action_pane,
+                          container = bayes_param_group,
                           expand = TRUE,
                           width = 300)
 
@@ -52,23 +49,14 @@ bayes_band_layout[2,1] <- gspinbutton(from = 0, by = 0.01)
 
 
 ## application params
-bayes_grouping_frame <- gframe(text = "Data Grouping",
+bayes_target_frame <- gframe(text = "Target Variable",
                              horizontal = FALSE,
-                             container = bayes_param_frame,
-                             expand = FALSE)
+                             container = bayes_param_frame)
 
-# trial/group vars
-bayes_grouping_layout <- glayout(container = bayes_grouping_frame)
-
-bayes_grouping_layout[1,1] <- "First Group (Trial)"
-bayes_grouping_layout[2,1] <- 
-  gcombobox(
-    names(rbci.env$importlist[[svalue(class_var_filesel, index=TRUE)]]))
-
-bayes_grouping_layout[3,1] <- "Second Group (Channel)"
-bayes_grouping_layout[4,1] <- 
-  gcombobox(
-    names(rbci.env$importlist[[svalue(class_var_filesel, index=TRUE)]]))
+bayes_target_list <- 
+    gcombobox(
+        container = bayes_target_frame,
+        names(rbci.env$importlist[[svalue(class_var_filesel, index=TRUE)]]))
 
 ## output params
 bayes_output_frame <- gframe(text = "Output Options",
@@ -80,36 +68,107 @@ bayes_output_frame <- gframe(text = "Output Options",
 bayes_output_layout <- glayout(container = bayes_output_frame)
 # apply bayes button
 bayes_output_layout[1,1] <-
-    gbutton("Train",
+    gbutton("Train Model",
             handler = function(h,...){
+                train.name <- svalue(class_var_filesel)
+                train.data <- rbci.env$importlist[[train.name]]
+                bayes.target <- svalue(bayes_target_list)
+                bayes.features <- svalue(bayes_varlist)
+                bayes.lambda <- svalue(bayes_band_layout[2,1])
+                bayes.lambda.var <- svalue(bayes_band_layout[4,1])
+
+                new.table <-
+                    list(
+                        train.bayes.model(train.data,
+                                        bayes.target,
+                                        bayes.features,
+                                        bayes.lambda,
+                                        bayes.lambda.var)
+                        )
                 
-            })
-bayes_output_layout[1,2] <-
-    gbutton("Test",
-            handler = function(h,...){
+                names(new.table) <- paste(train.name,
+                                          "bayesmodel", seq_along(new.table),
+                                          sep = ".")
+                
+                rbci.env$importlist <- append(rbci.env$importlist,
+                                              new.table)
+                
+                ## ensure names are straight
+                names(rbci.env$importlist) <-
+                    make.unique(names(rbci.env$importlist))
                 
             })
 
 ## refresh dataset frame on run
 ## alert complete (progress bar?)
 
-### save bayes
-bayes_output_layout[2,1] <-
-    gbutton(text = "Export Model",
-            handler = function (h,...) {
+bayes_output_layout[1,2] <-
+    gbutton("Print Table",
+            handler = function(h,...){
+                bayes.name <- svalue(class_var_filesel)
+                bayes.pred <- rbci.env$importlist[[bayes.name]]
+                data.name <- svalue(bayes_test_list)
+                target.col <- svalue(bayes_target_list)
+                data.actual <-
+                    rbci.env$importlist[[data.name]][,target.col,with=FALSE]
                 
-                ## save file
-                ## update list to include
-                save(output.model, ## TODO need to organize this
-                     file = gfile(
-                         filter = list("RData"= list(patterns = c("*.RData"))),
-                         type = "save"))
-                
+                ## send table to widget
+                svalue(bayes_output_frame) <-
+                    capture.output(
+                        table(predicted = bayes.pred[['class']],
+                              data = data.actual[[target.col]])
+                        )
+                return()
             })
 
+bayes_output_layout[1,3] <-
+    gbutton("Print Model",
+            handler = function(h,...){
+                bayes.name <- svalue(class_var_filesel)
+                bayes.model <- rbci.env$importlist[[bayes.name]]
+                
+                svalue(bayes_output_frame) <-
+                    capture.output(
+                        print(bayes.model)
+                        )
+            })
 
-bayes_output_layout[2,2] <- gbutton("Print Table")
-bayes_output_layout[3,1] <- gbutton("Print Model")
+bayes_test_btn <-
+    gbutton("Test Model",
+            container = bayes_output_frame,
+            handler = function(h,...){
+                test.name <- svalue(class_var_filesel)
+                test.model <- rbci.env$importlist[[test.name]]
+                test.dataname <- svalue(bayes_test_list)
+                test.data <- rbci.env$importlist[[test.dataname]]
+                test.feats <- svalue(bayes_varlist)
+                
+                new.table <-
+                    list(
+                        test.bayes.model(test.model,
+                                       test.data,
+                                       test.feats)
+                        )
+                
+                names(new.table) <- paste(test.dataname,
+                                          "bayestest", seq_along(new.table),
+                                          sep = ".")
+                
+                rbci.env$importlist <- append(rbci.env$importlist,
+                                              new.table)
+                
+                ## ensure names are straight
+                names(rbci.env$importlist) <-
+                    make.unique(names(rbci.env$importlist))
+
+            })
+
+bayes_test_label <- glabel("Test Set",
+                         container = bayes_output_frame)
+bayes_test_list <-
+    gdroplist(container = bayes_output_frame,
+              names(rbci.env$importlist))
+
 
 bayes_output_frame <- gtext(text = "bayes output",
                           font.attr=c(family="monospace"),
@@ -117,4 +176,4 @@ bayes_output_frame <- gtext(text = "bayes output",
                           container = bayes_pane)
 
 # set some widths (doesn't work if earlier)
-svalue(bayes_pane) <- 0.2
+svalue(bayes_pane) <- 0.6
