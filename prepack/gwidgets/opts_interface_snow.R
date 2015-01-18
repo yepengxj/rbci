@@ -10,9 +10,12 @@ build_snowfields <- function(num.clusters, oldframe, container) {
     sapply(seq_len(num.clusters), function(this.row) {
 
         snowopts_layout[this.row,1] <- paste("Machine",this.row)
-        snowopts_layout[this.row,2] <- glabel("Hostname", editable = TRUE)
-        snowopts_layout[this.row,3] <- glabel("RScript path", editable = TRUE)
-        snowopts_layout[this.row,4] <- glabel("SNOW library path", editable = TRUE)
+        snowopts_layout[this.row,2] <- glabel("Hostname",
+                                              editable = TRUE)
+        snowopts_layout[this.row,3] <- glabel("RScript path",
+                                              editable = TRUE)
+        snowopts_layout[this.row,4] <- glabel("SNOW library path",
+                                              editable = TRUE)
         return()
     })
     add(oldframe, snowopts_layout)
@@ -34,3 +37,14 @@ snow_cfg_btn <-
                                  parallel_frame)
 
             })
+
+snow_control_frame <- gframe("Cluster control",
+                             container = backendopts_frame,
+                             center = TRUE)
+snow_start_btn <-
+    gbutton("Start Cluster",
+            container = snow_control_frame)
+
+snow_stop_btn <-
+    gbutton("Stop Cluster",
+            container = snow_control_frame)

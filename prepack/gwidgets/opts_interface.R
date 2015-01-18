@@ -26,7 +26,7 @@ parallelbackend_type_menu <-
               # sigma, order, degree, for Bessel
               # sigma, degree for ANOVA
               switch (svalue(h$obj),
-                      "multicore" = {
+                      "multicore (local)" = {
                           ## load multicore subGUI
                           source('./gwidgets/opts_interface_multicore.R') 
                       },
