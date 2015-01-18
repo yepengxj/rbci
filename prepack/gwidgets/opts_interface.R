@@ -10,7 +10,7 @@ parallel_frame <- gframe(container = opts_win,
 
 parallel_label <- glabel("Cluster Type",
                          container = parallel_frame)
-parallelbackend_type_list <- c("multicore (local)", "SNOW")
+parallelbackend_type_list <- c("multicore (local)", "SNOW", "Redis")
 
 parallelbackend_type_menu <- 
   gdroplist(parallelbackend_type_list,
@@ -33,6 +33,10 @@ parallelbackend_type_menu <-
                       "SNOW" = {
                           ## load snow subGUI
                           source('./gwidgets/opts_interface_snow.R')
+                      },
+                      "Redis" = {
+                          ## load redis subGUI
+                          source('./gwidgets/opts_interface_redis.R')
                       })
             })
 ## since multicore is default and droplist handler won't run then, we manually
