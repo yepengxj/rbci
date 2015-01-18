@@ -10,7 +10,7 @@ parallel_frame <- gframe(container = opts_win,
 
 parallel_label <- glabel("Options",
                          container = parallel_frame)
-parallelbackend_type_list <- c("multicore")
+parallelbackend_type_list <- c("multicore", "SNOW")
 
 parallelbackend_type_menu <- 
   gdroplist(parallelbackend_type_list,
@@ -27,38 +27,14 @@ parallelbackend_type_menu <-
               # sigma, degree for ANOVA
               switch (svalue(h$obj),
                       "multicore" = {
-                        enabled(backendopts_layout[1,1]) <- TRUE
-                        enabled(backendopts_layout[2,1]) <- TRUE
-                        enabled(backendopts_layout[1,2]) <- FALSE
-                        enabled(backendopts_layout[2,2]) <- FALSE
-                        enabled(backendopts_layout[3,1]) <- FALSE
-                        enabled(backendopts_layout[4,1]) <- FALSE
+                          ## load multicore subGUI
+                          source('./gwidgets/opts_interface_multicore.R') 
+                      },
+                      "SNOW" = {
+                          ## load snow subGUI
+                          source('./gwidgets/opts_interface_snow.R')
                       })
             })
-
-backendopts_layout <- glayout(container = parallel_frame)
-backendopts_layout[1,1] <- "# of Cores"
-
-if (detectCores() < 2) { # single core case
-    backendopts_layout[2,1] <-
-        "Single core machine detected: multicore unavailable"
-} else { 
-    backendopts_layout[2,1] <- gslider(from = 1, to = detectCores(), by = 1,
-                                       handler = function(h,...){
-                                        # set number of cores
-                                           rbci.env$numcores <- svalue(h$obj)
-                                       })
-}
-
-# backendopts_layout[1,2] <- " "
-# backendopts_layout[2,2] <- gspinbutton(from = 0, to = 1, by = 0.01)
-# 
-# backendopts_layout[3,1] <- " "
-# backendopts_layout[4,1] <- gspinbutton(from = 0, to = 1, by = 0.01)
-
-enabled(backendopts_layout[1,1]) <- TRUE
-enabled(backendopts_layout[2,1]) <- TRUE
-enabled(backendopts_layout[1,2]) <- FALSE
-enabled(backendopts_layout[2,2]) <- FALSE
-enabled(backendopts_layout[3,1]) <- FALSE
-enabled(backendopts_layout[4,1]) <- FALSE
+## since multicore is default and droplist handler won't run then, we manually
+## call
+source('./gwidgets/opts_interface_multicore.R')

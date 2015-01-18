@@ -33,7 +33,7 @@ enabled.list <- function(state = TRUE, ...) {
 
 ### hacky widget refresher, destroys and recreates widgets
 refresh.widget <- function(container, old.widget, new.widget = old.widget) {
-    delete(old.widget$container, old.widget)
+    delete(container, old.widget)
     add(container, new.widget)
 }
 
