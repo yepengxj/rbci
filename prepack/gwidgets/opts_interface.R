@@ -8,9 +8,9 @@ opts_win <- gwindow("Parallelization Options",
 parallel_frame <- gframe(container = opts_win,
                          horizontal = FALSE)
 
-parallel_label <- glabel("Options",
+parallel_label <- glabel("Cluster Type",
                          container = parallel_frame)
-parallelbackend_type_list <- c("multicore", "SNOW")
+parallelbackend_type_list <- c("multicore (local)", "SNOW")
 
 parallelbackend_type_menu <- 
   gdroplist(parallelbackend_type_list,

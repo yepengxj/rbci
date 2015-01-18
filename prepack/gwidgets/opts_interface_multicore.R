@@ -1,7 +1,7 @@
 multicore_backendopts_frame <- gframe(horizontal = FALSE,
                                       text = "Multicore options")
 ## initialize lower layout again
-if (isExtant(backendopts_frame)) {
+if (exists('backendopts_frame') && isExtant(backendopts_frame)) {
     delete(parallel_frame,
            backendopts_frame)
 }

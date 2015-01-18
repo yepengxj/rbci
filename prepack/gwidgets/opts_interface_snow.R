@@ -1,5 +1,8 @@
 build_snowfields <- function(num.clusters, oldframe, container) {
 ### Builds form layout for SNOW cluster config
+    if (exists('snowopts_layout') && isExtant(snowopts_layout)) {
+        delete(oldframe, snowopts_layout)
+    }
     snowopts_layout <<- glayout()
     
     refresh.widget(container, oldframe) # delete old layout
@@ -10,9 +13,9 @@ build_snowfields <- function(num.clusters, oldframe, container) {
         snowopts_layout[this.row,2] <- glabel("Hostname", editable = TRUE)
         snowopts_layout[this.row,3] <- glabel("RScript path", editable = TRUE)
         snowopts_layout[this.row,4] <- glabel("SNOW library path", editable = TRUE)
-        
+        return()
     })
-
+    add(oldframe, snowopts_layout)
 }
 
 snow_backendopts_frame <- gframe(horizontal = FALSE,
