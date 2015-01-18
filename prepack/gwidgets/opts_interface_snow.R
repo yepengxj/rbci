@@ -43,8 +43,27 @@ snow_control_frame <- gframe("Cluster control",
                              center = TRUE)
 snow_start_btn <-
     gbutton("Start Cluster",
-            container = snow_control_frame)
+            container = snow_control_frame,
+            handler = function(h,...) {
+                cluster.optslist <-
+                    vector("list", # hack: we know how many columns in layout
+                           length(snowopts_layout[])/4)
+                for (this.row in seq_along(cluster.optslist)) {
+                    cluster.optslist[[this.row]] <- 
+                        list(host = svalue(snowopts_layout[this.row,2]),
+                             rscript = svalue(snowopts_layout[this.row,3]),
+                             snowlib = svalue(snowopts_layout[this.row,4]))
+                    }
+### TODO error checking on opts (fails silently if malformed)
+                rbci.env$cluster <-
+                    makeCluster(cluster.optslist,
+                                type = "SOCK")
+                registerDoSNOW(rbci.env$cluster)
+            })
 
 snow_stop_btn <-
     gbutton("Stop Cluster",
-            container = snow_control_frame)
+            container = snow_control_frame,
+            handler = function(h,...){
+                stopCluster(rbci.env$cluster)
+            })

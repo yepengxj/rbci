@@ -36,5 +36,5 @@ parallelbackend_type_menu <-
                       })
             })
 ## since multicore is default and droplist handler won't run then, we manually
-## call
+## call default subGUI
 source('./gwidgets/opts_interface_multicore.R')
