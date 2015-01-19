@@ -55,29 +55,30 @@ script_list_frame <- gframe(text = "Scripts",
 tool_var_filesel <- gradio(dir(svalue(tool_dir_button),
                                pattern = "*.R"),
                            container = script_list_frame)
-# function to update script list
+
+## function to update script list
 tool_update_scripts <- function(h,...) {
-  # populate tool script selector
-  # TODO add some kind of handler to refresh subitems in tables
+### TODO add refresh
+    ## populate tool script selector
   
   tool_var_filesel <- gradio(dir(svalue(tool_dir_button),
                                  pattern = "*.R"),
                              container = script_list_frame)
 }
+
 addHandlerChanged(tool_dir_button,
                   handler = tool_update_scripts())
 
 tool_loadsave_frame <- gframe(text = "Load/Save",
                               container = tool_var_frame)
-tool_load_button <- gbutton(text = "Load Selected",
-                            container = tool_loadsave_frame,
-                            handler = function (h,...) {
-                              
-                              ## below to backend
-                              # load script file
-                              
-                              
-                            })
+tool_load_button <-
+    gbutton(text = "Load Selected",
+            container = tool_loadsave_frame,
+            handler = function (h,...) {
+                ## load script file
+                svalue(tool_var_filesel)
+                
+            })
 tool_save_button <- gfilebrowse(text = "Save Script",
                                 type = "save",
                             container = tool_loadsave_frame,
