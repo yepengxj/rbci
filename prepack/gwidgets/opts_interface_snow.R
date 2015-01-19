@@ -26,16 +26,29 @@ snow_backendopts_frame <- gframe(horizontal = FALSE,
 ## initialize lower layout again
 refresh.widget(parallel_frame, backendopts_frame, snow_backendopts_frame)
 backendopts_frame <- snow_backendopts_frame # add simple name reference
+
+## static options
+staticopts_frame <- gframe(container = backendopts_frame,
+                            horizontal = TRUE)
+
+snow_numlabel <- glabel("Number of workstations",
+                        container = staticopts_frame)
 snow_numclust <- gspinbutton(from = 1, to = 16, value = 1,
-                                    container = backendopts_frame)
+                                    container = staticopts_frame)
+snow_typelabel <- glabel("Interface type",
+                         container = staticopts_frame)
+snow_typelist <- c("SOCK","MPI")
+snow_type <- gdroplist(snow_typelist,
+                       container = staticopts_frame)
+                         
 snow_cfg_btn <-
     gbutton("Configure clusters",
             container = backendopts_frame,
             handler = function(h,...) {
+                ## generate dynamic options
                 build_snowfields(svalue(snow_numclust),
                                  backendopts_frame,
                                  parallel_frame)
-
             })
 
 snow_control_frame <- gframe("Cluster control",
@@ -53,11 +66,11 @@ snow_start_btn <-
                         list(host = svalue(snowopts_layout[this.row,2]),
                              rscript = svalue(snowopts_layout[this.row,3]),
                              snowlib = svalue(snowopts_layout[this.row,4]))
-                    }
+                }
 ### TODO error checking on opts (fails silently if malformed)
                 rbci.env$cluster <-
                     makeCluster(cluster.optslist,
-                                type = "SOCK")
+                                type = svalue(snow_type))
                 registerDoSNOW(rbci.env$cluster)
             })
 
