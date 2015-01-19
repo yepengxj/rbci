@@ -192,10 +192,7 @@ transform.csp <- function(table.data,
     correlation.mats.list <- # a list of lists; class( trial(...
         lapply(class.trial.map, function(class.trials) { # dumb hybrid approach?
             foreach (this.trial = class.trials, 
-                     .combine = abind3curry) %do% {
-                                        # this loop is deliberately serial:
-                                        # not worth trying to parallelize in
-                                        # most cases? TODO
+                     .combine = abind3curry) %dopar% {
                          cor(table.channel[get(trial.col) == this.trial,
                                            names(table.channel)[4:length(names(table.channel))],
                                            with=FALSE]
