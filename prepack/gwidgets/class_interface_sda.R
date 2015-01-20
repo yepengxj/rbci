@@ -20,6 +20,16 @@ sda_varlist <- gcheckboxgroup(
     use.table = TRUE,
     expand = TRUE)
 
+addHandlerChanged(class_var_filesel,
+                  handler = function(h,...) {
+                      new.dataset.names <- 
+                          names(rbci.env$importlist[[svalue(class_var_filesel,
+                                                            index=TRUE)]])
+                      svm_varlist[] <- new.dataset.names
+                      svm_target_list[] <- new.dataset.names
+                      
+                  })
+
 ## sda params
 sda_param_frame <- gframe(text = "SDA Parameters",
                           horizontal = FALSE,
