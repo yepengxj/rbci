@@ -19,8 +19,14 @@ grand.means.plot <- function(eeg.table,
                              val.name = "Voltage",
                              time.name = "Sample",
                              chan.name = "Channel",
-                             targ.name = "Class") {
-    
+                             targ.name = "Class",
+                             plot.title = NULL) {
+    title.caption <- "Averaged ERP by Class"
+    if (!is.null(plot.title)) {
+        title.caption <- paste(title.caption, ":\n", plot.title,
+                               sep = "")
+    }
+
     comb.class.avg <- eeg.table[,mean(get(val.name)), by = c(time.name,
                                                              chan.name,
                                                              targ.name)]
@@ -41,7 +47,7 @@ grand.means.plot <- function(eeg.table,
                stat_smooth(aes_string(colour = targ.name),
                            method = "loess", level=0.9) +
                facet_wrap(as.formula(paste("~", chan.name)), ncol=4) +
-               ggtitle(bquote("Averaged ERP by Class")) +
+               ggtitle(title.caption) +
                xlab(time.name) + ylab("Amplitude (uV)") +
                ## guides(col = guide_legend(nrow = 28, byrow=TRUE,
                ##                           title = "Channel")) +

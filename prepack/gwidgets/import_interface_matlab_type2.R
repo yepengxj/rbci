@@ -50,7 +50,10 @@ matlab_type2_preview_button <-
                        ggraphics(container = matlab_type2_pane)
                      # visible(matlab_type2_preview_frame) <- TRUE
                      # print(eegdata$preview.plot) # should plot here
-                     print(grand.means.plot(eegdata))
+                     print(grand.means.plot(eegdata,
+                           plot.title =
+                               basename(svalue(matlab_type2_file_button)))
+                           )
                    }
             )
           })
