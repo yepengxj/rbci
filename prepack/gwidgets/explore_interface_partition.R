@@ -129,19 +129,19 @@ partition_apply_btn <-
                 part.type <- svalue(partition_type_menu)
                 
                 ## apply the partition, add new data tables to list
-                new.tables <- list(partition.table(part.file,
-                                                   part.col,
-                                                   part.props,
-                                                   part.type)
-                                   )
+                new.tables <- partition.table(part.file,
+                                              part.col,
+                                              part.props,
+                                              part.type)
+
+                
                 ## naming for clarity
                 names(new.tables) <- paste(file.name,
                                            "part", seq_along(new.tables),
                                            sep = ".")
-                
-                rbci.env$importlist <-
-                    append(rbci.env$importlist,list(new.tables))
-                ## ensure names are straight
-                names(rbci.env$importlist) <-
-                    make.unique(names(rbci.env$importlist))
+
+### TODO revisit this if name uniqueness is an issue
+                lapply(names(new.tables), function(x) {
+                    rbci.env$importlist[[x]] <- new.tables[[x]]
+                })
             })
