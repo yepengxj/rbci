@@ -256,7 +256,7 @@ pca_output_layout[2,1] <-
                 data.name <- svalue(pca_output_layout[3,1])
                 data.file <- rbci.env$importlist[[data.name]]
                 pca.name <- svalue(trans_var_filesel)
-                pca.data <- rbci.env$importlist[[input.name]]
+                pca.data <- rbci.env$importlist[[pca.name]]
                 input.val <- svalue(pca_grouping_layout[2,1])
                 input.targ <- svalue(pca_grouping_layout[4,1])
                 input.epoc <- svalue(pca_grouping_layout[6,1])
