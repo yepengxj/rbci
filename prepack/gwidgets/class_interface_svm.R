@@ -12,12 +12,28 @@ svm_varlist_frame <- gframe(text = "Feature Columns",
                             container = svm_param_group,
                             expand = TRUE,
                             width = 300)
+
+
 # populate varlist
 svm_varlist <- gcheckboxgroup(
   names(rbci.env$importlist[[svalue(class_var_filesel, index=TRUE)]]),
   container = svm_varlist_frame,
   use.table = TRUE,
   expand = TRUE)
+
+## if we change datasets, update interface elements
+class_varlist_h <-
+    addHandlerClicked(class_var_filesel,
+                      handler = function(h,...) {
+                          browser()
+                          delete(svm_varlist_frame,svm_varlist)
+                          svm_varlist <<- gcheckboxgroup(
+                              names(rbci.env$importlist[[svalue(class_var_filesel,
+                                                                index=TRUE)]]),
+                              container = svm_varlist_frame,
+                              use.table = TRUE,
+                              expand = TRUE)
+                      })
 
 ## svm params
 svm_param_frame <- gframe(text = "SVM Parameters",
@@ -276,6 +292,7 @@ svm_output_layout[1,2] <-
                         )
                 return()
             })
+
 svm_output_layout[1,3] <-
     gbutton("Print Model",
             handler = function(h,...) {
