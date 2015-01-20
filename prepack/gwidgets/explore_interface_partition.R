@@ -83,11 +83,6 @@ partition_grouping_layout[1,1] <- "Partition Group (Trials)"
 partition_grouping_layout[2,1] <- 
     gcombobox(
         names(rbci.env$importlist[[svalue(explore_var_filesel, index=TRUE)]]))
-# 
-# partition_grouping_layout[3,1] <- "Second Group (Channel)"
-# partition_grouping_layout[4,1] <- 
-#     gcombobox(
-#         names(rbci.env$importlist[[svalue(explore_var_filesel, index=TRUE)]]))
 
 ## output params
 partition_output_frame <- gframe(text = "Output Controls",
@@ -134,10 +129,11 @@ partition_apply_btn <-
                 part.type <- svalue(partition_type_menu)
                 
                 ## apply the partition, add new data tables to list
-                new.tables <- partition.table(part.file,
-                                              part.col,
-                                              part.props,
-                                              part.type)
+                new.tables <- list(partition.table(part.file,
+                                                   part.col,
+                                                   part.props,
+                                                   part.type)
+                                   )
                 ## naming for clarity
                 names(new.tables) <- paste(file.name,
                                            "part", seq_along(new.tables),
@@ -149,10 +145,3 @@ partition_apply_btn <-
                 names(rbci.env$importlist) <-
                     make.unique(names(rbci.env$importlist))
             })
-
-## save partition
-## Leave off for reporter also
-# partition_save_btn <- gbutton("Save Partitioned Data",
-#                           container = partition_output_frame)
-# refresh dataset frame on run
-# alert complete (progress bar?)

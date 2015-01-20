@@ -5,7 +5,7 @@ simple_pane <- gpanedgroup(horizontal = TRUE,
                            container = filter_simple_tab)
 
 
-filter_varlist_frame <- gframe(text = "Data Columns",
+filter_varlist_frame <- gframe(text = "Apply Columns",
                                horizontal = FALSE,
                                container = simple_pane,
                                expand = TRUE,
