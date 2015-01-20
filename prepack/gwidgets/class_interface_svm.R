@@ -11,6 +11,7 @@ svm_varlist_frame <- gframe(text = "Feature Columns",
                             horizontal = FALSE,
                             container = svm_param_group,
                             expand = TRUE,
+                            full = TRUE,
                             width = 300)
 
 
@@ -23,16 +24,14 @@ svm_varlist <- gcheckboxgroup(
 
 ## if we change datasets, update interface elements
 class_varlist_h <-
-    addHandlerClicked(class_var_filesel,
+    addHandlerChanged(class_var_filesel,
                       handler = function(h,...) {
-                          browser()
-                          delete(svm_varlist_frame,svm_varlist)
-                          svm_varlist <<- gcheckboxgroup(
+                          new.dataset.names <- 
                               names(rbci.env$importlist[[svalue(class_var_filesel,
-                                                                index=TRUE)]]),
-                              container = svm_varlist_frame,
-                              use.table = TRUE,
-                              expand = TRUE)
+                                                                index=TRUE)]])
+                          svm_varlist[] <- new.dataset.names
+                          svm_target_list[] <- new.dataset.names
+                          
                       })
 
 ## svm params
