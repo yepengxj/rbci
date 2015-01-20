@@ -1,6 +1,6 @@
 ### define special concatenating function along fourth dimension for files
 myabind <- function(x,y) {
-  abind(x,y,along=4)
+    abind(x,y,along=4)
 }
 
 ### curried abind for foreach; binds its arguments along 3rd dimension

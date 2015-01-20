@@ -23,6 +23,7 @@ transform.pca <- function(targ.name = "Class",
                               has.dups = FALSE)
     
     if (kernel.type == "Linear") {
+
         eeg.pca <- prcomp(reformulate(termlabels =
                                           setdiff(colnames(eeg.table),
                                                   c(targ.name,
@@ -40,7 +41,7 @@ transform.pca <- function(targ.name = "Class",
         ## nonlinear case
         switch(kernel.type,
                Gaussian = {
-                                        # options: sigma
+                   # options: sigma
                    eeg.pca <- kpca(as.formula(paste("~ .",
                                                     "-",targ.name,
                                                     "-",epoch.name,
@@ -245,32 +246,49 @@ channel.form <- function(input.table,
                          class.col = "Class",
                          time.col = "Time",
                          trial.col = "Trial",
-                         has.dups = FALSE) {
-# Converts long table format to slightly wider format split by channels.
-# For epoched datasets.
+                         has.dups = FALSE) { # TODO has.dups needed?
+    # Converts long table format to slightly wider format split by channels.
+    # For epoched datasets.
     
-  # add id col if there are duplicates, replace trial column
-  if (has.dups == TRUE) {
-    input.table[,c(trial.col):= sample.int(nrow(input.table))]
-    setkeyv(input.table,trial.col)
-    #trial.col = "id"
-  }
-  
-  chan.table <- dcast.data.table(input.table, 
-                   as.formula(paste(class.col,"+",time.col,"+",trial.col,"~",
-                                    split.col,sep = "")),
-                   value.var = value.col)
-#                   fun.aggregate=identity) # TODO review this
-  setnames(chan.table,old=names(chan.table),
-           new=c(class.col,time.col,trial.col,
-               paste("Ch",input.table[,unique(get(split.col))],sep="")))
-            
-  # data.table is not picky about column order, but we need to be in case of
-  # coercion to matrices etc.
-  setcolorder(chan.table,
+    # add id col if there are duplicates, replace trial column
+    if (has.dups == TRUE) {
+        input.table[,c(trial.col):= sample.int(nrow(input.table))]
+        setkeyv(input.table,trial.col)
+        #trial.col = "id"
+    }
+    setkeyv(input.table, class.col)
+
+    ## magic begins here...
+    chan.split <- split(input.table,input.table[,get(split.col)])
+    chan.d <- cbind(lapply(chan.split,
+                           function(x){
+                               x[,value.col,with=FALSE]
+                           }))
+    
+    chan.d <-
+        as.data.table(matrix(unlist(chan.d),
+                             ncol = input.table[,length(unique(get(split.col)))],
+                             byrow=TRUE))
+    ## reintroduce class labels
+    # since the split is over identical sections for each channel, we can just
+    # use the first split's labels
+    chan.d <- chan.d[,c(class.col):= chan.split[[1]][,get(class.col)]]
+    chan.d[,c(class.col):=as.factor(get(class.col))]
+    # similarly with time and trial labels
+    chan.d <- chan.d[,Time:= chan.split[[1]][,get(time.col)]]
+    chan.d <- chan.d[,Trial:= chan.split[[1]][,get(trial.col)]]
+    return(chan.d) 
+
+    setnames(chan.table,old=names(chan.table),
+             new=c(class.col,time.col,trial.col,
+                 paste("Ch",input.table[,unique(get(split.col))],sep="")))
+    
+    # data.table is not picky about column order, but we need to be in case of
+    # coercion to matrices etc.
+    setcolorder(chan.table,
               c(class.col,time.col,trial.col,
                 paste("Ch",sort(input.table[,unique(get(split.col))]),sep="")))
-                
-  return(chan.table)
+    
+    return(chan.table)
 }
 
