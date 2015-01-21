@@ -84,6 +84,15 @@ partition_grouping_layout[2,1] <-
     gcombobox(
         names(rbci.env$importlist[[svalue(explore_var_filesel, index=TRUE)]]))
 
+
+addHandlerChanged(explore_var_filesel,
+                  handler = function(h,...) {
+                      new.dataset.names <- 
+                          names(rbci.env$importlist[[svalue(explore_var_filesel,
+                                                            index=TRUE)]])
+                      partition_grouping_layout[2,1][] <- new.dataset.names
+                  })
+
 ## output params
 partition_output_frame <- gframe(text = "Output Controls",
                                   horizontal = FALSE,
@@ -145,3 +154,11 @@ partition_apply_btn <-
                     rbci.env$importlist[[x]] <- new.tables[[x]]
                 })
             })
+
+addHandlerClicked(partition_apply_btn,
+                  handler = function(h,...){
+                      new.datasets <-
+                          names(rbci.env$importlist)
+                      explore_var_filesel[] <- new.datasets
+                  })
+
