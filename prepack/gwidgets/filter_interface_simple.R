@@ -1,4 +1,4 @@
-# button pane
+                                        # button pane
 simple_pane <- gpanedgroup(horizontal = TRUE,
                            expand = TRUE,
                            fill = TRUE,
@@ -16,6 +16,17 @@ filter_varlist <- gcheckboxgroup(
   container = filter_varlist_frame,
   use.table = TRUE,
   expand = TRUE)
+
+addHandlerChanged(filter_var_filesel,
+                  handler = function(h,...) {
+                      new.dataset.names <- 
+                          names(rbci.env$importlist[[svalue(filter_var_filesel,
+                                                            index=TRUE)]])
+                      filter_varlist[] <- new.dataset.names
+                      filter_grouping_layout[2,1][] <- new.dataset.names
+                      filter_grouping_layout[4,1][] <- new.dataset.names
+                  })
+
 
 simple_filter_pane <- gpanedgroup(horizontal = TRUE,
                                   expand = TRUE,
@@ -133,6 +144,13 @@ filter_apply_btn <-
             })
 
 ## refresh dataset frame on run
+addHandlerClicked(filter_apply_btn,
+                  handler = function(h,...){
+                      new.datasets <-
+                          names(rbci.env$importlist)
+                      filter_var_filesel[] <- new.datasets
+                  })
+
 ## alert complete (progress bar?)
 
 
