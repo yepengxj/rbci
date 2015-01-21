@@ -21,16 +21,15 @@ bayes_varlist <- gcheckboxgroup(
   expand = TRUE)
 
 ## if we change datasets, update interface elements
-class_varlist_h <-
-    addHandlerChanged(class_var_filesel,
-                      handler = function(h,...) {
-                          new.dataset.names <- 
-                              names(rbci.env$importlist[[svalue(class_var_filesel,
-                                                                index=TRUE)]])
-                          bayes_varlist[] <- new.dataset.names
-                          bayes_target_list[] <- new.dataset.names
-                          
-                      })
+addHandlerChanged(class_var_filesel,
+                  handler = function(h,...) {
+                      new.dataset.names <- 
+                          names(rbci.env$importlist[[svalue(class_var_filesel,
+                                                            index=TRUE)]])
+                      bayes_varlist[] <- new.dataset.names
+                      bayes_target_list[] <- new.dataset.names
+                      
+                  })
 
 ## bayes params
 bayes_param_frame <- gframe(text = "Naive Bayes Parameters",
