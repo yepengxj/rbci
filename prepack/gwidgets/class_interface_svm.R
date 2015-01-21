@@ -304,8 +304,22 @@ svm_output_layout[1,3] <-
                 
             })
 
-# plot pane
+## Buttons that add new things should refresh the dataset selector
+addHandlerClicked(svm_output_layout[1,1],
+                  handler = function(h,...){
+                      new.datasets <-
+                          names(rbci.env$importlist)
+                      class_var_filesel[] <- new.datasets
+                  })
+addHandlerClicked(svm_test_btn,
+                  handler = function(h,...){
+                      new.datasets <-
+                          names(rbci.env$importlist)
+                      class_var_filesel[] <- new.datasets
+                  })
 
+
+## plot pane
 svm_output_frame <- gtext(text = "svm output",
                            font.attr=c(family="monospace"),
 #                           width = window.width*0.4,

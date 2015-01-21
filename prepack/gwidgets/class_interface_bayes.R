@@ -178,6 +178,21 @@ bayes_test_list <-
               names(rbci.env$importlist))
 
 
+## Buttons that add new things should refresh the dataset selector
+addHandlerClicked(bayes_output_layout[1,1],
+                  handler = function(h,...){
+                      new.datasets <-
+                          names(rbci.env$importlist)
+                      class_var_filesel[] <- new.datasets
+                  })
+addHandlerClicked(bayes_test_btn,
+                  handler = function(h,...){
+                      new.datasets <-
+                          names(rbci.env$importlist)
+                      class_var_filesel[] <- new.datasets
+                  })
+
+
 bayes_output_frame <- gtext(text = "bayes output",
                           font.attr=c(family="monospace"),
                           width = window.width*0.4,
