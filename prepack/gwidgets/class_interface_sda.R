@@ -20,6 +20,16 @@ sda_varlist <- gcheckboxgroup(
     use.table = TRUE,
     expand = TRUE)
 
+addHandlerChanged(class_var_filesel,
+                  handler = function(h,...) {
+                      new.dataset.names <- 
+                          names(rbci.env$importlist[[svalue(class_var_filesel,
+                                                            index=TRUE)]])
+                      sda_varlist[] <- new.dataset.names
+                      sda_target_list[] <- new.dataset.names
+                      
+                  })
+
 ## sda params
 sda_param_frame <- gframe(text = "SDA Parameters",
                           horizontal = FALSE,
@@ -161,6 +171,20 @@ sda_test_label <- glabel("Test Set",
 sda_test_list <-
     gdroplist(container = sda_output_frame,
               names(rbci.env$importlist))
+
+## Buttons that add new things should refresh the dataset selector
+addHandlerClicked(sda_output_layout[1,1],
+                  handler = function(h,...){
+                      new.datasets <-
+                          names(rbci.env$importlist)
+                      class_var_filesel[] <- new.datasets
+                  })
+addHandlerClicked(sda_test_btn,
+                  handler = function(h,...){
+                      new.datasets <-
+                          names(rbci.env$importlist)
+                      class_var_filesel[] <- new.datasets
+                  })
 
 
 sda_output_frame <- gtext(text = "sda output",

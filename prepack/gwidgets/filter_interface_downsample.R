@@ -10,6 +10,15 @@ downsample_varlist <- gcheckboxgroup(
   use.table = TRUE,
   expand = TRUE)
 
+addHandlerChanged(filter_var_filesel,
+                  handler = function(h,...) {
+                      new.dataset.names <- 
+                          names(rbci.env$importlist[[svalue(filter_var_filesel,
+                                                            index=TRUE)]])
+                      downsample_varlist[] <- new.dataset.names
+                  })
+
+
 ## downsample params
 downsample_param_frame <- gframe(text = "Downsample Parameters",
                              horizontal = FALSE,
@@ -94,6 +103,13 @@ downsample_apply_btn <-
                 names(rbci.env$importlist) <-
                     make.unique(names(rbci.env$importlist))
             })
+
+addHandlerClicked(downsample_apply_btn,
+                  handler = function(h,...){
+                      new.datasets <-
+                          names(rbci.env$importlist)
+                      filter_var_filesel[] <- new.datasets
+                  })
 
 # save downsample
 # downsample_save_btn <- gbutton("Save Downsampled Data",

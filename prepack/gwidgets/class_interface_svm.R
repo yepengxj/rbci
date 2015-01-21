@@ -11,13 +11,27 @@ svm_varlist_frame <- gframe(text = "Feature Columns",
                             horizontal = FALSE,
                             container = svm_param_group,
                             expand = TRUE,
+                            full = TRUE,
                             width = 300)
+
+
 # populate varlist
 svm_varlist <- gcheckboxgroup(
   names(rbci.env$importlist[[svalue(class_var_filesel, index=TRUE)]]),
   container = svm_varlist_frame,
   use.table = TRUE,
   expand = TRUE)
+
+## if we change datasets, update interface elements
+addHandlerChanged(class_var_filesel,
+                  handler = function(h,...) {
+                      new.dataset.names <- 
+                          names(rbci.env$importlist[[svalue(class_var_filesel,
+                                                            index=TRUE)]])
+                      svm_varlist[] <- new.dataset.names
+                      svm_target_list[] <- new.dataset.names
+                      
+                  })
 
 ## svm params
 svm_param_frame <- gframe(text = "SVM Parameters",
@@ -276,6 +290,7 @@ svm_output_layout[1,2] <-
                         )
                 return()
             })
+
 svm_output_layout[1,3] <-
     gbutton("Print Model",
             handler = function(h,...) {
@@ -289,8 +304,22 @@ svm_output_layout[1,3] <-
                 
             })
 
-# plot pane
+## Buttons that add new things should refresh the dataset selector
+addHandlerClicked(svm_output_layout[1,1],
+                  handler = function(h,...){
+                      new.datasets <-
+                          names(rbci.env$importlist)
+                      class_var_filesel[] <- new.datasets
+                  })
+addHandlerClicked(svm_test_btn,
+                  handler = function(h,...){
+                      new.datasets <-
+                          names(rbci.env$importlist)
+                      class_var_filesel[] <- new.datasets
+                  })
 
+
+## plot pane
 svm_output_frame <- gtext(text = "svm output",
                            font.attr=c(family="monospace"),
 #                           width = window.width*0.4,

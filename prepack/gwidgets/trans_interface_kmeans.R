@@ -18,6 +18,15 @@ kmeans_varlist <- gcheckboxgroup(
   use.table = TRUE,
   expand = TRUE)
 
+addHandlerChanged(trans_var_filesel,
+                  handler = function(h,...) {
+                      new.dataset.names <- 
+                          names(rbci.env$importlist[[svalue(trans_var_filesel,
+                                                            index=TRUE)]])
+                      kmeans_varlist[] <- new.dataset.names
+                  })
+
+
 kmeans_action_pane <- gpanedgroup(horizontal = TRUE,
                                   expand = TRUE,
                                   fill = TRUE,
@@ -119,7 +128,16 @@ kmeans_apply_btn <-
             })
 
 ## refresh dataset frame on run
-## alert complete
+addHandlerClicked(kmeans_apply_btn,
+                  handler = function(h,...){
+                      new.datasets <-
+                          names(rbci.env$importlist)
+                      trans_var_filesel[] <- new.datasets
+                      kmeans_data_list[] <- new.datasets
+                  })
+
+
+## TODO alert complete
 
 ## plot variances
 kmeans_plot_btn <-

@@ -52,6 +52,19 @@ csp_grouping_layout[6,2] <-
     gcombobox(
         names(rbci.env$importlist[[svalue(trans_var_filesel, index=TRUE)]]))
 
+addHandlerChanged(trans_var_filesel,
+                  handler = function(h,...) {
+                      new.dataset.names <- 
+                          names(rbci.env$importlist[[svalue(trans_var_filesel,
+                                                            index=TRUE)]])
+                      csp_grouping_layout[2,2][] <- new.dataset.names
+                      csp_grouping_layout[4,1][] <- new.dataset.names
+                      csp_grouping_layout[4,2][] <- new.dataset.names
+                      csp_grouping_layout[6,1][] <- new.dataset.names
+                      csp_grouping_layout[6,2][] <- new.dataset.names
+                  })
+
+### TODO make dynamic on dataset change
 csp_feat_num_label <- glabel(text = "# of Spatial Pairs (0 = all)",
                              container = csp_param_frame)
 csp_feat_num <- gspinbutton(from = 0, to = 100, by = 1,
@@ -106,6 +119,15 @@ csp_extract_btn <-
                 
             })
 
+addHandlerClicked(csp_extract_btn,
+                  handler = function(h,...){
+                      new.datasets <-
+                          names(rbci.env$importlist)
+                      trans_var_filesel[] <- new.datasets
+                      csp_apply_list[] <- new.datasets
+                  })
+
+
 ## apply csp button
 csp_apply_button <-
     gbutton("Apply CSP",
@@ -142,6 +164,14 @@ csp_apply_button <-
                     make.unique(names(rbci.env$importlist))
                 
             })
+
+addHandlerClicked(csp_apply_button,
+                  handler = function(h,...){
+                      new.datasets <-
+                          names(rbci.env$importlist)
+                      trans_var_filesel[] <- new.datasets
+                      csp_apply_list[] <- new.datasets
+                  })
 
 csp_apply_list <-
     gdroplist(names(rbci.env$importlist),

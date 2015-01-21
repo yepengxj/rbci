@@ -83,11 +83,15 @@ partition_grouping_layout[1,1] <- "Partition Group (Trials)"
 partition_grouping_layout[2,1] <- 
     gcombobox(
         names(rbci.env$importlist[[svalue(explore_var_filesel, index=TRUE)]]))
-# 
-# partition_grouping_layout[3,1] <- "Second Group (Channel)"
-# partition_grouping_layout[4,1] <- 
-#     gcombobox(
-#         names(rbci.env$importlist[[svalue(explore_var_filesel, index=TRUE)]]))
+
+
+addHandlerChanged(explore_var_filesel,
+                  handler = function(h,...) {
+                      new.dataset.names <- 
+                          names(rbci.env$importlist[[svalue(explore_var_filesel,
+                                                            index=TRUE)]])
+                      partition_grouping_layout[2,1][] <- new.dataset.names
+                  })
 
 ## output params
 partition_output_frame <- gframe(text = "Output Controls",
@@ -138,21 +142,23 @@ partition_apply_btn <-
                                               part.col,
                                               part.props,
                                               part.type)
+
+                
                 ## naming for clarity
                 names(new.tables) <- paste(file.name,
                                            "part", seq_along(new.tables),
                                            sep = ".")
-                
-                rbci.env$importlist <-
-                    append(rbci.env$importlist,list(new.tables))
-                ## ensure names are straight
-                names(rbci.env$importlist) <-
-                    make.unique(names(rbci.env$importlist))
+
+### TODO revisit this if name uniqueness is an issue
+                lapply(names(new.tables), function(x) {
+                    rbci.env$importlist[[x]] <- new.tables[[x]]
+                })
             })
 
-## save partition
-## Leave off for reporter also
-# partition_save_btn <- gbutton("Save Partitioned Data",
-#                           container = partition_output_frame)
-# refresh dataset frame on run
-# alert complete (progress bar?)
+addHandlerClicked(partition_apply_btn,
+                  handler = function(h,...){
+                      new.datasets <-
+                          names(rbci.env$importlist)
+                      explore_var_filesel[] <- new.datasets
+                  })
+

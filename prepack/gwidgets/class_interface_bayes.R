@@ -20,6 +20,16 @@ bayes_varlist <- gcheckboxgroup(
   use.table = TRUE,
   expand = TRUE)
 
+## if we change datasets, update interface elements
+addHandlerChanged(class_var_filesel,
+                  handler = function(h,...) {
+                      new.dataset.names <- 
+                          names(rbci.env$importlist[[svalue(class_var_filesel,
+                                                            index=TRUE)]])
+                      bayes_varlist[] <- new.dataset.names
+                      bayes_target_list[] <- new.dataset.names
+                      
+                  })
 
 ## bayes params
 bayes_param_frame <- gframe(text = "Naive Bayes Parameters",
@@ -166,6 +176,21 @@ bayes_test_label <- glabel("Test Set",
 bayes_test_list <-
     gdroplist(container = bayes_output_frame,
               names(rbci.env$importlist))
+
+
+## Buttons that add new things should refresh the dataset selector
+addHandlerClicked(bayes_output_layout[1,1],
+                  handler = function(h,...){
+                      new.datasets <-
+                          names(rbci.env$importlist)
+                      class_var_filesel[] <- new.datasets
+                  })
+addHandlerClicked(bayes_test_btn,
+                  handler = function(h,...){
+                      new.datasets <-
+                          names(rbci.env$importlist)
+                      class_var_filesel[] <- new.datasets
+                  })
 
 
 bayes_output_frame <- gtext(text = "bayes output",
