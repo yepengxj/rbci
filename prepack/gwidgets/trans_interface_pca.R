@@ -179,6 +179,19 @@ pca_grouping_layout[6,1] <-
     gcombobox(
         names(rbci.env$importlist[[svalue(trans_var_filesel, index=TRUE)]]))
 
+addHandlerChanged(trans_var_filesel,
+                  handler = function(h,...) {
+                      new.dataset.names <- 
+                          names(rbci.env$importlist[[svalue(trans_var_filesel,
+                                                            index=TRUE)]])
+                      pca_grouping_layout[2,1][] <- new.dataset.names
+                      pca_grouping_layout[2,2][] <- new.dataset.names
+                      pca_grouping_layout[4,1][] <- new.dataset.names
+                      pca_grouping_layout[4,2][] <- new.dataset.names
+                      pca_grouping_layout[6,1][] <- new.dataset.names
+                  })
+
+
 ### output params
 pca_output_frame <- gframe(text = "PCA Output Options",
                            horizontal = FALSE,
@@ -224,8 +237,14 @@ pca_output_layout[1,1] <-
                     make.unique(names(rbci.env$importlist))
             })
 
-## apply pca button
-# refresh dataset frame on run
+addHandlerClicked(pca_output_layout[1,1],
+                  handler = function(h,...){
+                      new.datasets <-
+                          names(rbci.env$importlist)
+                      trans_var_filesel[] <- new.datasets
+                      pca_output_layout[3,1][] <- new.datasets
+                  })
+
 # alert complete (progress bar?)
 
 # plot variances
@@ -283,6 +302,15 @@ pca_output_layout[2,1] <-
                 names(rbci.env$importlist) <-
                     make.unique(names(rbci.env$importlist))
             })
+
+addHandlerClicked(pca_output_layout[2,1],
+                  handler = function(h,...){
+                      new.datasets <-
+                          names(rbci.env$importlist)
+                      trans_var_filesel[] <- new.datasets
+                      pca_output_layout[3,1][] <- new.datasets
+                  })
+
 
 pca_output_layout[3,1] <-
     gdroplist(names(rbci.env$importlist))
