@@ -185,6 +185,7 @@ transform.csp <- function(table.data,
     
     ## compute correlation matrices by trial, class
     setkeyv(table.data,class.col)
+    setkeyv(table.channel,class.col) ### TODO review this
     ## build map of trials/classes
     class.trial.map <- lapply(table.channel[,unique(get(class.col))], 
                               function(x){
@@ -193,8 +194,10 @@ transform.csp <- function(table.data,
     correlation.mats.list <- # a list of lists; class( trial(...
         lapply(class.trial.map, function(class.trials) { # dumb hybrid approach?
             foreach (this.trial = class.trials, 
-                     .combine = abind3curry) %dopar% {
+                     .combine = abind3curry) %do% {
+                         
                          cor(table.channel[get(trial.col) == this.trial,
+### TODO fix these magic numbers (we're selecting the chan vars only)
                                            names(table.channel)[4:length(names(table.channel))],
                                            with=FALSE]
                              )
@@ -260,28 +263,27 @@ channel.form <- function(input.table,
 
     ## magic begins here...
     chan.split <- split(input.table,input.table[,get(split.col)])
-    chan.d <- cbind(lapply(chan.split,
+    chan.table <- cbind(lapply(chan.split,
                            function(x){
                                x[,value.col,with=FALSE]
                            }))
     
-    chan.d <-
-        as.data.table(matrix(unlist(chan.d),
+    chan.table <-
+        as.data.table(matrix(unlist(chan.table),
                              ncol = input.table[,length(unique(get(split.col)))],
                              byrow=TRUE))
     ## reintroduce class labels
     # since the split is over identical sections for each channel, we can just
     # use the first split's labels
-    chan.d <- chan.d[,c(class.col):= chan.split[[1]][,get(class.col)]]
-    chan.d[,c(class.col):=as.factor(get(class.col))]
+    chan.table <- chan.table[,c(class.col):= chan.split[[1]][,get(class.col)]]
+    chan.table[,c(class.col):=as.factor(get(class.col))]
     # similarly with time and trial labels
-    chan.d <- chan.d[,Time:= chan.split[[1]][,get(time.col)]]
-    chan.d <- chan.d[,Trial:= chan.split[[1]][,get(trial.col)]]
-    return(chan.d) 
+    chan.table <- chan.table[,Time:= chan.split[[1]][,get(time.col)]]
+    chan.table <- chan.table[,Trial:= chan.split[[1]][,get(trial.col)]]
 
     setnames(chan.table,old=names(chan.table),
-             new=c(class.col,time.col,trial.col,
-                 paste("Ch",input.table[,unique(get(split.col))],sep="")))
+             new=c(paste("Ch",input.table[,unique(get(split.col))],sep=""),
+                 class.col,time.col,trial.col))
     
     # data.table is not picky about column order, but we need to be in case of
     # coercion to matrices etc.
