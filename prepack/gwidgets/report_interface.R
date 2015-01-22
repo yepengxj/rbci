@@ -26,15 +26,24 @@ process_frame <- gframe(text = "Processed Steps",
 process_step_sel <- gtable(tabulate.steplist(rbci.env$steplist),
                            container = process_frame,
                            use.table = TRUE,
-                           expand = TRUE,
-                           handler = function(h,...){
-                               ## update previewers
-### TODO fix this
-                               svalue(step_code_text) <-
-                                   svalue(h$obj, drop = FALSE)$code
-                               
-                           })
+                           expand = TRUE)
+### update preview text, summary on selection change
+addHandlerChanged(process_step_sel,
+                  handler = function(h,...) {
+                      code.text <-
+                          process_step_sel[svalue(process_step_sel,index=TRUE),
+                                           'code']
+                      summary.text <-
+                          process_step_sel[svalue(process_step_sel,index=TRUE),
+                                           'summary']
 
+                      svalue(step_code_text) <-
+                          code.text
+                      svalue(step_summary) <-
+                          paste("Summary: ", summary.text)
+                                
+                  })
+                      
 ### controls for changing step ordering/enabledness
 process_step_up <- gbutton(
     text = "▲",
