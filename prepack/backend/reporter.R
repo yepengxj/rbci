@@ -1,20 +1,21 @@
-add.step <- function(func.name, args) {
+add.step <- function(func.name, step.args) {
 ### adds called analysis steps and their args to the reporter view.
 ### Should be called by every analysis GUI button.
 
     ## a short summary for the user
-    step.summary <- paste(func.name, "of", args[[1]])
+    step.summary <- paste(func.name, "of", step.args[[2]])
 
 ### we assume arguments are explicitly named for all functions of this kind
 ### see https://github.com/talexand/rbci/issues/55 for discussion
-        
+
     new.step <- list(summary = step.summary,
-                     code = deparse(do.call(func.name, args)),
+                     code = paste(deparse(call(func.name, unlist(step.args))),
+                         collapse = ""),
                      enabled = FALSE)
-    
+
     rbci.env$steplist <- append(rbci.env$steplist,
-                                new.step)
-                                
+                                list(new.step))
+    
 }
 
 tabulate.steplist <- function(steplist) {
