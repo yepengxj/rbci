@@ -53,8 +53,7 @@ means_plot_btn <-
                     list(
                         eeg.table =
                             bquote( # partially dereference call
-                              rbci.env$importlist[[.(svalue(explore_var_filesel,
-                                                            index=TRUE))]]),
+                              rbci.env$importlist[[.(svalue(explore_var_filesel))]]),
                         val.name = svalue(means_grouping_layout[2,1]),
                         time.name = svalue(means_grouping_layout[4,1]),
                         chan.name = svalue(means_grouping_layout[8,1]),
