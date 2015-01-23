@@ -27,12 +27,12 @@ rbci.env$steplist <- list()
 rbci.env$steplist <-
     list(step1 =
              list(summary = "transform.pca of set.1",
-                  code = "transform.pca(set.1,\nsome.params",
-                  enabled = TRUE),
+                  enabled = TRUE,
+                  code = "transform.pca(set.1,\nsome.params"),
          step2 =
              list(summary = "downsample.dt of set.2",
-                  code = "downsample.dt(set.2)",
-                  enabled = FALSE)
+                  enabled = FALSE,
+                  code = "downsample.dt(set.2)")
          )
 
 ### TODO revisit these

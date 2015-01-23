@@ -12,9 +12,10 @@ add.step <- function(func.name, step.args) {
 ### see https://github.com/talexand/rbci/issues/55 for discussion
 
     new.step <- list(summary = step.summary,
+                     enabled = FALSE,
                      code = paste(deparse(call(func.name, unlist(step.args))),
-                         collapse = ""),
-                     enabled = FALSE)
+                         collapse = "")
+                     )
 
     rbci.env$steplist <- append(rbci.env$steplist,
                                 list(new.step))
