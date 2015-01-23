@@ -48,30 +48,6 @@ downsample_band_layout[1,1] <- "Downsampling Factor"
 downsample_band_layout[2,1] <- gspinbutton(from = 0, to = 1, by = 0.001)
 
 addSpring(downsample_param_frame)
-## stop band end
-## downsample_band_layout[1,2] <- "End"
-## downsample_band_layout[2,2] <- gspinbutton(from = 0, to = 1, by = 0.01)
-
-## application params
-# downsample_grouping_frame <- gframe(text = "Sampling Apply Rules",
-#                              horizontal = FALSE,
-#                              container = downsample_param_frame,
-#                              expand = TRUE,
-#                              width = 300)
-## trial/group vars
-# downsample_grouping_label <- glabel(text = "Data Grouping",
-#                                 container = downsample_grouping_frame)
-# downsample_grouping_layout <- glayout(container = downsample_grouping_frame)
-# 
-# downsample_grouping_layout[1,1] <- "First Group (Trial)"
-# downsample_grouping_layout[2,1] <- 
-#     gcombobox(
-#         names(rbci.env$importlist[[svalue(filter_var_filesel, index=TRUE)]]))
-# 
-# downsample_grouping_layout[3,1] <- "Second Group (Channel)"
-# downsample_grouping_layout[4,1] <- 
-#     gcombobox(
-#         names(rbci.env$importlist[[svalue(filter_var_filesel, index=TRUE)]]))
 
 ## output params
 downsample_output_frame <- gframe(text = "Output Options",
@@ -85,25 +61,34 @@ downsample_apply_btn <-
     gbutton("Apply Downsample to Data",
             container = downsample_output_frame,
             handler = function(h,...){
-                ds.factor <- svalue(downsample_band_layout[2,1])
                 ds.filename <- svalue(filter_var_filesel)
-                ds.file <- rbci.env$importlist[[ds.filename]]
-                ds.col <- svalue(downsample_varlist)
 
-                new.table <-
-                    list(downsample.dt(ds.file,ds.col,ds.factor))
+                ## collect args
+                this.args <- list(
+                    input.table = bquote( # partial dereference
+                        rbci.env$importlist[[.(ds.filename)]]),
+                    ds.factor = svalue(downsample_band_layout[2,1]),
+                    time.col = svalue(downsample_varlist)
+                )
+                ## apply the downsample, add new data file to list
+                new.table <- 
+                    list(do.call(downsample.dt,this.args))
+                
                 names(new.table) <- paste(ds.filename,
                                           "downsample", seq_along(new.table),
                                           sep = ".")
-                ## apply the downsample, add new data file to list
-                rbci.env$importlist <-
-                    append(rbci.env$importlist,
-                           new.table)
+                rbci.env$importlist <- append(rbci.env$importlist,
+                                              new.table)
                 ## ensure names are straight
                 names(rbci.env$importlist) <-
                     make.unique(names(rbci.env$importlist))
+
+                ## add op to reporter
+                add.step("downsample.dt", this.args)
+                
             })
 
+# refresh dataset frame on run
 addHandlerClicked(downsample_apply_btn,
                   handler = function(h,...){
                       new.datasets <-
@@ -111,10 +96,6 @@ addHandlerClicked(downsample_apply_btn,
                       filter_var_filesel[] <- new.datasets
                   })
 
-# save downsample
-# downsample_save_btn <- gbutton("Save Downsampled Data",
-#                           container = downsample_output_frame)
-# refresh dataset frame on run
 # alert complete (progress bar?)
 
 # set some widths (doesn't work if earlier)
