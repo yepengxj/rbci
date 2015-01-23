@@ -179,6 +179,7 @@ pca_grouping_layout[6,1] <-
     gcombobox(
         names(rbci.env$importlist[[svalue(trans_var_filesel, index=TRUE)]]))
 
+## change column selectors on dataset change
 addHandlerChanged(trans_var_filesel,
                   handler = function(h,...) {
                       new.dataset.names <- 
@@ -206,24 +207,23 @@ pca_output_layout[1,1] <-
     gbutton("Compute PCA",
 #            container = pca_output_frame,
             handler = function(h,...){
+                ## collect args
                 input.name <- svalue(trans_var_filesel)
-                input.data <- rbci.env$importlist[[input.name]]
-                input.val <- svalue(pca_grouping_layout[2,1])
-                input.targ <- svalue(pca_grouping_layout[4,1])
-                input.epoc <- svalue(pca_grouping_layout[6,1])
-                input.time <- svalue(pca_grouping_layout[2,2])
-                input.chan <- svalue(pca_grouping_layout[4,2])
+
+                pca.args <- list(
+                    input.table = bquote( # partial deref
+                        rbci.env$importlist[[.(input.name)]]),
+                    val.col = svalue(pca_grouping_layout[2,1]),
+                    targ.name = svalue(pca_grouping_layout[4,1]),
+                    epoch.name = svalue(pca_grouping_layout[6,1]),
+                    time.name = svalue(pca_grouping_layout[2,2]),
+                    split.col = svalue(pca_grouping_layout[4,2]),
+                    kernel.type = svalue(pca_kernel_type_menu),
+                    pc.count = svalue(pca_band_layout[4,2])
+                    )
                 
                 new.table <-
-                    list(
-                        transform.pca(targ.name = input.targ,
-                                      epoch.name = input.epoc,
-                                      time.name = input.time,
-                                      input.table = input.data,
-                                      split.col = input.chan,
-                                      val.col = input.val,
-                                      kernel.type = svalue(pca_kernel_type_menu),
-                                      pc.count = svalue(pca_band_layout[4,2])))
+                    list( do.call(transform.pca, pca.args) )
                 
                 names(new.table) <- paste(input.name,
                                           "pcamodel", seq_along(new.table),
@@ -235,6 +235,9 @@ pca_output_layout[1,1] <-
                 ## ensure names are straight
                 names(rbci.env$importlist) <-
                     make.unique(names(rbci.env$importlist))
+
+                ## add op to reporter
+                add.step("transform.pca", pca.args)
             })
 
 addHandlerClicked(pca_output_layout[1,1],
@@ -252,9 +255,13 @@ pca_output_layout[1,2] <-
     gbutton("Plot Eigenvalues",
 ##            container = pca_output_frame,
             handler = function(h,...){
-                
-                pca.obj <- rbci.env$importlist[[svalue(trans_var_filesel)]]
-                print(plot(pca.obj))
+
+                plot.args <- list(
+                    bquote(rbci.env$importlist[[.(svalue(trans_var_filesel))]])
+                           )
+                print(do.call(plot,plot.args))
+                ## add op to reporter
+                add.step("plot",plot.args)
                 
             })
 pca_output_layout[2,2] <-
@@ -263,9 +270,15 @@ pca_output_layout[2,2] <-
             handler = function(h,...){
 ### TODO add hex binning etc.
 ### see https://github.com/vqv/ggbiplot/blob/master/README.markdown
-                pca.obj <- rbci.env$importlist[[svalue(trans_var_filesel)]]
-                print(ggbiplot(pca.obj))
-                
+                pca.plotargs <- list(
+                    pcobj = bquote(
+                        rbci.env$importlist[[.(svalue(trans_var_filesel))]]
+                        )
+                    )
+                    
+                print(do.call(ggbiplot, pca.plotargs))
+                ## add op to reporter
+                add.step("ggbiplot",pca.plotargs)
             })
 
 pca_output_layout[2,1] <-
@@ -273,32 +286,28 @@ pca_output_layout[2,1] <-
 #            container = pca_output_frame,
             handler = function(h,...){
                 data.name <- svalue(pca_output_layout[3,1])
-                data.file <- rbci.env$importlist[[data.name]]
                 pca.name <- svalue(trans_var_filesel)
-                pca.data <- rbci.env$importlist[[pca.name]]
-                input.val <- svalue(pca_grouping_layout[2,1])
-                input.targ <- svalue(pca_grouping_layout[4,1])
-                input.epoc <- svalue(pca_grouping_layout[6,1])
-                input.time <- svalue(pca_grouping_layout[2,2])
-                input.chan <- svalue(pca_grouping_layout[4,2])                
-                
-                new.table <- list(
-                    transform.pc(pca.model = pca.data,
-                                 targ.name = input.targ,
-                                 epoch.name = input.epoc,
-                                 time.name = input.time,
-                                 split.col = input.chan,
-                                 val.col = input.val,
-                                 long.data.set = data.file)
+                pc.args <- list(
+                    long.data.set = bquote( # partial deref
+                        rbci.env$importlist[[.(data.name)]]),
+                    pca.model = bquote( # partial deref
+                        rbci.env$importlist[[.(pca.name)]]),
+                    val.col = svalue(pca_grouping_layout[2,1]),
+                    targ.name = svalue(pca_grouping_layout[4,1]),
+                    epoch.name = svalue(pca_grouping_layout[6,1]),
+                    time.name = svalue(pca_grouping_layout[2,2]),
+                    split.col = svalue(pca_grouping_layout[4,2])
                     )
                 
+                new.table <- list(do.call(transform.pc, pc.args)) # do transform
+                add.step("transform.pc", pc.args) # add op to reporter
+
+                ## add to dataset list
                 names(new.table) <- paste(pca.name,
                                           "pc", seq_along(new.table),
                                           sep = ".")
-                
                 rbci.env$importlist <- append(rbci.env$importlist,
                                               new.table)
-                
                 names(rbci.env$importlist) <-
                     make.unique(names(rbci.env$importlist))
             })
@@ -315,6 +324,19 @@ addHandlerClicked(pca_output_layout[2,1],
 pca_output_layout[3,1] <-
     gdroplist(names(rbci.env$importlist))
 #              container = pca_output_frame)
+## we ALSO want to have column selector change when selecting target sets for
+## the target set list
+addHandlerChanged(pca_output_layout[3,1],
+                  handler = function(h,...) {
+                      new.dataset.names <- 
+                          names(rbci.env$importlist[[svalue(pca_output_layout[3,1])]])
+                      pca_grouping_layout[2,1][] <- new.dataset.names
+                      pca_grouping_layout[2,2][] <- new.dataset.names
+                      pca_grouping_layout[4,1][] <- new.dataset.names
+                      pca_grouping_layout[4,2][] <- new.dataset.names
+                      pca_grouping_layout[6,1][] <- new.dataset.names
+                  })
+
 
 # plot pane
 
