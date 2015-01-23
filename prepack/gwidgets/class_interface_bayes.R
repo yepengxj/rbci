@@ -12,8 +12,7 @@ bayes_varlist_frame <- gframe(text = "Apply Columns",
                             container = bayes_param_group,
                             expand = TRUE,
                             width = 300)
-# populate varlist
-# TODO Update features spinbox on change
+## populate varlist
 bayes_varlist <- gcheckboxgroup(
   names(rbci.env$importlist[[svalue(class_var_filesel, index=TRUE)]]),
   container = bayes_varlist_frame,
@@ -49,15 +48,6 @@ bayes_band_layout <- glayout(container = bayes_param_frame)
 bayes_band_layout[1,1] <- "Laplace smoothing"
 bayes_band_layout[2,1] <- gspinbutton(from = 0, by = 0.01)
 
-# # stop band end
-# bayes_band_layout[1,2] <- "Shrinkage (variances)"
-# bayes_band_layout[2,2] <- gspinbutton(from = 0, to = 1, by = 0.01)
-# 
-# # pass band start
-# bayes_band_layout[3,1] <- "Shrinkage (frequencies)"
-# bayes_band_layout[4,1] <- gspinbutton(from = 0, to = 1, by = 0.01)
-
-
 ## application params
 bayes_target_frame <- gframe(text = "Target Variable",
                              horizontal = FALSE,
@@ -76,34 +66,34 @@ bayes_output_frame <- gframe(text = "Output Options",
                            width = 300)
 
 bayes_output_layout <- glayout(container = bayes_output_frame)
-# apply bayes button
+
+## apply bayes button
 bayes_output_layout[1,1] <-
     gbutton("Train Model",
             handler = function(h,...){
                 train.name <- svalue(class_var_filesel)
-                train.data <- rbci.env$importlist[[train.name]]
-                bayes.target <- svalue(bayes_target_list)
-                bayes.features <- svalue(bayes_varlist)
-                bayes.smooth <- svalue(bayes_band_layout[2,1])
 
-                new.table <-
-                    list(
-                        train.bayes.model(train.data,
-                                          bayes.smooth,
-                                          bayes.target,
-                                          bayes.features)
-                        )
-                
+                this.args <- list( # collect args
+                    train.data = bquote( # partial deref
+                        rbci.env$importlist[[.(train.name)]]),
+                    bayes.smooth = svalue(bayes_band_layout[2,1]),
+                    target.col = svalue(bayes_target_list),
+                    feature.cols = svalue(bayes_varlist)
+                )
+
+                ## do the train model call
+                new.table <- list(do.call(train.bayes.model,this.args))
                 names(new.table) <- paste(train.name,
                                           "bayesmodel", seq_along(new.table),
                                           sep = ".")
-                
                 rbci.env$importlist <- append(rbci.env$importlist,
                                               new.table)
-                
                 ## ensure names are straight
                 names(rbci.env$importlist) <-
                     make.unique(names(rbci.env$importlist))
+
+                ## update reporter with op
+                add.step("train.bayes.model", this.args)
                 
             })
 
