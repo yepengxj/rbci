@@ -21,7 +21,8 @@ summary_summarize_btn <-
           container = summary_varlist_frame,
           handler = function(h,...) {
               this.args <-
-                  list(eeg.table = bquote(rbci.env$importlist[[.(svalue(explore_var_filesel,index=TRUE))]]),
+                  list(eeg.table =  bquote(rbci.env$importlist[[.(svalue(explore_var_filesel,
+                           index=TRUE))]]), # partially dereference call
                        selected.columns = svalue(summary_varlist))
               
               svalue(summary_output_frame) <- # do the job

@@ -49,22 +49,25 @@ means_plot_btn <-
     gbutton(text = "Plot",
             container = means_param_frame,
             handler = function(h,...) {
-                means.data <-
-                    rbci.env$importlist[[svalue(explore_var_filesel,index=TRUE)]]
-                means.val <- svalue(means_grouping_layout[2,1])
-                means.time <- svalue(means_grouping_layout[4,1])
-                means.chan <- svalue(means_grouping_layout[8,1])
-                means.targ <- svalue(means_grouping_layout[6,1])
+                this.args <-
+                    list(
+                        eeg.table =
+                            bquote( # partially dereference call
+                              rbci.env$importlist[[.(svalue(explore_var_filesel,
+                                                            index=TRUE))]]),
+                        val.name = svalue(means_grouping_layout[2,1]),
+                        time.name = svalue(means_grouping_layout[4,1]),
+                        chan.name = svalue(means_grouping_layout[8,1]),
+                        targ.name = svalue(means_grouping_layout[6,1])
+                        )
                 
-                print(
-                    grand.means.plot(
-                        means.data,
-                        means.val,
-                        means.time,
-                        means.chan,
-                        means.targ
+                print(do.call(
+                    grand.means.plot,
+                    this.args)
                     )
-                )
+
+                add.step(func.name = "grand.means.plot",
+                         step.args = this.args)
             })
 
 means_output_frame <- ggraphics(container = means_pane)
