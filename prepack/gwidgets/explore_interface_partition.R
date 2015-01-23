@@ -133,15 +133,18 @@ partition_apply_btn <-
                 
 ### TODO throw error if props are malformed
                 file.name <- svalue(explore_var_filesel)
-                part.file <- rbci.env$importlist[[file.name]]
-                part.col <- svalue(partition_grouping_layout[2,1])
-                part.type <- svalue(partition_type_menu)
+                
+                this.args <-
+                    list(
+                        table.data = bquote( # partially deref call
+                            rbci.env$importlist[[.(file.name)]]),
+                        part.col = svalue(partition_grouping_layout[2,1]),
+                        proportions = part.props,
+                        part.type = svalue(partition_type_menu)
+                        )
                 
                 ## apply the partition, add new data tables to list
-                new.tables <- partition.table(part.file,
-                                              part.col,
-                                              part.props,
-                                              part.type)
+                new.tables <- do.call(partition.table, this.args)
 
                 
                 ## naming for clarity
@@ -153,6 +156,9 @@ partition_apply_btn <-
                 lapply(names(new.tables), function(x) {
                     rbci.env$importlist[[x]] <- new.tables[[x]]
                 })
+
+                ## update reporter with this op
+                add.step("partition.table", this.args)
             })
 
 addHandlerClicked(partition_apply_btn,
