@@ -108,36 +108,59 @@ filter_apply_btn <-
                 
                 filt.type <- svalue(filter_type_menu)
                 filt.band <- c(svalue(filter_band_layout[2,1]),
-                                   svalue(filter_band_layout[2,2]))
+                               svalue(filter_band_layout[2,2]))
                 filt.groups <- c(svalue(filter_grouping_layout[2,1]),
                                  svalue(filter_grouping_layout[4,1]))
                 file.name <- svalue(filter_var_filesel)
-                filt.file <- rbci.env$importlist[[file.name]]
+                filt.file <- # partial deref
+                    bquote(rbci.env$importlist[[.(file.name)]])
                 filt.srate <- svalue(filter_band_layout[3,2])
                 
+                filter.args <- list(
+                    filter.type = filt.type,
+                    filter.band = filt.band/0.2/(filt.srate/2),
+                    filter.groups = filt.groups)
+                
                 ## get the designed filter
-                rbci.env$filter <- simple.filter(filt.type,
-                                                 filt.band/0.2/(filt.srate/2),
-                                                 filt.groups)
+                my.filter <- do.call(simple.filter, filter.args)
+                ## add op to reporter
+                add.step("simple.filter", filter.args)
                 
                 ## plot the filter as confirmation that it worked
                 visible(filter_plot_frame,TRUE)
-                print(plot.filter(rbci.env$filter,
-                                  sample.rate = filt.srate))
+                filter.plot.args <- list(
+                    filter = my.filter,
+                    sample.rate = filt.srate)
+                
+                print(do.call(plot.filter, filter.plot.args))
+                ## add filter to reporter manifest                
+                add.step("plot.filter", filter.plot.args)
                 
                 ## apply the filter, add new data file to list
-                new.table <- list(apply.filter(
-                               signal.table = filt.file,
-                               filt.groups = filt.groups,
-                               val.col = svalue(filter_varlist),
-                               filter.obj = rbci.env$filter))
-                names(new.table) <- paste(file.name,
-                                           "filt", seq_along(new.table),
-                                           sep = ".")
+                ## for reproducibility, add the filter to the list also
                 
+                apply.filter.args <- list(
+                    signal.table = filt.file,
+                    filt.groups = filt.groups,
+                    val.col = svalue(filter_varlist),
+                    filter.obj = my.filter
+                    )
+                
+                new.table <- list(my.filter,
+                                  do.call(apply.filter, apply.filter.args))
+                add.step("apply.filter", apply.filter.args)
+                
+                
+                names(new.table) <- c(paste(file.name, # filter name
+                                            "filter",
+                                            sep = "."),
+                                      paste(file.name, # filtered data
+                                            "filtered",
+                                            sep = "."))
+
                 rbci.env$importlist <-
                     append(rbci.env$importlist, new.table)
-                           
+                
                 ## ensure names are straight
                 names(rbci.env$importlist) <-
                     make.unique(names(rbci.env$importlist))
