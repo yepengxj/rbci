@@ -3,7 +3,10 @@ add.step <- function(func.name, step.args) {
 ### Should be called by every analysis GUI button.
 
     ## a short summary for the user
-    step.summary <- paste(func.name, "of", step.args[[2]])
+    ### TODO first arg of all main analysis functions should be the dataset
+    ## abbreviate the first argument call to 50 chars in case it's huge
+    main.arg.short <- substr(as.character(step.args[1]), 1, 50)
+    step.summary <- paste(func.name, "of", main.arg.short)
 
 ### we assume arguments are explicitly named for all functions of this kind
 ### see https://github.com/talexand/rbci/issues/55 for discussion

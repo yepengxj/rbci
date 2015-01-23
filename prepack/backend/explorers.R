@@ -55,3 +55,14 @@ grand.means.plot <- function(eeg.table,
                                                colour = "black", vjust=1))
     preview.plot
 }
+
+hist.plot <- function(data.set) {
+    data.melt <- melt(data.set)
+    
+    data.plot <-
+        ggplot(data.melt,aes(x = value, color = variable)) + 
+            facet_wrap(~variable,scales = "free") +
+                geom_density()
+
+    return(data.plot)
+}
