@@ -10,7 +10,7 @@ train.svm.model <- function(train.data,
 
     ## sanitize params
     cost.param <- if(is.na(as.numeric(cost.param)) ||
-                     !(as.numeric(cost.param) > 0)) 1 else cost.param # R standard elvis op
+                     !(as.numeric(cost.param) > 0)) 1 else cost.param # R standard null coalescing op (elvis)
 
     if (kern.type == "Linear") {
         ## use LiblineaR
@@ -101,7 +101,7 @@ train.sda.model <- function(train.data,
 
 test.sda.model <- function(sda.model, test.data, feature.cols) {
 ### TODO error checking on input
-    
+
     predict(sda.model, as.matrix(test.data[, feature.cols, with=FALSE]))
 }
 
@@ -110,7 +110,7 @@ test.sda.model <- function(sda.model, test.data, feature.cols) {
 table.sda.model <- function(sda.prediction, test.data) {
 
     table(predicted = sda.prediction$class,
-          data = test.data)
+          data = test.data$Class)
 
 }
 
