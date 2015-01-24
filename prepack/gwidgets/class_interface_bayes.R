@@ -104,19 +104,25 @@ bayes_output_layout[1,2] <-
     gbutton("Print Table",
             handler = function(h,...){
                 bayes.name <- svalue(class_var_filesel)
-                bayes.pred <- rbci.env$importlist[[bayes.name]]
                 data.name <- svalue(bayes_test_list)
                 target.col <- svalue(bayes_target_list)
-                data.actual <-
-                    rbci.env$importlist[[data.name]][,target.col,with=FALSE]
+
+                this.args <- list( # collect args
+                    # partial deref
+                    bayes.prediction =
+                        bquote(rbci.env$importlist[[.(bayes.name)]]),
+                    test.data = bquote(
+                        rbci.env$importlist[[.(data.name)]][,.(target.col),
+                                                            with=FALSE])
+                )
                 
                 ## send table to widget
                 svalue(bayes_output_frame) <-
-                    capture.output(
-                        table(predicted = bayes.pred,
-                              data = data.actual[[target.col]])
-                        )
+                    do.call(table.bayes.model, this.args)
                 return()
+
+                ## send op to reporter
+                add.step("table.bayes.model", this.args)
             })
 
 bayes_output_layout[1,3] <-
@@ -129,6 +135,7 @@ bayes_output_layout[1,3] <-
                     capture.output(
                         print(bayes.model)
                         )
+
             })
 
 bayes_test_btn <-
@@ -143,9 +150,8 @@ bayes_test_btn <-
                 
                 new.table <-
                     list(
-                        test.bayes.model(test.model,
-                                       test.data)
-                                       # test.feats)
+                        prediction = test.bayes.model(test.model, test.data)
+                        # test.feats)
                         )
                 
                 names(new.table) <- paste(test.dataname,
@@ -166,7 +172,19 @@ bayes_test_label <- glabel("Test Set",
 bayes_test_list <-
     gdroplist(container = bayes_output_frame,
               names(rbci.env$importlist))
+## we ALSO want to have column selector change when selecting target sets for
+## the target set list
+addHandlerChanged(bayes_test_list,
+                  handler = function(h,...) {
+                      new.dataset.names <- 
+                          names(rbci.env$importlist[[svalue(bayes_test_list)]])
 
+                      if (!is.null(new.dataset.names)) {
+                          bayes_varlist[] <- new.dataset.names
+                          bayes_target_list[] <- new.dataset.names
+                      }
+                      
+                  })
 
 ## Buttons that add new things should refresh the dataset selector
 addHandlerClicked(bayes_output_layout[1,1],
