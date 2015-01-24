@@ -106,7 +106,7 @@ bayes_output_layout[1,2] <-
                 bayes.name <- svalue(class_var_filesel)
                 data.name <- svalue(bayes_test_list)
                 target.col <- svalue(bayes_target_list)
-                browser()
+
                 this.args <- list( # collect args
                     # partial deref
                     bayes.prediction =
@@ -130,42 +130,50 @@ bayes_output_layout[1,3] <-
     gbutton("Print Model",
             handler = function(h,...){
                 bayes.name <- svalue(class_var_filesel)
-                bayes.model <- rbci.env$importlist[[bayes.name]]
+                print.args <- list(
+                    bayes.model = bquote(
+                        rbci.env$importlist[[.(bayes.name)]])
+                )
                 
                 svalue(bayes_output_frame) <-
                     capture.output(
-                        print(bayes.model)
+                        do.call(print,print.args)
                         )
 
+                add.step("print", print.args)
             })
 
 bayes_test_btn <-
     gbutton("Test Model",
             container = bayes_output_frame,
-            handler = function(h,...){
+            handler = function(h,...) {
                 test.name <- svalue(class_var_filesel)
-                test.model <- rbci.env$importlist[[test.name]]
                 test.dataname <- svalue(bayes_test_list)
-                test.data <- rbci.env$importlist[[test.dataname]]
                 test.feats <- svalue(bayes_varlist)
-                
-                new.table <-
-                    list(
-                        prediction = test.bayes.model(test.model, test.data)
-                        # test.feats)
-                        )
-                
+
+                test.args <- list( # collect partially dereferenced args
+                    bayes.model = bquote(
+                        rbci.env$importlist[[.(test.name)]]),
+                    test.data = bquote(
+                        rbci.env$importlist[[.(test.dataname)]])
+                )
+
+                ## do work, update GUI
+                new.table <- list(
+                    # do the model test with the above args
+                    do.call(test.bayes.model, test.args)
+                    )
                 names(new.table) <- paste(test.dataname,
                                           "bayestest", seq_along(new.table),
                                           sep = ".")
-                
                 rbci.env$importlist <- append(rbci.env$importlist,
                                               new.table)
-                
                 ## ensure names are straight
                 names(rbci.env$importlist) <-
                     make.unique(names(rbci.env$importlist))
 
+                ## add op to reporter
+                add.step("test.bayes.model", test.args)
             })
 
 bayes_test_label <- glabel("Test Set",
@@ -196,9 +204,9 @@ addHandlerClicked(bayes_output_layout[1,1],
                   })
 addHandlerClicked(bayes_test_btn,
                   handler = function(h,...){
-                      new.datasets <-
+                      
+                      bayes_test_list[] <-
                           names(rbci.env$importlist)
-                      class_var_filesel[] <- new.datasets
                   })
 
 

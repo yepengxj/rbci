@@ -133,7 +133,7 @@ train.bayes.model <- function(train.data,
 
 test.bayes.model <- function(bayes.model, test.data) {
 
-    bayes.pred <- predict(bayes.model, test.data)
+    bayes.pred <- list(prediction = predict(bayes.model, test.data))
     return(bayes.pred)
 }
 
@@ -141,6 +141,6 @@ test.bayes.model <- function(bayes.model, test.data) {
 
 table.bayes.model <- function(bayes.prediction, test.data) {
     
-    table(bayes.prediction, test.data)
+    table(bayes.prediction$prediction, test.data)
     
 }
