@@ -131,13 +131,13 @@ bayes_output_layout[1,3] <-
             handler = function(h,...){
                 bayes.name <- svalue(class_var_filesel)
                 print.args <- list(
-                    bayes.model = bquote(
+                    x = bquote(
                         rbci.env$importlist[[.(bayes.name)]])
                 )
-                
+
                 svalue(bayes_output_frame) <-
                     capture.output(
-                        do.call(print,print.args)
+                        do.call(print, print.args)
                         )
 
                 add.step("print", print.args)
