@@ -106,20 +106,21 @@ bayes_output_layout[1,2] <-
                 bayes.name <- svalue(class_var_filesel)
                 data.name <- svalue(bayes_test_list)
                 target.col <- svalue(bayes_target_list)
-
+                browser()
                 this.args <- list( # collect args
                     # partial deref
                     bayes.prediction =
                         bquote(rbci.env$importlist[[.(bayes.name)]]),
-                    test.data = bquote(
+                    test.data = bquote(c(
                         rbci.env$importlist[[.(data.name)]][,.(target.col),
-                                                            with=FALSE])
+                                                            with=FALSE])[[1]]
+                                       )
                 )
                 
                 ## send table to widget
                 svalue(bayes_output_frame) <-
-                    do.call(table.bayes.model, this.args)
-                return()
+                    ## we have to capture output here due to GUI
+                    capture.output(do.call(table.bayes.model, this.args))
 
                 ## send op to reporter
                 add.step("table.bayes.model", this.args)
