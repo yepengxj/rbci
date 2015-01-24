@@ -138,7 +138,7 @@ bayes_output_layout[1,3] <-
                 svalue(bayes_output_frame) <-
                     capture.output(
                         do.call(print, print.args)
-                        )
+                    )
 
                 add.step("print", print.args)
             })
