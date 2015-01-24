@@ -141,6 +141,8 @@ test.bayes.model <- function(bayes.model, test.data) {
 
 table.bayes.model <- function(bayes.prediction, test.data) {
     
-    table(bayes.prediction, test.data)
+    return(capture.output(
+        table(bayes.prediction, test.data)
+        ))
     
 }
