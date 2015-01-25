@@ -44,22 +44,19 @@ toggle.row <- function(steplist.table, row.ind) {
     
 }
 
-export.single.step <- function(some.code) {
-### evaluates a single step of code as stored by the reporter;
-### expects a string
-    
-    ## run given code, capture output
-    code.result <- capture.output({
-        eval(parse(some.code))
-    })
-
-}
-
 build.report <- function(steplist.table, report.title, report.author,
                          output.dir) {
     
     ## collect up a a list of code objects that need to be run to be passed out
     step.list <- steplist.table[steplist.table$enabled,]
+
+    ## save environment to data directory
+    env.file.name <-
+        paste(output.dir, "/", strsplit(report.title, " ")[[1]][1],
+              ".RData", # needed?
+              sep = "")
+    save(rbci.env,
+         file = env.file.name)
     
     ## get an R Markdown file ready
     file.name <- paste(output.dir, "/", strsplit(report.title, " ")[[1]][1],
@@ -68,8 +65,16 @@ build.report <- function(steplist.table, report.title, report.author,
     file.create(file.name)
     
     file.conn <- file(file.name, open = "a")
+
     ## write header junk like title and author
-    writeLines(make.report.head(report.title,report.author), file.conn)
+    writeLines(make.report.head(report.title, report.author), file.conn)
+
+    ## write environment load line
+    writeLines(c("```",
+                 paste("load(",env.file.name,", .GlobalEnv)"),
+                 paste("unlink(",env.file.name,")"),
+                 "```"),
+               file.conn)
     
     lapply(step.list, function(this.step) {
         ## write summary
@@ -83,8 +88,9 @@ build.report <- function(steplist.table, report.title, report.author,
     ## do some directory finagling to make sure knitr is happy
     cur.dir <- getwd()
     setwd(output.dir)
-    knit2html(basename(file.name))
-    if (interactive()) browseURL(paste(file_path_sans_ext(basename(file.name))))
+
+    ## knit2html(basename(file.name))
+    ## if (interactive()) browseURL(paste(file_path_sans_ext(basename(file.name))))
     setwd(cur.dir) # undo dir finagle
 }
 
