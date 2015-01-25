@@ -46,10 +46,17 @@ toggle.row <- function(steplist.table, row.ind) {
 
 build.report <- function(steplist.table, report.title, report.author,
                          output.dir) {
+    browser()
+    ## sanitize output.dir (gWidgets gives single quotes, against convention?)
+    output.dir <- gsub("'","", output.dir)
     
-    ## collect up a a list of code objects that need to be run to be passed out
-    step.list <- steplist.table[steplist.table$enabled,]
-
+    ## collect up a frame of code objects that need to be run to be passed out
+    step.list <- as.data.frame(
+        steplist.table[which(steplist.table[,'enabled'] == TRUE),]
+        )
+    ## validation: fail if no steps enabled
+    if (nrow(step.list) == 0) { return("no steps to run") }
+    
     ## save environment to data directory
     env.file.name <-
         paste(output.dir, "/", strsplit(report.title, " ")[[1]][1],
