@@ -26,7 +26,8 @@ cran.dependencies = c(
     "sda"           ,  # sda classifier
     "LiblineaR"     ,  # linear svm classifier
     "kernlab"       ,  # kernel pca/svm lib
-    "e1071"            # naiveBayes classifier
+    "e1071"         ,  # naiveBayes classifier
+    "knitr"            # report generator
     )
 
 github.dependencies = list(

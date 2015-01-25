@@ -1,6 +1,6 @@
 ###### Initialize backend processing #######
 ### load libs
-source("./dependencies.R")
+source("./backend/dependencies.R")
 
 ### load data structures
 source("./backend/structures.R")
