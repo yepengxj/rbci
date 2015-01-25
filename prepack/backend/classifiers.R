@@ -76,10 +76,12 @@ plot.svm.model <- function(svm.model, ...) {
 table.svm.model <- function(svm.prediction, test.data) {
     switch(class(svm.prediction),
            "list"={ # predict.LiblineaR() returns a list
-               table(svm.prediction$predictions,test.data)
+               table(prediction = svm.prediction$predictions,
+                     actual = test.data$Class)
            },
            "matrix"={ # predict.ksvm() returns a matrix
-               table(svm.prediction,test.data)
+               table(prediction = svm.prediction,
+                     actual = test.data)
            })
 }
 

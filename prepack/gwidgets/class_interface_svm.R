@@ -228,7 +228,7 @@ svm_output_layout[1,1] <-
                     make.unique(names(rbci.env$importlist))
 
                 ## update reporter with op
-                add.step("train.svm.model", this.args)
+                add.step("train.svm.model", train.args)
             })
 
 svm_test_btn <- 
@@ -293,12 +293,13 @@ svm_output_layout[1,2] <-
 
                 ## collect args
                 table.args <- list(
-                    svm.pred = bquote( # partially deref dataset calls
+                    svm.prediction = bquote( # partially deref dataset calls
                         rbci.env$importlist[[.(svm.name)]]),
-                    data.actual = bquote(
+                    test.data = bquote(
                         rbci.env$importlist[[.(data.name)]][,.(target.col),
                                                             with=FALSE])
-                )
+                    )
+                browser()
                 ## send table to widget
                 svalue(svm_output_frame) <-
                     capture.output(do.call(table.svm.model, table.args))
@@ -319,7 +320,7 @@ svm_output_layout[1,3] <-
 
                 svalue(svm_output_frame) <-
                     capture.output(
-                        do.call(print,svm.model)
+                        do.call(print, print.args)
                     )
                 
                 add.step("print", print.args)
