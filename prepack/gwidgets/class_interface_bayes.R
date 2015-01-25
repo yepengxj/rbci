@@ -7,7 +7,7 @@ bayes_pane <- gpanedgroup(horizontal = TRUE,
 bayes_param_group <- ggroup(container = bayes_pane,
                           horizontal = TRUE)
 
-bayes_varlist_frame <- gframe(text = "Apply Columns",
+bayes_varlist_frame <- gframe(text = "Feature Columns",
                             horizontal = FALSE,
                             container = bayes_param_group,
                             expand = TRUE,
