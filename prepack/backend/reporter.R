@@ -46,7 +46,7 @@ toggle.row <- function(steplist.table, row.ind) {
 
 build.report <- function(steplist.table, report.title, report.author,
                          output.dir) {
-    browser()
+
     ## sanitize output.dir (gWidgets gives single quotes, against convention?)
     output.dir <- gsub("'","", output.dir)
     
@@ -80,14 +80,17 @@ build.report <- function(steplist.table, report.title, report.author,
     writeLines(c("```",
                  paste("load(",env.file.name,", .GlobalEnv)"),
                  paste("unlink(",env.file.name,")"),
-                 "```"),
+                 "```", ""),
                file.conn)
-    
-    lapply(step.list, function(this.step) {
+
+    apply(step.list, 1, function(this.step) { # go down by rows (of the df)
         ## write summary
-        ## write RMarkdown delimiters and code
-        writeLines(c(this.step$summary,"```",this.step$code,"```"))
-        
+        writeLines(c("", this.step['summary'],
+                     "```{r}", # write RMarkdown delimiters and code
+                     this.step['code'],
+                     "```", ""),
+                   con = file.conn)
+
     })
     close(file.conn)
     
@@ -106,8 +109,8 @@ make.report.head <- function(report.title, report.author) {
 ### TODO add settings
 ### TODO add backend function importer (for now import all funcs; show=false)
     
-    c(paste(report.title,"\n","======","\n",sep=""),
-      paste("## ",report.author,"\n",sep=""),
-      paste("*",Sys.time(),"*",sep=""))
+    c(paste(report.title,"\n","======","\n", sep=""),
+      paste("## ",report.author,"\n", sep=""),
+      paste("*",Sys.time(),"*","\n", sep=""))
     
 }
