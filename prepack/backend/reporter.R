@@ -58,12 +58,16 @@ build.report <- function(steplist.table, report.title, report.author,
     if (nrow(step.list) == 0) { return("no steps to run") }
     
     ## save environment to data directory
-    env.file.name <-
+    env.file.path <-
         paste(output.dir, "/", strsplit(report.title, " ")[[1]][1],
               ".RData", # needed?
               sep = "")
     save(rbci.env,
-         file = env.file.name)
+         file = env.file.path)
+    ## make relative name for portability
+    env.file.name <- paste('"',"./", strsplit(report.title, " ")[[1]][1],
+                           ".RData", '"',
+                           sep = "")
     
     ## get an R Markdown file ready
     file.name <- paste(output.dir, "/", strsplit(report.title, " ")[[1]][1],
