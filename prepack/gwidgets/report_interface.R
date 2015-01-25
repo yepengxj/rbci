@@ -65,8 +65,11 @@ process_step_toggle <-
     gbutton(text = "Enable/Disable",
             container = process_frame,
             handler = function(h, ...) {
-                toggle.row(process_step_sel,
-                           svalue(process_step_sel, index = TRUE))
+                row.ind <- svalue(process_step_sel, index = TRUE)
+                toggle.row(process_step_sel, # sets GUI part
+                           row.ind)
+                ## sets actual env list part
+                rbci.env$steplist[[row.ind]]$enabled <- TRUE 
             })
 
 # addSpring(process_frame)
