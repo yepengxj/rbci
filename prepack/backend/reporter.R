@@ -68,6 +68,12 @@ build.report <- function(steplist.table, report.title, report.author,
     env.file.name <- paste('"',"./", strsplit(report.title, " ")[[1]][1],
                            ".RData", '"',
                            sep = "")
+    ## copy backend files to data directory
+### TODO make this more portable/track package changes
+    dir.create(paste(output.dir, "/backend", sep = ""), mode = "0775")
+    file.copy(from = "./backend",
+              to = paste(output.dir, "/", sep = ""),
+              recursive = TRUE)
     
     ## get an R Markdown file ready
     file.name <- paste(output.dir, "/", strsplit(report.title, " ")[[1]][1],
@@ -80,10 +86,11 @@ build.report <- function(steplist.table, report.title, report.author,
     ## write header junk like title and author
     writeLines(make.report.head(report.title, report.author), file.conn)
 
-    ## write environment load line
-    writeLines(c("```",
+    ## write environment+backend load line
+    writeLines(c("```{r}",
                  paste("load(",env.file.name,", .GlobalEnv)"),
-                 paste("unlink(",env.file.name,")"),
+                 'source("./backend/dependencies.R")', # TODO little clumsy
+                 'sourceDirectory("./backend")',
                  "```", ""),
                file.conn)
 
