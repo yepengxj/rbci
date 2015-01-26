@@ -13,10 +13,11 @@ add.step <- function(func.name, step.args) {
 
     new.step <- list(summary = step.summary,
                      enabled = FALSE,
-                     code = deparse(
+                     code = paste(deparse(
                          bquote(do.call(.(func.name), .(step.args))),
                                         # ensure we get knittable code
-                         control = c("showAttributes" = NULL))
+                         control = c("showAttributes" = NULL)),
+                         collapse = "\n")
                      )
 
     rbci.env$steplist <- append(rbci.env$steplist,
