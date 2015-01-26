@@ -1,29 +1,37 @@
 simple.filter <- function(filter.type,
-                          filter.band,
+                          active.band,
+                          sample.rate,
                           filter.groups) {
-    filter.order <- 8 # replace this with selectable order later?
+#    filter.order <- 8 # TODO replace this with selectable order later
+    band.tolerance <- 10 # Hz margin between pass/stop
     
     switch(filter.type,
            Lowpass = {
-               filt.type <- "low"
-               filt.band <- filter.band[2] # for the one-sided filters we use
-                                           # only one frequency
-           },
-           Bandpass = {
-               filt.type <- "pass"
-               filt.band <- filter.band
+               pass.band <- active.band[[2]] # for the one-sided filters we use
+                                             # only one frequency
+               stop.band <- pass.band + band.tolerance
            },
            Highpass = {
-               filt.type <- "high"
-               filt.band <- filter.band[1]
+               pass.band <- active.band[[1]]
            },
            Stopband = {
-               filt.type <- "stop"
-               filt.band <- filter.band
+               stop.band <- active.band
+               pass.band <- c(stop.band[[1]] - band.tolerance,
+                              stop.band[[2]] + band.tolerance)              
+           },
+           Bandpass = {
+               pass.band <- active.band
+               stop.band <- c(pass.band[[1]] - band.tolerance,
+                              pass.band[[2]] + band.tolerance)
            })
     
+#    designed.filter <-
+#        butter(filter.order, type = filt.type,
+#               W = pass.band,
+#               plane = "s")
     designed.filter <-
-        butter(filter.order, type = filt.type,
-               W = filter.band,
-               plane = "z")
+        butter(buttord(Wp = pass.band/sample.rate*2,
+                       Ws = stop.band/sample.rate*2,
+                       Rp = 0.5, Rs = 40)) # ripple doesn't matter so much for
+                                           # butter
 }

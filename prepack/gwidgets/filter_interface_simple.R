@@ -118,7 +118,8 @@ filter_apply_btn <-
                 
                 filter.args <- list(
                     filter.type = filt.type,
-                    filter.band = filt.band/0.2/(filt.srate/2),
+                    active.band = filt.band,
+                    sample.rate = filt.srate,
                     filter.groups = filt.groups)
                 
                 ## get the designed filter
@@ -130,7 +131,8 @@ filter_apply_btn <-
                 visible(filter_plot_frame,TRUE)
                 filter.plot.args <- list(
                     filter = my.filter,
-                    sample.rate = filt.srate)
+                    sample.rate = filt.srate,
+                    active.band = filt.band)
                 
                 print(do.call(plot.filter, filter.plot.args))
                 ## add filter to reporter manifest                
