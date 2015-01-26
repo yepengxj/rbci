@@ -12,9 +12,9 @@ abind3curry <- function(...) {
 ## http://stackoverflow.com/a/5577647/2023432
 load_obj <- function(f)
 {
-  env <- new.env()
-  nm <- load(f, env)[1]
-  env[[nm]]
+  temp.env <- new.env()
+  nm <- load(f, envir = temp.env)[1]
+  temp.env[[nm]]
 }
 
 ### pseudo-curry of gwidgets enabled() method to enable bulk enable/disable
