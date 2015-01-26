@@ -80,19 +80,24 @@ report_output_sel <- gfilebrowse(text = "Output directory name",
                                  type = "selectdir",
                                  container = process_frame)
 
-report_output_btn <-
+report_output_layout <- glayout(container = process_frame)
+
+report_output_layout[1,1] <-
     gbutton(text = "Generate Report",
-            container = process_frame,
-            handler = function(h,...){
+            handler = function(h,...) {
+
                 report.steps <- process_step_sel
                 report.title <- svalue(report_opts_title)
                 report.auth <- svalue(report_opts_author)
                 report.dir <- svalue(report_output_sel)
+                report.knit <- svalue(report_output_layout[1,2])
 
                 build.report(report.steps, report.title,
-                             report.auth, report.dir)
+                             report.auth, report.dir, report.knit)
             })
 
+report_output_layout[1,2] <-
+    gcheckbox("Run exported report and remove disabled steps?")
 
 # Load subitems (into tabs)
 source("./gwidgets/report_interface_text.R")

@@ -48,7 +48,7 @@ toggle.row <- function(steplist.table, row.ind) {
 }
 
 build.report <- function(steplist.table, report.title, report.author,
-                         output.dir) {
+                         output.dir, knit.now = FALSE) {
 
     ## sanitize output.dir (gWidgets gives single quotes, against convention?)
     output.dir <- gsub("'","", output.dir)
@@ -108,14 +108,22 @@ build.report <- function(steplist.table, report.title, report.author,
     })
     close(file.conn)
     
-    ## call knitr on resulting Rmd file
-    ## do some directory finagling to make sure knitr is happy
-    cur.dir <- getwd()
-    setwd(output.dir)
+    ## call knitr on resulting Rmd file if enabled
+    if (knit.now == TRUE) {
+        
+        ## do some directory finagling to make sure knitr is happy
+        cur.dir <- getwd()
+        setwd(output.dir)
+        
+        knit2html(basename(file.name))
+        
+        setwd(cur.dir) # undo dir finagle
 
-    ## knit2html(basename(file.name))
-    ## if (interactive()) browseURL(paste(file_path_sans_ext(basename(file.name))))
-    setwd(cur.dir) # undo dir finagle
+        if (interactive()) {
+            browseURL(paste("file://",file_path_sans_ext(file.name),".html",
+                            sep = ""))
+        }
+    }
 }
 
 make.report.head <- function(report.title, report.author) {
