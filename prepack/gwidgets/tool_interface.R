@@ -39,24 +39,15 @@ tool_edit_text <- gtext(text =
                         font.attr = c(family="monospace"))
 
 
-# script directory selector
+## script directory selector
 tool_dir_button <- gfilebrowse(text = "Script Directory",
                                type = "selectdir",
                                container = tool_var_frame,
                                quote = FALSE)
-# set initial directory to pwd
+## set initial directory to pwd
 svalue(tool_dir_button) <- getwd()
-
-# initialize script list for placement
-script_list_frame <- gframe(text = "Scripts",
-                            expand = TRUE,
-                            horizontal = FALSE,
-                            container = tool_var_frame)
-tool_var_filesel <- gradio(dir(svalue(tool_dir_button),
-                               pattern = "*.R"),
-                           container = script_list_frame)
-
 ## function to update script list
+### TODO move to separate file
 tool_update_scripts <- function(h,...) {
 ### TODO add refresh
     ## populate tool script selector
@@ -68,6 +59,16 @@ tool_update_scripts <- function(h,...) {
 
 addHandlerChanged(tool_dir_button,
                   handler = tool_update_scripts())
+
+## initialize script list for placement
+script_list_frame <- gframe(text = "Scripts",
+                            expand = TRUE,
+                            horizontal = FALSE,
+                            container = tool_var_frame)
+tool_var_filesel <- gradio(dir(svalue(tool_dir_button),
+                               pattern = "*.R"),
+                           container = script_list_frame)
+
 
 tool_loadsave_frame <- gframe(text = "Load/Save",
                               container = tool_var_frame)
