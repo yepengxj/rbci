@@ -12,23 +12,24 @@ sda_varlist_frame <- gframe(text = "Feature Columns",
                             container = sda_param_group,
                             expand = TRUE,
                             width = 300)
-# populate varlist
-# TODO Update features spinbox on change
+
+## populate varlist
 sda_varlist <- gcheckboxgroup(
     names(rbci.env$importlist[[svalue(class_var_filesel, index=TRUE)]]),
     container = sda_varlist_frame,
     use.table = TRUE,
     expand = TRUE)
 
+## if we change datasets, update interface elements
 addHandlerChanged(class_var_filesel,
                   handler = function(h,...) {
                       new.dataset.names <- 
-                          names(rbci.env$importlist[[svalue(class_var_filesel,
-                                                            index=TRUE)]])
+                          names(rbci.env$importlist[[svalue(class_var_filesel)]])
                       sda_varlist[] <- new.dataset.names
                       sda_target_list[] <- new.dataset.names
                       
                   })
+
 
 ## sda params
 sda_param_frame <- gframe(text = "SDA Parameters",
@@ -74,32 +75,29 @@ sda_output_layout[1,1] <-
     gbutton("Train Model",
             handler = function(h,...){
                 train.name <- svalue(class_var_filesel)
-                train.data <- rbci.env$importlist[[train.name]]
-                sda.target <- svalue(sda_target_list)
-                sda.features <- svalue(sda_varlist)
-                sda.lambda <- svalue(sda_band_layout[2,1])
-                sda.lambda.var <- svalue(sda_band_layout[4,1])
 
-                new.table <-
-                    list(
-                        train.sda.model(train.data,
-                                        sda.target,
-                                        sda.features,
-                                        sda.lambda,
-                                        sda.lambda.var)
-                        )
-                
+                train.args <- list(
+                    train.data = bquote( # partial deref of dataset call
+                        rbci.env$importlist[[.(train.name)]]),
+                    target.col = svalue(sda_target_list),
+                    feature.cols = svalue(sda_varlist),
+                    sda.lambda = svalue(sda_band_layout[2,1]),
+                    sda.lambda.var = svalue(sda_band_layout[4,1])
+                )
+                    
+                new.table <- # do the train model call
+                    list(do.call(train.sda.model,train.args))
                 names(new.table) <- paste(train.name,
                                           "sdamodel", seq_along(new.table),
-                                          sep = ".")
-                
+                                          sep = ".")                
                 rbci.env$importlist <- append(rbci.env$importlist,
-                                              new.table)
-                
+                                              new.table)                
                 ## ensure names are straight
                 names(rbci.env$importlist) <-
                     make.unique(names(rbci.env$importlist))
-                
+
+                ## update reporter with op
+                add.step("train.sda.model", train.args)
             })
 
 ## refresh dataset frame on run
@@ -107,32 +105,43 @@ sda_output_layout[1,1] <-
 
 sda_output_layout[1,2] <-
     gbutton("Print Table",
-            handler = function(h,...){
+            handler = function(h,...) {
                 sda.name <- svalue(class_var_filesel)
-                sda.pred <- rbci.env$importlist[[sda.name]]
                 data.name <- svalue(sda_test_list)
                 target.col <- svalue(sda_target_list)
-                data.actual <-
-                    rbci.env$importlist[[data.name]][,target.col,with=FALSE]
+
+                table.args <- list( # collect table arguments
+                    sda.prediction = bquote( # partially deref data calls
+                        rbci.env$importlist[[.(sda.name)]]),
+                    test.data =
+                        bquote(
+                            rbci.env$importlist[[.(data.name)]][,.(target.col),
+                                                                with=FALSE])
+                )
 
                 ## send table to widget
                 svalue(sda_output_frame) <-
-                    capture.output(
-                        table(predicted = sda.pred[['class']],
-                              data = data.actual[[target.col]])
-                        )
-                return()
+                    capture.output(do.call(table.sda.model, table.args))
+
+                ## send op to reporter
+                add.step("table.sda.model", this.args)
+
             })
+
 sda_output_layout[1,3] <-
     gbutton("Print Model",
             handler = function(h,...){
                 sda.name <- svalue(class_var_filesel)
-                sda.model <- rbci.env$importlist[[sda.name]]
+                print.args <- list(
+                    x = bquote(
+                        rbci.env$importlist[[.(sda.name)]])
+                )
 
                 svalue(sda_output_frame) <-
                     capture.output(
-                        print(sda.model)
+                        do.call(print, print.args)
                         )
+                add.step("print", print.args)
                 
             })
 
@@ -141,29 +150,32 @@ sda_test_btn <-
             container = sda_output_frame,
             handler = function(h,...){
                 test.name <- svalue(class_var_filesel)
-                test.model <- rbci.env$importlist[[test.name]]
                 test.dataname <- svalue(sda_test_list)
-                test.data <- rbci.env$importlist[[test.dataname]]
-                test.feats <- svalue(sda_varlist)
+
+                ## collect args
+                test.args <- list( 
+                    sda.model = bquote(
+                        rbci.env$importlist[[.(test.name)]]),
+                    test.data = bquote(
+                        rbci.env$importlist[[.(test.dataname)]]),
+                    feature.cols = svalue(sda_varlist)
+                )
+
                 
-                new.table <-
-                    list(
-                        test.sda.model(test.model,
-                                       test.data,
-                                       test.feats)
-                        )
-                
+                ## do work, update GUI
+                new.table <- 
+                    list(do.call(test.sda.model, test.args))
                 names(new.table) <- paste(test.dataname,
                                           "sdatest", seq_along(new.table),
                                           sep = ".")
-                
                 rbci.env$importlist <- append(rbci.env$importlist,
                                               new.table)
-                
                 ## ensure names are straight
                 names(rbci.env$importlist) <-
                     make.unique(names(rbci.env$importlist))
 
+                ## add op to reporter
+                add.step("test.sda.model", test.args)
             })
 
 sda_test_label <- glabel("Test Set",
@@ -172,18 +184,33 @@ sda_test_list <-
     gdroplist(container = sda_output_frame,
               names(rbci.env$importlist))
 
+## we ALSO want to have column selector change when selecting target sets for
+## the target set list
+addHandlerChanged(sda_test_list,
+                  handler = function(h,...) {
+                      new.dataset.names <- 
+                          names(rbci.env$importlist[[svalue(sda_test_list)]])
+
+                      if (!is.null(new.dataset.names)) {
+                          sda_varlist[] <- new.dataset.names
+                          sda_target_list[] <- new.dataset.names
+                      }
+                  })
+
 ## Buttons that add new things should refresh the dataset selector
 addHandlerClicked(sda_output_layout[1,1],
                   handler = function(h,...){
                       new.datasets <-
                           names(rbci.env$importlist)
                       class_var_filesel[] <- new.datasets
+                      sda_test_list[] <- new.datasets
                   })
 addHandlerClicked(sda_test_btn,
                   handler = function(h,...){
                       new.datasets <-
                           names(rbci.env$importlist)
-                      class_var_filesel[] <- new.datasets
+
+                      sda_test_list[] <- new.datasets
                   })
 
 

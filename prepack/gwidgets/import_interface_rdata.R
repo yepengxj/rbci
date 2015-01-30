@@ -104,10 +104,10 @@ rdata_export_button <- gbutton(text = "Export to R Data (RData)",
                                
                                # read full-length file
                                rbci.env$importfile <- 
-                                 readMat(rbci.env$previewfile)
+                                   load_obj(rbci.env$previewfile)
                                
                                eegdata <- 
-                                 rbci.env$importfile
+                                   rbci.env$importfile
                                
                                save(eegdata,
                                     file = gfile(
@@ -121,7 +121,6 @@ rdata_load_button <-
   gbutton(text = "Import into interface",
           container = rdata_export_frame,
           handler = function(h,...) {
-            # rename, insert into interface
             
             # get enabled columns
             colsel <- sapply(rbci.env$columnboxes,svalue)
@@ -129,11 +128,11 @@ rdata_load_button <-
             # read full-length file
             rbci.env$importfile <- 
               load_obj(rbci.env$previewfile)
-            
-            # add imported data to list
+
+            ## add imported data to list
             rbci.env$importlist[[
               basename(file_path_sans_ext(svalue(rdata_file_button)))]] <-
-                rbci.env$importfile[,which(colsel==TRUE)]
+                rbci.env$importfile[,which(colsel==TRUE), with = FALSE]
             # in case of duplicates, mark explicitly
             names(rbci.env$importlist) <- 
               make.unique(names(rbci.env$importlist))

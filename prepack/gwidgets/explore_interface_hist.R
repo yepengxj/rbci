@@ -20,18 +20,20 @@ hist_summarize_btn <-
     gbutton(text = "Plot Histogram",
             container = hist_varlist_frame,
             handler = function(h,...) {
-              ## svalue(hist_output_frame) <- 
-              data.melt <- melt(rbci.env$importlist[[svalue(explore_var_filesel,
-                                 index=TRUE)]][,svalue(hist_varlist),
-                                               with=FALSE]
-                                )
-              ## str(data.melt)
-              visible(hist_output_frame) <- TRUE
-              data.plot <-
-                ggplot(data.melt,aes(x = value, color = variable)) + 
-                  facet_wrap(~variable,scales = "free") +
-                    geom_density()
-              print(data.plot)
+                this.args <- list(
+                    data.set =
+                        bquote( # partially dereference call
+                            rbci.env$importlist[[.(svalue(explore_var_filesel))]][,
+                        .(svalue(hist_varlist)),
+                        with = FALSE ])
+                    )
+                
+                visible(hist_output_frame) <- TRUE
+                print(do.call(hist.plot,this.args)) # do the GUI Work
+
+                ## update reporter module with this op
+                add.step(func.name = "hist.plot",
+                         step.args = this.args)
             })
 
 hist_output_frame <- ggraphics(container = hist_pane)

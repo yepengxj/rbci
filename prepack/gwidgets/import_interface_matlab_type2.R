@@ -88,10 +88,6 @@ matlab_type2_export_button <-
           type = "save",
           container = matlab_type2_export_frame,
           handler = function(h,...) {
-            # save file
-            # get enabled columns
-            colsel <- sapply(rbci.env$columnboxes,svalue)
-            
             # read full-length file
             rbci.env$importfile <- 
               readMat(rbci.env$previewfile)
@@ -101,8 +97,7 @@ matlab_type2_export_button <-
                                   eeg.ind = svalue(matlab_type2_eegindex),
                                   tgt.ind = svalue(matlab_type2_tgtindex))
         
-            save(eegdata, # index 1 is "eeg.table"
-                 # envir = rbci.env,
+            save(eegdata,
                  file = gfile(
                    filter = list("RData"= list(patterns = c("*.RData"))),
                    type = "save"))

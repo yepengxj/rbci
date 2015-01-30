@@ -10,7 +10,7 @@ train.svm.model <- function(train.data,
 
     ## sanitize params
     cost.param <- if(is.na(as.numeric(cost.param)) ||
-                     !(as.numeric(cost.param) > 0)) 1 else cost.param # R standard elvis op
+                     !(as.numeric(cost.param) > 0)) 1 else cost.param # R standard null coalescing op (elvis)
 
     if (kern.type == "Linear") {
         ## use LiblineaR
@@ -76,10 +76,12 @@ plot.svm.model <- function(svm.model, ...) {
 table.svm.model <- function(svm.prediction, test.data) {
     switch(class(svm.prediction),
            "list"={ # predict.LiblineaR() returns a list
-               table(svm.prediction$predictions,test.data)
+               table(prediction = svm.prediction$predictions,
+                     actual = test.data$Class)
            },
            "matrix"={ # predict.ksvm() returns a matrix
-               table(svm.prediction,test.data)
+               table(prediction = svm.prediction,
+                     actual = test.data)
            })
 }
 
@@ -101,7 +103,7 @@ train.sda.model <- function(train.data,
 
 test.sda.model <- function(sda.model, test.data, feature.cols) {
 ### TODO error checking on input
-    
+
     predict(sda.model, as.matrix(test.data[, feature.cols, with=FALSE]))
 }
 
@@ -110,7 +112,7 @@ test.sda.model <- function(sda.model, test.data, feature.cols) {
 table.sda.model <- function(sda.prediction, test.data) {
 
     table(predicted = sda.prediction$class,
-          data = test.data)
+          data = test.data$Class)
 
 }
 
@@ -133,7 +135,7 @@ train.bayes.model <- function(train.data,
 
 test.bayes.model <- function(bayes.model, test.data) {
 
-    bayes.pred <- predict(bayes.model, test.data)
+    bayes.pred <- list(prediction = predict(bayes.model, test.data))
     return(bayes.pred)
 }
 
@@ -141,6 +143,6 @@ test.bayes.model <- function(bayes.model, test.data) {
 
 table.bayes.model <- function(bayes.prediction, test.data) {
     
-    table(bayes.prediction, test.data)
+    table(bayes.prediction$prediction, test.data)
     
 }

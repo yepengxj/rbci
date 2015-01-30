@@ -15,7 +15,7 @@ svm_varlist_frame <- gframe(text = "Feature Columns",
                             width = 300)
 
 
-# populate varlist
+## populate varlist
 svm_varlist <- gcheckboxgroup(
   names(rbci.env$importlist[[svalue(class_var_filesel, index=TRUE)]]),
   container = svm_varlist_frame,
@@ -200,37 +200,35 @@ svm_output_layout[1,1] <-
     gbutton("Train Model",
             handler = function(h,...){
                 train.name <- svalue(class_var_filesel)
-                train.data <- rbci.env$importlist[[train.name]]
-                svm.kern <- svalue(svm_kernel_type_menu)
-                svm.target <- svalue(svm_target_list)
-                svm.features <- svalue(svm_varlist)
-                svm.cost <- svalue(svm_band_layout[4,2])
-                svm.kernparams <- list(
-                    svalue(svm_band_layout[2,1]),
-                    svalue(svm_band_layout[2,2]),
-                    svalue(svm_band_layout[4,1]))
 
+                ## collecdt args
+                train.args <- list( 
+                    train.data = bquote( # partially deref dataset calls
+                        rbci.env$importlist[[.(train.name)]]),
+                    kern.type = svalue(svm_kernel_type_menu),
+                    target.col = svalue(svm_target_list),
+                    feature.cols = svalue(svm_varlist),
+                    cost.param = svalue(svm_band_layout[4,2]),
+                    kern.params = list(
+                        svalue(svm_band_layout[2,1]),
+                        svalue(svm_band_layout[2,2]),
+                        svalue(svm_band_layout[4,1]))
+                    )
+
+                ## do the call, update GUI
                 new.table <-
-                    list(
-                        train.svm.model(train.data,
-                                        svm.kern,
-                                        svm.target,
-                                        svm.features,
-                                        svm.cost,
-                                        svm.lambda.var)
-                        )
-                
+                    list(do.call(train.svm.model, train.args))
                 names(new.table) <- paste(train.name,
                                           "svmmodel", seq_along(new.table),
                                           sep = ".")
-                
                 rbci.env$importlist <- append(rbci.env$importlist,
                                               new.table)
-                
                 ## ensure names are straight
                 names(rbci.env$importlist) <-
                     make.unique(names(rbci.env$importlist))
 
+                ## update reporter with op
+                add.step("train.svm.model", train.args)
             })
 
 svm_test_btn <- 
@@ -238,27 +236,30 @@ svm_test_btn <-
             container = svm_output_frame,
             handler = function(h,...){
                 svm.name <- svalue(class_var_filesel)
-                svm.model <- rbci.env$importlist[[svm.name]]
                 test.dataname <- svalue(svm_test_list)
-                test.data <- rbci.env$importlist[[test.dataname]]
-                test.feats <- svalue(svm_varlist)
-                
-                new.table <-
-                    test.svm.model(test.data,
-                                   svm.model,
-                                   test.feats)
-                
+
+                ## collect args
+                test.args <- list(
+                    test.data = bquote( # partially dereference dataset calls
+                        rbci.env$importlist[[.(test.dataname)]]),
+                    svm.model = bquote(
+                        rbci.env$importlist[[.(svm.name)]]),
+                    feature.cols = svalue(svm_varlist)
+                )
+
+                ## do the work, update the GUI
+                new.table <- list(do.call(test.svm.model, test.args))
                 names(new.table) <- paste(test.dataname,
                                           "svmtest", seq_along(new.table),
                                           sep = ".")
-                
                 rbci.env$importlist <- append(rbci.env$importlist,
                                               new.table)
-                
                 ## ensure names are straight
                 names(rbci.env$importlist) <-
                     make.unique(names(rbci.env$importlist))
 
+                ## update reporter with op
+                add.step("test.svm.model", test.args)
             })
 
 svm_test_label <-
@@ -269,39 +270,60 @@ svm_test_list <-
     gdroplist(container = svm_output_frame,
               names(rbci.env$importlist))
 
-### TODO refresh dataset frame on run
-### TODO alert complete (progress bar?)
+## we ALSO want to have column selector change when selecting target sets for
+## the target set list
+addHandlerChanged(svm_test_list,
+                  handler = function(h,...) {
+                      new.dataset.names <- 
+                          names(rbci.env$importlist[[svalue(svm_test_list)]])
+
+                      if (!is.null(new.dataset.names)) {
+                          svm_varlist[] <- new.dataset.names
+                          svm_target_list[] <- new.dataset.names
+                      }
+                      
+                  })
 
 svm_output_layout[1,2] <-
     gbutton("Print Table",
             handler = function(h,...) {
                 svm.name <- svalue(class_var_filesel)
-                svm.pred <- rbci.env$importlist[[svm.name]]
                 data.name <- svalue(svm_test_list)
                 target.col <- svalue(svm_target_list)
-                data.actual <-
-                    rbci.env$importlist[[data.name]][,target.col,with=FALSE]
 
+                ## collect args
+                table.args <- list(
+                    svm.prediction = bquote( # partially deref dataset calls
+                        rbci.env$importlist[[.(svm.name)]]),
+                    test.data = bquote(
+                        rbci.env$importlist[[.(data.name)]][,.(target.col),
+                                                            with=FALSE])
+                    )
+                browser()
                 ## send table to widget
                 svalue(svm_output_frame) <-
-                    capture.output(
-                        table(predicted = svm.pred,
-                              data = data.actual[[target.col]])
-                        )
-                return()
+                    capture.output(do.call(table.svm.model, table.args))
+
+                ## update reporter with op
+                add.step("table.svm.model", table.args)
             })
 
 svm_output_layout[1,3] <-
     gbutton("Print Model",
             handler = function(h,...) {
                 svm.name <- svalue(class_var_filesel)
-                svm.model <- rbci.env$importlist[[svm.name]]
+
+                print.args <- list(
+                    x = bquote(
+                        rbci.env$importlist[[.(svm.name)]])
+                )
 
                 svalue(svm_output_frame) <-
                     capture.output(
-                        print(svm.model)
-                        )
+                        do.call(print, print.args)
+                    )
                 
+                add.step("print", print.args)
             })
 
 ## Buttons that add new things should refresh the dataset selector

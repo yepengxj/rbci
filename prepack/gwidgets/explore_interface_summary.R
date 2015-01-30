@@ -20,10 +20,17 @@ summary_summarize_btn <-
   gbutton(text = "Summarize",
           container = summary_varlist_frame,
           handler = function(h,...) {
-            svalue(summary_output_frame) <- 
-              summarize(rbci.env$importlist[[svalue(explore_var_filesel,
-                                                    index=TRUE)]],
-                        svalue(summary_varlist))
+              this.args <-
+                  list(eeg.table = # partially dereference call
+                           bquote(rbci.env$importlist[[.(svalue(explore_var_filesel))]]), 
+                       selected.columns = svalue(summary_varlist))
+              
+              svalue(summary_output_frame) <- # do the job
+                  do.call(summarize, this.args)
+              
+            ## update the reporter module with a record of this op
+            add.step(func.name = "summarize",
+                     step.args = this.args)
           })
 
 summary_output_frame <- gtext(text = "Summary output",
