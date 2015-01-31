@@ -48,17 +48,15 @@ tool_dir_button <- gfilebrowse(text = "Script Directory",
 svalue(tool_dir_button) <- getwd()
 ## function to update script list
 ### TODO move to separate file
-tool_update_scripts <- function(h,...) {
-### TODO add refresh
-    ## populate tool script selector
-  
-  tool_var_scriptsel <- gradio(dir(svalue(tool_dir_button),
-                                 pattern = "*.R"),
-                             container = script_list_frame)
-}
+## Buttons that add new things should refresh the dataset selector
 
 addHandlerChanged(tool_dir_button,
-                  handler = tool_update_scripts())
+                  handler = function(h,...) {
+                      new.scripts <-
+                          dir(svalue(tool_dir_button),
+                              pattern = "*.R")
+                      tool_var_scriptsel[] <- new.scripts
+                  })
 
 ## initialize script list for placement
 script_list_frame <- gframe(text = "Scripts",
@@ -66,8 +64,8 @@ script_list_frame <- gframe(text = "Scripts",
                             horizontal = FALSE,
                             container = tool_var_frame)
 tool_var_scriptsel <- gradio(dir(svalue(tool_dir_button),
-                               pattern = "*.R"),
-                           container = script_list_frame)
+                                 pattern = "*.R"),
+                             container = script_list_frame)
 
 
 tool_loadsave_frame <- gframe(text = "Load/Save",
@@ -76,10 +74,15 @@ tool_load_button <-
     gbutton(text = "Edit Selected Script",
             container = tool_loadsave_frame,
             handler = function (h,...) {
+### TODO add file directory
                 ## load script file
-                svalue(tool_var_scriptsel)
-                
+                load.name <- svalue(tool_var_scriptsel)
+                ## get text
+                load.text <- readChar(load.name, file.info(load.name)$size)
+                ## make available to GUI
+                svalue(tool_edit_text) <- load.text
             })
+
 tool_save_button <-
     gbutton(text = "Save Script",
             type = "save",
@@ -97,6 +100,13 @@ tool_save_button <-
                 ## update list to include
                 tool_update_scripts()
             })
+addHandlerClicked(tool_save_button,
+                  handler = function(h,...){
+                      new.scripts <-
+                          dir(svalue(tool_dir_button),
+                              pattern = "*.R")
+                      tool_var_scriptsel[] <- new.scripts
+                  })
 
 addSpring(tool_edit_frame)
 tool_edit_runframe <- gframe(text = "Run/Output",

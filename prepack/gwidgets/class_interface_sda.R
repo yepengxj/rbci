@@ -1,4 +1,4 @@
-# button pane
+## button pane
 sda_pane <- gpanedgroup(horizontal = TRUE,
                         expand = TRUE,
                         fill = TRUE,
