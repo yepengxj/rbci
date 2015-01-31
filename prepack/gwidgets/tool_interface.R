@@ -52,7 +52,7 @@ tool_update_scripts <- function(h,...) {
 ### TODO add refresh
     ## populate tool script selector
   
-  tool_var_filesel <- gradio(dir(svalue(tool_dir_button),
+  tool_var_scriptsel <- gradio(dir(svalue(tool_dir_button),
                                  pattern = "*.R"),
                              container = script_list_frame)
 }
@@ -65,7 +65,7 @@ script_list_frame <- gframe(text = "Scripts",
                             expand = TRUE,
                             horizontal = FALSE,
                             container = tool_var_frame)
-tool_var_filesel <- gradio(dir(svalue(tool_dir_button),
+tool_var_scriptsel <- gradio(dir(svalue(tool_dir_button),
                                pattern = "*.R"),
                            container = script_list_frame)
 
@@ -73,24 +73,30 @@ tool_var_filesel <- gradio(dir(svalue(tool_dir_button),
 tool_loadsave_frame <- gframe(text = "Load/Save",
                               container = tool_var_frame)
 tool_load_button <-
-    gbutton(text = "Load Selected",
+    gbutton(text = "Edit Selected Script",
             container = tool_loadsave_frame,
             handler = function (h,...) {
                 ## load script file
-                svalue(tool_var_filesel)
+                svalue(tool_var_scriptsel)
                 
             })
-tool_save_button <- gfilebrowse(text = "Save Script",
-                                type = "save",
-                            container = tool_loadsave_frame,
-                            handler = function (h,...) {
-                              
-                              ## below to backend
-                              # save file
-                              
-                              # update list to include
-                              tool_update_scripts()
-                            })
+tool_save_button <-
+    gbutton(text = "Save Script",
+            type = "save",
+            container = tool_loadsave_frame,
+            handler = function (h,...) {
+                file.text <-
+                    svalue(tool_edit_text)
+
+                save(file.text,
+                     file = gfile(
+                         filter =
+                             list("R scripts"= list(patterns = ("*.R"))),
+                         type = "save"))
+                
+                ## update list to include
+                tool_update_scripts()
+            })
 
 addSpring(tool_edit_frame)
 tool_edit_runframe <- gframe(text = "Run/Output",
