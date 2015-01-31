@@ -90,7 +90,7 @@ build.report <- function(steplist.table, report.title, report.author,
     writeLines(make.report.head(report.title, report.author), file.conn)
 
     ## write environment+backend load line
-    writeLines(c("```{r, results=hide}",
+    writeLines(c('```{r, results="hide", message=FALSE}',
                  paste("load(",env.file.name,", envir = .GlobalEnv)"),
                  'source("./backend/dependencies.R")', # TODO little clumsy
                  'sourceDirectory("./backend")',
