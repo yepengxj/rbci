@@ -29,11 +29,15 @@ tool_edit_frame <- ggroup(text = "Editor",
 
 
 tool_edit_text <- gtext(text = 
-                          "tool1 <- function(rbci.env$selected_data, rbci.env$output_data, ...) {
+                            "tool1 <- function(input.table = rbci.env$selected_data, ...) {
 
   ## EDIT HERE
 
-}",
+}
+
+## EXECUTE FUNCTION ON DATA
+tool1()
+",
                         container = tool_edit_frame,
                         height = 550, width = 550,
                         font.attr = c(family="monospace"))
@@ -98,10 +102,7 @@ tool_save_button <-
                      file = gfile(
                          filter =
                              list("R scripts"= list(patterns = ("*.R"))),
-                         type = "save"))
-                
-                ## update list to include
-                tool_update_scripts()
+                         type = "save"))                
             })
 addHandlerClicked(tool_save_button,
                   handler = function(h,...){
@@ -115,20 +116,36 @@ addSpring(tool_edit_frame)
 tool_edit_runframe <- gframe(text = "Run/Output",
                              horizontal = TRUE,
                              container = tool_edit_frame)
-tool_run_button <- gbutton(text = "Run Script",
-                           container = tool_edit_runframe,
-                           anchor = c(1,1),
-                           handler = function (h,...) {
-                             
-                             ## the below belongs in backend
-                             # get selected data file
-                             
-                             
-                             # save output var to env if successful
-                             
-                             # print error in console if not (automatic?)
-                             # notify w/ alert
-                           })
+tool_run_button <-
+    gbutton(text = "Run Loaded Script",
+            container = tool_edit_runframe,
+            anchor = c(1,1),
+            handler = function (h,...) {                            
+                ## get data
+                rbci.env$selected_data <-
+                    rbci.env$importlist[svalue(tool_input_name)]
+                
+                ## do the call, add to dataset list
+                ## save output var to env if successful
+                rbci.env$importlist[svalue(tool_output_name)] <-
+                    parse(text = svalue(tool_edit_text))
+
+                ## add string manually to reporter
+### TODO refactor this to match other steps
+                new.step <-
+                    list(summary = paste("custom function of",
+                             svalue(tool_input_name)),
+                         enabled = FALSE,
+                         code = svalue(tool_edit_text))
+                rbci.env$steplist <- append(rbci.env$steplist,
+                                            list(new.step))
+                
+                ## print error in console if not (automatic?)
+### TODO notify w/ alert
+
+                ## update available data
+                tool_input_name[] <- names(rbci.env$importlist)
+            })
 tool_input_name <- gdroplist(names(rbci.env$importlist),
                              container = tool_edit_runframe)
 tool_output_name <- gedit(text = "Output.Variable",
