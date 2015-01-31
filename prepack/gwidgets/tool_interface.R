@@ -98,11 +98,11 @@ tool_save_button <-
                 file.text <-
                     svalue(tool_edit_text)
 
-                save(file.text,
-                     file = gfile(
-                         filter =
-                             list("R scripts"= list(patterns = ("*.R"))),
-                         type = "save"))                
+                write(file.text,
+                      file = gfile(
+                          filter =
+                              list("R scripts"= list(patterns = ("*.R"))),
+                          type = "save"))                
             })
 addHandlerClicked(tool_save_button,
                   handler = function(h,...){
@@ -128,7 +128,7 @@ tool_run_button <-
                 ## do the call, add to dataset list
                 ## save output var to env if successful
                 rbci.env$importlist[svalue(tool_output_name)] <-
-                    parse(text = svalue(tool_edit_text))
+                    eval(parse(text = svalue(tool_edit_text)))
 
                 ## add string manually to reporter
 ### TODO refactor this to match other steps
