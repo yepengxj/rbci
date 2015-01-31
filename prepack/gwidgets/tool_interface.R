@@ -82,10 +82,11 @@ tool_load_button <-
                 ## load script file
                 load.name <- svalue(tool_var_scriptsel)
                 load.dir <- svalue(tool_dir_button)
+                load.path <- paste(load.dir, load.name, sep="/")
                 ## get text
                 load.text <- 
-                    readChar(paste(load.dir, load.name, sep="/"),
-                             file.info(load.name)$size)
+                    readChar(load.path,
+                             file.info(load.path)$size)
                 ## make available to GUI
                 svalue(tool_edit_text) <- load.text
             })
