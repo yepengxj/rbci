@@ -11,7 +11,14 @@ source("./backend/misc.R")
 source("./backend/importers.R")
 ### explorer backend
 source("./backend/explorers.R")
+### filter backend
+source("./backend/simple_filter.R")
+source("./backend/plot_filter.R")
+source("./backend/apply_filter.R")
+source("./backend/downsample_dt.R")
 ### transformer backend
 source("./backend/transformers.R")
+### classifier backend
+source("./backend/classifiers.R")
 ### reporter backend
 source("./backend/reporter.R")
