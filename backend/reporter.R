@@ -30,14 +30,13 @@ tabulate.steplist <- function(steplist) {
 ### (once done, the report generator also has to use this form, but it's only
 ### done once)
 
-    if (!is.null(steplist)) {
+    if (length(steplist) > 0) {
         t(sapply(steplist,unlist))
     } else {
         ## return a dummy df that matches structure
 ### TODO revisit this
-        return(t(as.matrix(list(summary.text=NULL, code=NULL, enabled=FALSE))))
+        return(t(as.matrix(list(summary.text="", code="", enabled=""))))
     }
-
 }
 
 toggle.row <- function(steplist.table, row.ind) {

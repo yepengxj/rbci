@@ -27,6 +27,7 @@ process_step_sel <- gtable(tabulate.steplist(rbci.env$steplist),
                            container = process_frame,
                            use.table = TRUE,
                            expand = TRUE)
+
 ### update preview text, summary on selection change
 addHandlerChanged(process_step_sel,
                   handler = function(h,...) {
