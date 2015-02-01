@@ -13,13 +13,48 @@ accomplish the main tasks of data science therein (adapted from
 4. Classification
 5. Report generation
 
+### Other goals
+
+- Specific, well-defined formats and data structures for EEG data (especially
+  taking advantage of [data.table](https://github.com/Rdatatable/data.table)
+- Cross-platform support through GTK
+- Improved visualizations (adding to the already excellent ones in R)
+- Increased collaboration and reproducibility through free+open software
+
+## Features
+
+- Modules for each of the above tasks, and more:
+    - Import
+        - MATLAB
+        - RData
+        - CSV
+    - Filtering
+    - Downsampling
+    - Exploration
+        - Histograms
+        - Summary stats
+        - Grand means
+        - Data partitioning
+    - Transforms
+        - PCA
+        - CSP
+    - Unsupervised learning
+        - k-means
+    - Supervised learning
+        - SDA
+        - SVM
+        - Naive Bayes
+    - Report generation
+        - Automatic code generation
+        - Literate programming (with `knitr`)
+
 ## Current status
 
 Approaching v0.1 rapidly.
 
 ### How to build and run
 
-Note that this is experimental software and has only been tested on 64-bit
+- Note: that this is experimental software and has only been tested on 64-bit
 Linux. If you have problems, please include a `traceback()` and your system
 information in an issue.
 
@@ -66,40 +101,7 @@ The rest of the packages should install through R when run:
 
 3. EEGLAB and BCILAB don't support parallelism or distributed computing.
 
-## Other goals
 
-- Specific, well-defined formats and data structures for EEG data (especially
-  taking advantage of [data.table](https://github.com/Rdatatable/data.table)
-- Cross-platform support through GTK
-- Improved visualizations (adding to the already excellent ones in R)
-- Increased collaboration and reproducibility through FLOS software
-
-## Features
-
-- Modules for each of the above tasks, and more:
-    - Import
-        - MATLAB
-        - RData
-        - CSV
-    - Filtering
-    - Downsampling
-    - Exploration
-        - Histograms
-        - Summary stats
-        - Grand means
-        - Data partitioning
-    - Transforms
-        - PCA
-        - CSP
-    - Unsupervised learning
-        - k-means
-    - Supervised learning
-        - SDA
-        - SVM
-        - Naive Bayes
-    - Report generation
-        - Automatic code generation
-        - Literate programming (with `knitr`)
 
 ### Roadmap
 
