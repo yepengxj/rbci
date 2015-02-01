@@ -59,11 +59,11 @@ scoot.gtable.row <- function(input.gtable, input.row, direction = "up") {
     ## pick out the swapping buddy
     switch(direction,
            "up" = {
-               row.ind <- my.ind-1
+               row.ind <- if (my.ind-1 > 0) my.ind-1 else my.ind
                swap.row <- input.gtable[row.ind,]
            },
            "down" = {
-               row.ind <- my.ind+1
+               row.ind <- if (my.ind+1 > length(input.gtable)) my.ind+1 else my.ind
                swap.row <- input.gtable[row.ind,]
            })
     
