@@ -27,31 +27,32 @@ matlab_preview_button <-
             rbci.env$importfile <- readMat(rbci.env$previewfile,
                                            maxLength = 100000)
             
-            # delete previous preview frame if present
+            ## delete previous preview frame if present
             if ("matlab_preview_frame" %in% ls()) {
               delete(matlab_pane, matlab_preview_frame)
             }
-            # react to preview type setting
+            ## react to preview type setting
             switch(svalue(matlab_preview_type),
                    Columnar = {
-                     # init tabular preview frame
+                       ## init tabular preview frame
                      matlab_preview_frame <<- 
                        gtable(items = 
                                 as.data.frame(
                                   rbci.env$importfile)[seq_len(preview.rowlen),],
                               container = matlab_pane)
                      
-                     # column selectors
-                     rbci.env$columnboxes <- c()
-                     for (this.col in 
-                          colnames(as.data.frame(rbci.env$importfile))) {
-                       rbci.env$columnboxes <<- 
-                         c(rbci.env$columnboxes,
-                           gcheckbox(this.col,
-                                     checked = FALSE,
-                                     expand = FALSE,
-                                     container = matlab_option_group))
-                     }
+                     ## column selectors
+                     if(exists("matlab_column_sel")) {
+                         matlab_column_sel[] <- # replace members if exists
+                             colnames(as.data.frame(rbci.env$importfile))
+                     } else {
+                         matlab_column_sel <<- # global assign to resolve scope
+                             gcheckboxgroup( # create if new
+                                 colnames(as.data.frame(rbci.env$importfile)),
+                                 container = matlab_option_group,
+                                 use.table = TRUE,
+                                 expand = TRUE)
+                     }                                         
                    },
                    Structural = {
                      matlab_preview_frame <<- 

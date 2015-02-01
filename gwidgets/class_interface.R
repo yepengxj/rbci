@@ -26,7 +26,7 @@ class_var_frame <- gframe(text = "Data Sets",
 ## populate data set selector
 if (!is.null(names(rbci.env$importlist))) {
     class_var_filesel <- gradio(names(rbci.env$importlist),
-                                  container = class_var_frame)
+                                container = class_var_frame)
 } else {
     class_var_filesel <- glabel("No data found.",
                                 container = class_var_frame)

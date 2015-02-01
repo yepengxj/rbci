@@ -26,31 +26,32 @@ csv_preview_button <-
           handler   = function(h, ...) {
             rbci.env$importfile <- read.table(rbci.env$previewfile,
                                            nrows = preview.rowlen)
-            # TODO add CSV formatting options to GUI
-            # delete previous preview frame if present
+            ## TODO add CSV formatting options to GUI
+            ## delete previous preview frame if present
             if ("csv_preview_frame" %in% ls()) {
               delete(csv_pane, csv_preview_frame)
             }
-            # react to preview type setting
+            ## react to preview type setting
             switch(svalue(csv_preview_type),
                    Columnar = {
-                     # init tabular preview frame
+                     ## init tabular preview frame
                      csv_preview_frame <<- 
                        gtable(items = 
-                                as.data.frame(
+                                  as.data.frame(
                                   rbci.env$importfile)[seq_len(preview.rowlen),],
                               container = csv_pane)
                      
-                     # column selectors
-                     rbci.env$columnboxes <- c()
-                     for (this.col in 
-                          colnames(as.data.frame(rbci.env$importfile))) {
-                       rbci.env$columnboxes <<- 
-                         c(rbci.env$columnboxes,
-                           gcheckbox(this.col,
-                                     checked = FALSE,
-                                     expand = FALSE,
-                                     container = csv_option_group))
+                     ## column selectors
+                     if(exists("csv_column_sel")) {
+                         csv_column_sel[] <- # replace members if exists already
+                             colnames(as.data.frame(rbci.env$importfile))
+                     } else {
+                         csv_column_sel <-
+                             gcheckboxgroup( # create if new
+                                 colnames(as.data.frame(rbci.env$importfile)),
+                                 container = csv_option_group,
+                                 use.table = TRUE,
+                                 expand = TRUE)
                      }
                    },
                    Structural = {

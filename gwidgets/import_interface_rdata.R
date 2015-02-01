@@ -25,33 +25,34 @@ rdata_preview_button <-
           container = rdata_file_frame,
           handler   = function(h, ...) {
             rbci.env$importfile <- load_obj(rbci.env$previewfile)
-                                             # nrows = preview.rowlen)
-            # TODO add rdata formatting options to GUI
+                                            # nrows = preview.rowlen)
+            ## TODO add rdata formatting options to GUI
             # delete previous preview frame if present
             if ("rdata_preview_frame" %in% ls()) {
               delete(rdata_pane, rdata_preview_frame)
             }
-            # react to preview type setting
+            ## react to preview type setting
             switch(svalue(rdata_preview_type),
                    Columnar = {
                      # init tabular preview frame
                      rdata_preview_frame <<- 
                        gtable(items = 
                                 as.data.frame(
-                                  rbci.env$importfile)[seq_len(preview.rowlen),],
+                                    rbci.env$importfile)[seq_len(preview.rowlen),],
                               container = rdata_pane)
                      
-                     # column selectors
-                     rbci.env$columnboxes <- c()
-                     for (this.col in 
-                          colnames(as.data.frame(rbci.env$importfile))) {
-                       rbci.env$columnboxes <<- 
-                         c(rbci.env$columnboxes,
-                           gcheckbox(this.col,
-                                     checked = FALSE,
-                                     expand = FALSE,
-                                     container = rdata_option_group))
-                     }
+                     ## column selectors
+                     if(exists("rdata_column_sel")) {
+                         rdata_column_sel[] <- # replace members if exists
+                             colnames(as.data.frame(rbci.env$importfile))
+                     } else {
+                         rdata_column_sel <<- # global assign to resolve scope
+                             gcheckboxgroup( # create if new
+                                 colnames(as.data.frame(rbci.env$importfile)),
+                                 container = rdata_option_group,
+                                 use.table = TRUE,
+                                 expand = TRUE)
+                     }                    
                    },
                    Structural = {
                      rdata_preview_frame <<- 
