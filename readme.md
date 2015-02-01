@@ -31,6 +31,8 @@ information in an issue.
   (`libgtk2.0-dev` for Linux users)
 - For MPI-based parallelism, you will need OpenMPI development headers and
   binaries (`libopenmpi-dev`, `openmpi-bin`)
+- May also require `curl` as RCurl depends on it (specifically,
+  `libcurl4-gnutls-dev`).
 
 #### Running rBCI
 
