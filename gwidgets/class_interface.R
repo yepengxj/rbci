@@ -22,11 +22,15 @@ class_var_frame <- gframe(text = "Data Sets",
                           horizontal = FALSE,
                           container = class_var_group,
                           expand = TRUE)
-# populate data set selector
-# TODO add some kind of handler to refresh subitems in tables
-class_var_filesel <- gradio(names(rbci.env$importlist),
-                            container = class_var_frame)
 
+## populate data set selector
+if (!is.null(names(rbci.env$importlist))) {
+    class_var_filesel <- gradio(names(rbci.env$importlist),
+                                  container = class_var_frame)
+} else {
+    class_var_filesel <- glabel("No data found.",
+                                container = class_var_frame)
+}
 
 class_task_book <- gnotebook(tab.pos = 3,
                                container = class_pane)

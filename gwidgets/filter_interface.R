@@ -23,10 +23,13 @@ filter_var_frame <- gframe(text = "Data Sets",
                             container = filter_var_group,
                             expand = TRUE)
 # populate data set selector
-# TODO add some kind of handler to refresh subitems in tables
-filter_var_filesel <- gradio(names(rbci.env$importlist),
-                              container = filter_var_frame)
-
+if (!is.null(names(rbci.env$importlist))) {
+    filter_var_filesel <- gradio(names(rbci.env$importlist),
+                                  container = filter_var_frame)
+} else {
+    filter_var_filesel <- glabel("No data found.",
+                                  container = filter_var_frame)
+}
 
 filter_task_book <- gnotebook(tab.pos = 3,
                                container = filter_pane)
