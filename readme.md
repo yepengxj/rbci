@@ -16,7 +16,7 @@ accomplish the main tasks of data science therein (adapted from
 ### Other goals
 
 - Specific, well-defined formats and data structures for EEG data (especially
-  taking advantage of [data.table](https://github.com/Rdatatable/data.table)
+  taking advantage of [data.table](https://github.com/Rdatatable/data.table))
 - Cross-platform support through GTK
 - Improved visualizations (adding to the already excellent ones in R)
 - Increased collaboration and reproducibility through free+open software
@@ -50,7 +50,7 @@ accomplish the main tasks of data science therein (adapted from
 
 ## Current status
 
-Approaching v0.1 rapidly.
+v0.1: Usable alpha reached. (See [development milestones](https://github.com/talexand/rbci/milestones) for more.)
 
 ### How to build and run
 
